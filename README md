@@ -1,47 +1,26 @@
-## 🧾 Message Wave obligatoire (format DIGIY)
+# Commencer à payer — DIGIY (Wave)
 
-Pour permettre une activation rapide et sans erreur,  
-le message Wave doit contenir **le module, l’offre et le nom de l’abonnement**.
+Page publique de paiement DIGIY via Wave (JB BEAUVILLE).  
+Objectif : générer un **message Wave normé** (copier-coller) pour activer rapidement un module / pack.
 
-### Format officiel :
+## URL
+- Base : https://beauville.github.io/commencer-a-payer/
 
-# 💳 DIGIY PAY — Paiement Wave (JB BEAUVILLE)
+## Pré-remplissage (query params)
+La page accepte :
+- `module` (ex: DRIVER)
+- `offre`  (ex: STARTER_19900)
+- `abo`    (ex: DIGIY_DRIVER_9900)
 
-DIGIY PAY est la porte d’entrée **simple, humaine et souveraine** pour commencer à payer son abonnement DIGIY.
+Exemple :
+https://beauville.github.io/commencer-a-payer/?module=DRIVER&offre=MODULE_ONLY&abo=DIGIY_DRIVER_9900
 
-Ici, **pas d’intermédiaire**, pas de commission cachée :  
-👉 paiement direct via **Wave**, en toute transparence.
+## Fonctionnement
+1. Le client remplit nom / téléphone / zone
+2. La page génère un message Wave standard
+3. Le client copie-colle le message dans Wave et paie le montant exact
+4. L’équipe DIGIY vérifie et active l’abonnement
 
----
+## Stockage
+Les infos client (nom/tel/zone) sont sauvegardées **en local** (localStorage) pour éviter de re-saisir à chaque fois.
 
-## 🌍 Vision DIGIY
-DIGIYLYFE construit un écosystème digital enraciné en Afrique, respectueux des cultures locales et orienté vers la **souveraineté économique**.
-
-- 0% commission  
-- Paiement direct au pro  
-- Relation humaine  
-- Outils simples, puissants et sécurisés  
-
----
-
-## 📄 Contenu du projet
-
-Ce dépôt contient une **page HTML autonome** permettant à un utilisateur de :
-
-- comprendre le principe DIGIY
-- effectuer un paiement Wave
-- suivre des instructions claires
-- contacter DIGIY en cas de besoin
-
-Aucune dépendance externe.  
-Aucun framework.  
-Aucune PWA ici (volontaire).
-
----
-
-## 📁 Fichiers
-
-```text
-/
-├── payer-wave.html   # Page principale de paiement
-└── README.md         # Documentation
