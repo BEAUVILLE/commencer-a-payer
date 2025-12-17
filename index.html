@@ -1,40 +1,180 @@
-# 💳 DIGIY PAY — Paiement Wave (JB BEAUVILLE)
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Commencer à payer — DIGIY (Wave)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-DIGIY PAY est la porte d’entrée **simple, humaine et souveraine** pour commencer à payer son abonnement DIGIY.
+  <meta name="theme-color" content="#022c22">
+  <meta name="description" content="Paiement DIGIY — Envoie ton paiement Wave directement. 0% commission. Paiement humain et direct.">
 
-Ici, **pas d’intermédiaire**, pas de commission cachée :  
-👉 paiement direct via **Wave**, en toute transparence.
+  <style>
+    :root{
+      --bg:#022c22;
+      --bg2:#065f46;
+      --card:#052e16;
+      --gold:#facc15;
+      --text:#e5e7eb;
+      --muted:#9ca3af;
+      --border:rgba(148,163,184,.35);
+    }
 
----
+    *{box-sizing:border-box;margin:0;padding:0}
 
-## 🌍 Vision DIGIY
-DIGIYLYFE construit un écosystème digital enraciné en Afrique, respectueux des cultures locales et orienté vers la **souveraineté économique**.
+    body{
+      min-height:100vh;
+      background:linear-gradient(135deg,var(--bg),var(--bg2));
+      font-family:system-ui,-apple-system,Segoe UI,Roboto;
+      color:var(--text);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+    }
 
-- 0% commission  
-- Paiement direct au pro  
-- Relation humaine  
-- Outils simples, puissants et sécurisés  
+    .card{
+      width:100%;
+      max-width:520px;
+      background:var(--card);
+      border-radius:22px;
+      border:1px solid var(--border);
+      padding:26px 24px;
+      box-shadow:0 30px 80px rgba(0,0,0,.6);
+    }
 
----
+    .logo{
+      text-align:center;
+      font-size:42px;
+      font-weight:900;
+      color:var(--gold);
+      margin-bottom:10px;
+    }
 
-## 📄 Contenu du projet
+    h1{
+      text-align:center;
+      font-size:1.5rem;
+      margin-bottom:8px;
+      font-weight:800;
+    }
 
-Ce dépôt contient une **page HTML autonome** permettant à un utilisateur de :
+    .welcome{
+      text-align:center;
+      font-size:.95rem;
+      color:var(--muted);
+      line-height:1.6;
+      margin-bottom:22px;
+    }
 
-- comprendre le principe DIGIY
-- effectuer un paiement Wave
-- suivre des instructions claires
-- contacter DIGIY en cas de besoin
+    .step{
+      background:rgba(15,23,42,.45);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:16px;
+      margin-bottom:14px;
+    }
 
-Aucune dépendance externe.  
-Aucun framework.  
-Aucune PWA ici (volontaire).
+    .step strong{color:var(--gold)}
 
----
+    .label{
+      font-size:.8rem;
+      color:var(--muted);
+      margin-bottom:6px;
+      display:block;
+    }
 
-## 📁 Fichiers
+    .copy{
+      width:100%;
+      padding:12px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background:#020617;
+      color:var(--text);
+      font-weight:700;
+      font-size:.95rem;
+    }
 
-```text
-/
-├── payer-wave.html   # Page principale de paiement
-└── README.md         # Documentation
+    .btn{
+      display:block;
+      width:100%;
+      margin-top:18px;
+      padding:14px;
+      border-radius:16px;
+      background:linear-gradient(90deg,var(--gold),#f59e0b);
+      border:none;
+      font-weight:900;
+      font-size:1rem;
+      cursor:pointer;
+      color:#052e16;
+      text-decoration:none;
+      text-align:center;
+    }
+
+    .note{
+      margin-top:14px;
+      font-size:.8rem;
+      color:var(--muted);
+      line-height:1.5;
+      text-align:center;
+    }
+
+    footer{
+      margin-top:18px;
+      text-align:center;
+      font-size:.75rem;
+      color:var(--muted);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+
+    <div class="logo">∞</div>
+
+    <h1>Bienvenue dans DIGIY</h1>
+
+    <p class="welcome">
+      Ici, tu paies <strong>en direct</strong>, sans intermédiaire.<br>
+      Ton argent va à la bonne personne, au bon endroit.<br>
+      <strong>0% commission. 100% humain.</strong>
+    </p>
+
+    <div class="step">
+      <strong>1️⃣ Envoie ton paiement Wave à :</strong><br><br>
+      <span class="label">Nom</span>
+      <input class="copy" value="JB BEAUVILLE" readonly>
+
+      <span class="label" style="margin-top:10px;">Téléphone</span>
+      <input class="copy" value="+221 77 134 28 89" readonly>
+    </div>
+
+    <div class="step">
+      <strong>2️⃣ Message Wave (OBLIGATOIRE)</strong><br><br>
+      <span class="label">À copier-coller dans Wave</span>
+      <input class="copy" value="DIGIY — Paiement abonnement" readonly>
+    </div>
+
+    <div class="step">
+      <strong>3️⃣ Validation</strong><br><br>
+      Une fois le paiement reçu, ton accès DIGIY est activé.<br>
+      Tu seras contacté si besoin.
+    </div>
+
+    <a class="btn" href="https://wa.me/221771342889" target="_blank" rel="noopener">
+      📲 Contacter DIGIY sur WhatsApp
+    </a>
+
+    <p class="note">
+      Paiement manuel volontaire.<br>
+      DIGIY protège les revenus locaux et la souveraineté numérique.
+    </p>
+
+    <footer>
+      DIGIYLYFE • Sénégal • 0% commission
+    </footer>
+
+  </div>
+
+</body>
+</html>
