@@ -509,11 +509,15 @@ function selectModule(moduleId, price, displayName) {
   const amount = price;
   const reason = `DIGIY ${displayName}`;
 
-  const waveUrl = `https://pay.wave.com/sn/pay?amount=${amount}&recipient=${phone}&reason=${encodeURIComponent(reason)}`;
+  const waveUrl =
+    "https://pay.wave.com/sn/send" +
+    "?amount=" + amount +
+    "&recipient=" + phone +
+    "&reason=" + encodeURIComponent(reason);
 
-  // 👉 Ouvre Wave
   window.location.href = waveUrl;
 }
 </script>
+
 </body>
 </html>
