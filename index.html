@@ -4,12 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#0A0E1A" />
-  <title>Commencer à payer — DIGIY (Wave)</title>
-  <meta name="description" content="Paiement DIGIY par Wave. Message de paiement généré automatiquement pour activer ton abonnement." />
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;800;900&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <title>Paiement Wave — DIGIY PRO</title>
+  <meta name="description" content="Paiement DIGIY par Wave. Message généré automatiquement." />
 
   <style>
     :root{
@@ -20,13 +16,11 @@
       --muted:#94a3b8;
       --gold:#facc15;
       --orange:#f97316;
-      --orange2:#ea580c;
       --ok:#22c55e;
-      --danger:#ef4444;
     }
     *{box-sizing:border-box;margin:0;padding:0}
     body{
-      font-family:Manrope,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      font-family:system-ui,sans-serif;
       color:var(--text);
       background:
         radial-gradient(circle at 10% 10%, rgba(249,115,22,0.18), transparent 55%),
@@ -37,10 +31,10 @@
       justify-content:center;
       padding:22px 14px 40px;
     }
-    .wrap{width:100%;max-width:980px}
+    .wrap{width:100%;max-width:1000px}
     .top{
       display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
-      padding:16px 16px;
+      padding:16px 20px;
       border:1px solid var(--border);
       border-radius:18px;
       background:rgba(2,6,23,0.7);
@@ -48,48 +42,46 @@
     }
     .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit}
     .logo{
-      width:48px;height:48px;border-radius:16px;
+      width:52px;height:52px;border-radius:16px;
       display:flex;align-items:center;justify-content:center;
       background:radial-gradient(circle at 30% 20%, #fef3c7, var(--orange));
-      color:#0b1220;font-weight:900;font-size:22px;
+      color:#0b1220;font-weight:900;font-size:26px;
       box-shadow:0 12px 32px rgba(249,115,22,0.35);
-      font-family:Outfit,system-ui;
     }
     .brand h1{
-      font-family:Outfit,system-ui;
-      font-size:16px;
+      font-size:18px;
       letter-spacing:.12em;
       text-transform:uppercase;
       margin:0;
       line-height:1.1;
+      font-weight:900;
     }
-    .brand p{margin:2px 0 0;color:var(--muted);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+    .brand p{margin:4px 0 0;color:var(--muted);font-size:12px;font-weight:700}
     .btnBack{
       border:1px solid var(--border);
       background:rgba(15,23,42,0.65);
       color:var(--text);
-      padding:10px 12px;
+      padding:11px 16px;
       border-radius:999px;
       font-weight:900;
       text-decoration:none;
       display:inline-flex;
       align-items:center;
       gap:8px;
-      font-family:Outfit,system-ui;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      font-size:12px;
-      white-space:nowrap;
+      letter-spacing:.06em;
+      font-size:13px;
+      transition:all .2s;
     }
     .btnBack:hover{border-color:rgba(249,115,22,0.8)}
+    
     .hero{
       margin-top:16px;
       border:1px solid var(--border);
       border-radius:22px;
       background:linear-gradient(135deg, rgba(15,23,42,0.96), rgba(2,6,23,0.86));
-      padding:18px 16px;
-      overflow:hidden;
+      padding:24px 20px;
       position:relative;
+      overflow:hidden;
     }
     .hero::before{
       content:"";
@@ -102,11 +94,10 @@
     }
     .heroInner{position:relative}
     .hello{
-      font-family:Outfit,system-ui;
-      font-size:20px;
+      font-size:24px;
       font-weight:900;
-      margin-bottom:8px;
-      line-height:1.25;
+      margin-bottom:10px;
+      line-height:1.2;
     }
     .hello span{
       background:linear-gradient(135deg,var(--orange),var(--gold));
@@ -114,16 +105,16 @@
     }
     .sub{
       color:var(--muted);
-      font-size:14px;
+      font-size:15px;
       line-height:1.6;
-      font-weight:700;
+      font-weight:600;
     }
 
     .grid{
       display:grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap:14px;
-      margin-top:14px;
+      grid-template-columns: 1.3fr .7fr;
+      gap:16px;
+      margin-top:16px;
     }
     @media(max-width:900px){.grid{grid-template-columns:1fr}}
 
@@ -131,131 +122,126 @@
       border:1px solid var(--border);
       border-radius:22px;
       background:var(--card);
-      padding:16px;
+      padding:20px;
     }
     .card h2{
-      font-family:Outfit,system-ui;
-      font-size:14px;
+      font-size:15px;
       text-transform:uppercase;
-      letter-spacing:.14em;
-      margin-bottom:10px;
-      color:#cbd5e1;
-    }
-
-    .steps{
-      display:grid;
-      gap:10px;
-    }
-    .step{
-      border:1px solid rgba(148,163,184,0.25);
-      background:rgba(2,6,23,0.55);
-      border-radius:16px;
-      padding:12px;
-    }
-    .stepTop{
-      display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
-    }
-    .badge{
-      display:inline-flex;align-items:center;gap:8px;
-      font-family:Outfit,system-ui;
-      font-weight:900;
       letter-spacing:.12em;
-      text-transform:uppercase;
-      font-size:12px;
-      padding:8px 10px;
-      border-radius:999px;
-      background:linear-gradient(135deg,var(--orange),var(--orange2));
-      color:#0b1220;
-      border:1px solid rgba(249,115,22,0.65);
-      white-space:nowrap;
-    }
-    .mini{
-      font-size:12px;
-      color:var(--muted);
-      font-weight:700;
-      line-height:1.55;
-      margin-top:8px;
+      margin-bottom:16px;
+      color:#cbd5e1;
+      font-weight:900;
     }
 
     label{
       display:block;
-      font-size:12px;
-      color:#a7b0c0;
+      font-size:13px;
+      color:#cbd5e1;
       font-weight:800;
-      margin:12px 0 6px 2px;
+      margin:0 0 8px 2px;
     }
     input, textarea{
       width:100%;
-      border-radius:16px;
-      border:1px solid rgba(148,163,184,0.28);
+      border-radius:14px;
+      border:2px solid rgba(148,163,184,0.28);
       background:rgba(2,6,23,0.55);
       color:var(--text);
-      padding:12px 12px;
+      padding:13px 14px;
       font-weight:700;
       outline:none;
+      font-size:15px;
+      transition:all .2s;
     }
-    textarea{min-height:92px;resize:vertical}
-    input:focus, textarea:focus{border-color:rgba(250,204,21,0.75)}
+    textarea{min-height:110px;resize:vertical;font-family:monospace;font-size:13px}
+    input:focus, textarea:focus{
+      border-color:var(--gold);
+      box-shadow:0 0 0 3px rgba(250,204,21,0.15);
+    }
 
-    .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
     @media(max-width:520px){.row2{grid-template-columns:1fr}}
 
+    .price-display{
+      background:rgba(250,204,21,0.12);
+      border:2px solid var(--gold);
+      border-radius:14px;
+      padding:16px;
+      margin:16px 0;
+      text-align:center;
+    }
+    .price-label{
+      font-size:13px;
+      color:var(--muted);
+      font-weight:700;
+      margin-bottom:8px;
+    }
+    .price-amount{
+      font-size:36px;
+      font-weight:900;
+      color:var(--gold);
+      line-height:1;
+    }
+
     .ctaRow{
-      display:flex;flex-wrap:wrap;gap:10px;align-items:center;
-      margin-top:12px;
+      display:flex;flex-wrap:wrap;gap:10px;
+      margin-top:16px;
     }
     .btn{
       border:none;
       cursor:pointer;
       border-radius:999px;
-      padding:12px 14px;
-      font-family:Outfit,system-ui;
-      font-weight:950;
+      padding:14px 18px;
+      font-weight:900;
       text-transform:uppercase;
-      letter-spacing:.12em;
-      font-size:12px;
+      letter-spacing:.10em;
+      font-size:13px;
       display:inline-flex;
       align-items:center;
       gap:10px;
       text-decoration:none;
-      white-space:nowrap;
+      transition:all .2s;
+      flex:1;
+      justify-content:center;
+      min-width:180px;
     }
     .btnPrimary{
       background:linear-gradient(135deg,var(--gold),#f59e0b);
       color:#052e16;
-      box-shadow:0 14px 36px rgba(250,204,21,0.18);
+      box-shadow:0 12px 32px rgba(250,204,21,0.25);
+    }
+    .btnPrimary:hover{
+      transform:translateY(-2px);
+      box-shadow:0 16px 40px rgba(250,204,21,0.35);
     }
     .btnGhost{
       background:rgba(15,23,42,0.65);
-      border:1px solid rgba(148,163,184,0.35);
+      border:2px solid rgba(148,163,184,0.35);
       color:var(--text);
     }
     .btnGhost:hover{border-color:rgba(249,115,22,0.75)}
+    
     .hint{
-      margin-top:10px;
+      margin-top:12px;
       font-size:12px;
       color:var(--muted);
-      line-height:1.55;
-      font-weight:700;
+      line-height:1.6;
+      font-weight:600;
     }
 
-    .payBox{
-      display:grid;
-      gap:10px;
-    }
+    .payBox{display:grid;gap:12px}
     .payLine{
       border:1px solid rgba(148,163,184,0.25);
       background:rgba(2,6,23,0.55);
       border-radius:16px;
-      padding:12px;
+      padding:14px;
     }
     .payLine strong{color:#fff}
     .bigPhone{
-      font-family:Outfit,system-ui;
-      font-weight:950;
-      font-size:18px;
+      font-weight:900;
+      font-size:22px;
       letter-spacing:.06em;
-      margin-top:6px;
+      margin-top:8px;
+      color:var(--gold);
     }
     .ok{
       display:flex;align-items:center;gap:8px;
@@ -263,250 +249,221 @@
       color:#dcfce7;
       background:rgba(34,197,94,0.12);
       border:1px solid rgba(34,197,94,0.35);
-      padding:10px 12px;border-radius:16px;
-      font-size:12px;
-      letter-spacing:.10em;
-      text-transform:uppercase;
-      font-family:Outfit,system-ui;
+      padding:12px;border-radius:14px;
+      font-size:13px;
+      letter-spacing:.08em;
     }
 
     footer{
-      margin-top:14px;
+      margin-top:20px;
       text-align:center;
       color:rgba(148,163,184,0.85);
-      font-size:12px;
+      font-size:13px;
       font-weight:700;
+      line-height:1.6;
     }
-    .tiny{opacity:.85;font-size:11px;margin-top:6px}
   </style>
 </head>
 
 <body>
   <div class="wrap">
     <div class="top">
-      <a class="brand" href="#" aria-label="DIGIY Paiement">
-        <div class="logo">∞</div>
+      <a class="brand" href="index.html">
+        <div class="logo">🦅</div>
         <div>
-          <h1>DIGIY — Paiement</h1>
-          <p>Wave • Message automatique • Activation rapide</p>
+          <h1>DIGIY — Paiement Wave</h1>
+          <p>0% commission · Activation rapide</p>
         </div>
       </a>
-
-      <!-- 🔁 Mets ici ton HUB GitHub si tu veux -->
-      <a class="btnBack" href="https://beauville.github.io/digiy-hub/" rel="noopener">
-        ← Retour au HUB
-      </a>
+      <a class="btnBack" href="inscription-pro.html">← Retour</a>
     </div>
 
     <div class="hero">
       <div class="heroInner">
-        <div class="hello">Bienvenue chez <span>DIGIY</span> frérot 🦅</div>
+        <div class="hello">Finalise ton inscription <span>DIGIY</span> 🦅</div>
         <div class="sub">
-          Ici tu payes **en direct**, sans intermédiaire, pour activer ton module / ton pack.
-          On te génère le <strong>message Wave exact</strong> pour que l’activation soit carrée.
+          Paiement <strong>direct par Wave</strong>, sans intermédiaire.<br>
+          On te génère le <strong>message exact</strong> à copier-coller pour une activation rapide.
         </div>
       </div>
     </div>
 
     <div class="grid">
-      <!-- LEFT: FORM + STEPS -->
+      <!-- LEFT: FORM -->
       <div class="card">
-        <h2>Étape 1 — Remplis tes infos</h2>
+        <h2>📋 Informations de paiement</h2>
 
-        <label>Nom / Prénom</label>
-        <input id="pgName" placeholder="Ex: Awa Diop" autocomplete="name" />
+        <label>Nom commercial / Nom complet</label>
+        <input id="pgName" placeholder="Restaurant Chez Astou" />
 
         <div class="row2">
           <div>
-            <label>Téléphone</label>
-            <input id="pgPhone" placeholder="+221 77..." autocomplete="tel" />
+            <label>Téléphone WhatsApp</label>
+            <input id="pgPhone" placeholder="+221 77 123 45 67" />
           </div>
           <div>
-            <label>Ville / Zone</label>
-            <input id="pgZone" placeholder="Ex: Saly Centre" />
+            <label>Ville</label>
+            <input id="pgZone" placeholder="Dakar" />
           </div>
         </div>
 
         <div class="row2">
           <div>
-            <label>Module</label>
-            <input id="pgModule" placeholder="Ex: DRIVER" />
+            <label>Module / Pack</label>
+            <input id="pgModule" placeholder="DRIVER" readonly style="background:rgba(2,6,23,0.75)" />
           </div>
           <div>
-            <label>Offre</label>
-            <input id="pgOffre" placeholder="Ex: STARTER_19900" />
+            <label>Montant mensuel</label>
+            <input id="pgMontant" placeholder="9900" readonly style="background:rgba(2,6,23,0.75)" />
           </div>
         </div>
 
-        <label>Nom de l’abonnement</label>
-        <input id="pgAbo" placeholder="Ex: DIGIY_DRIVER_9900" />
+        <div class="price-display">
+          <div class="price-label">MONTANT À ENVOYER</div>
+          <div class="price-amount" id="displayAmount">9,900 F</div>
+        </div>
 
-        <label>Message Wave (copier-coller)</label>
+        <label>Message Wave (à copier-coller)</label>
         <textarea id="pgMessage" readonly></textarea>
 
         <div class="ctaRow">
           <button class="btn btnPrimary" id="btnCopy">
             📋 Copier le message
           </button>
-
-          <a class="btn btnGhost" id="btnWhatsapp" href="#" target="_blank" rel="noopener">
-            💬 Envoyer le message sur WhatsApp
+          <a class="btn btnGhost" id="btnWhatsapp" href="#" target="_blank">
+            💬 WhatsApp
           </a>
-
-          <button class="btn btnGhost" id="btnSave">
-            ✅ Sauver mes infos
-          </button>
         </div>
 
         <div class="hint">
-          ✅ Astuce : si tu viens depuis la page Tarifs, le module et l’offre peuvent arriver automatiquement (via l’URL).
-          <br>
-          🔐 Les infos sont sauvegardées en local sur l’appareil (pour l’instant).
+          ✅ Copie le message ci-dessus<br>
+          ✅ Ouvre Wave et envoie au numéro indiqué<br>
+          ✅ Colle le message dans le champ "Note"<br>
+          ✅ Confirmation sous 24h
         </div>
       </div>
 
       <!-- RIGHT: PAYMENT INFO -->
       <div class="card">
-        <h2>Étape 2 — Paiement Wave</h2>
+        <h2>💳 Instructions Wave</h2>
 
         <div class="payBox">
           <div class="payLine">
-            <div class="ok">✅ Paiement direct — 0% commission</div>
+            <div class="ok">✅ Paiement direct · 0% commission</div>
           </div>
 
           <div class="payLine">
-            <div><strong>Envoyer le montant exact à :</strong></div>
-            <div class="bigPhone" id="waveNumber">+221 77 134 28 89</div>
-            <div class="tiny">Compte Wave : <strong>JB BEAUVILLE</strong></div>
+            <div><strong>Envoyer le montant à :</strong></div>
+            <div class="bigPhone">+221 77 134 28 89</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:6px;font-weight:700">
+              Compte Wave : <strong style="color:var(--text)">JB BEAUVILLE</strong>
+            </div>
           </div>
 
           <div class="payLine">
-            <div><strong>Message obligatoire à coller dans Wave :</strong></div>
-            <div class="tiny">Tu copies le message généré à gauche, tu le colles dans Wave, et c’est carré.</div>
+            <div><strong>Important :</strong></div>
+            <div style="font-size:13px;color:var(--muted);margin-top:8px;line-height:1.6;font-weight:600">
+              Le message généré contient toutes tes infos.<br>
+              Colle-le dans Wave pour une activation rapide.
+            </div>
           </div>
 
           <div class="payLine">
             <div><strong>Après paiement :</strong></div>
-            <div class="mini">
-              On vérifie, puis on active ton abonnement DIGIY.
-              <br><br>
-              Besoin d’aide ? WhatsApp direct.
+            <div style="font-size:13px;color:var(--muted);margin-top:8px;line-height:1.6;font-weight:600">
+              • Vérification sous 24h<br>
+              • Activation de ton compte<br>
+              • Accès à ton dashboard PRO
             </div>
           </div>
 
-          <a class="btn btnPrimary" href="https://wa.me/221771342889" target="_blank" rel="noopener" style="justify-content:center;">
-            💬 Contacter DIGIY (WhatsApp)
+          <a class="btn btnPrimary" href="https://wa.me/221771342889" target="_blank" style="width:100%">
+            💬 Contacter support
           </a>
         </div>
       </div>
     </div>
 
     <footer>
-      © DIGIYLYFE — Made in Sénégal • 0% commission • Paiement direct au pro
-      <div class="tiny">Page: /commencer-a-payer/ • Compatible mobile & PWA</div>
+      © DIGIYLYFE — Made in Sénégal 🇸🇳<br>
+      0% commission · Paiement direct au pro
     </footer>
   </div>
 
   <script>
-    // ✅ CONFIG
+    const WAVE_PHONE = "+221771342889";
     const WAVE_NAME = "JB BEAUVILLE";
-    const WAVE_PHONE_E164 = "+221771342889"; // format pratique (wa.me etc.)
-    const WAVE_DISPLAY = "+221 77 134 28 89";
 
-    // UI
-    document.getElementById("waveNumber").textContent = WAVE_DISPLAY;
-
-    const $name   = document.getElementById("pgName");
-    const $phone  = document.getElementById("pgPhone");
-    const $zone   = document.getElementById("pgZone");
+    const $name = document.getElementById("pgName");
+    const $phone = document.getElementById("pgPhone");
+    const $zone = document.getElementById("pgZone");
     const $module = document.getElementById("pgModule");
-    const $offre  = document.getElementById("pgOffre");
-    const $abo    = document.getElementById("pgAbo");
-    const $msg    = document.getElementById("pgMessage");
+    const $montant = document.getElementById("pgMontant");
+    const $msg = document.getElementById("pgMessage");
+    const $displayAmount = document.getElementById("displayAmount");
 
-    // ✅ 1) Pré-remplissage via URL
+    // Pré-remplissage depuis URL (venant de inscription-pro.html)
     (function hydrateFromUrl(){
       const params = new URLSearchParams(window.location.search);
-      const m = params.get("module");
-      const o = params.get("offre");
-      const a = params.get("abo");
-      if(m) $module.value = m;
-      if(o) $offre.value  = o;
-      if(a) $abo.value    = a;
+      
+      const module = params.get("module") || "SINGLE";
+      const montant = params.get("montant") || "9900";
+      const pro = params.get("pro") || "";
+      
+      $module.value = module.toUpperCase();
+      $montant.value = montant;
+      $name.value = pro;
+      
+      // Affichage formaté du montant
+      const montantNum = parseInt(montant);
+      $displayAmount.textContent = montantNum.toLocaleString('fr-FR') + ' F';
     })();
 
-    // ✅ 2) Restore local
-    (function restore(){
-      try{
-        const raw = localStorage.getItem("digiy_payment_profile");
-        if(!raw) return;
-        const p = JSON.parse(raw);
-        if(p.name)  $name.value  = p.name;
-        if(p.phone) $phone.value = p.phone;
-        if(p.zone)  $zone.value  = p.zone;
-      }catch(e){}
-    })();
-
-    // ✅ 3) Générateur message Wave
+    // Générateur message Wave
     function buildMessage(){
       const name = ($name.value || "").trim();
       const phone = ($phone.value || "").trim();
       const zone = ($zone.value || "").trim();
+      const module = ($module.value || "").trim().toUpperCase();
+      const montant = ($montant.value || "").trim();
 
-      const module = ($module.value || "HUB").trim().toUpperCase();
-      const offre  = ($offre.value  || "STANDARD").trim().toUpperCase();
-      const abo    = ($abo.value    || "DIGIY").trim();
-
-      // Format message: court, normé, lisible
       const parts = [
-        "DIGIY",
-        `CLIENT:${name || "N/A"}`,
+        "DIGIY PRO",
+        `NOM:${name || "N/A"}`,
         `TEL:${phone || "N/A"}`,
-        `ZONE:${zone || "N/A"}`,
+        `VILLE:${zone || "N/A"}`,
         `MODULE:${module}`,
-        `OFFRE:${offre}`,
-        `ABO:${abo}`,
-        `PAYER:${WAVE_NAME}`
+        `MONTANT:${montant}F`,
+        `DESTINATAIRE:${WAVE_NAME}`
       ];
+      
       return parts.join(" | ");
     }
 
     function refresh(){
       $msg.value = buildMessage();
       const msg = encodeURIComponent($msg.value);
-      document.getElementById("btnWhatsapp").href =
-        `https://wa.me/${WAVE_PHONE_E164.replace("+","")}?text=${msg}`;
+      document.getElementById("btnWhatsapp").href = `https://wa.me/${WAVE_PHONE.replace("+","")}?text=${msg}`;
     }
 
-    ["input","change"].forEach(evt=>{
-      [$name,$phone,$zone,$module,$offre,$abo].forEach(el=>el.addEventListener(evt, refresh));
+    [$name, $phone, $zone].forEach(el => {
+      el.addEventListener("input", refresh);
+      el.addEventListener("change", refresh);
     });
 
     refresh();
 
-    // ✅ Copier
+    // Copier
     document.getElementById("btnCopy").addEventListener("click", async ()=>{
       try{
         await navigator.clipboard.writeText($msg.value);
-        alert("✅ Message copié. Colle-le dans Wave.");
+        alert("✅ Message copié ! Colle-le dans Wave.");
       }catch(e){
-        // fallback
         $msg.focus();
         $msg.select();
         document.execCommand("copy");
-        alert("✅ Message copié (mode compat).");
+        alert("✅ Message copié !");
       }
-    });
-
-    // ✅ Save local
-    document.getElementById("btnSave").addEventListener("click", ()=>{
-      const payload = {
-        name: ($name.value||"").trim(),
-        phone: ($phone.value||"").trim(),
-        zone: ($zone.value||"").trim(),
-      };
-      localStorage.setItem("digiy_payment_profile", JSON.stringify(payload));
-      alert("✅ Infos sauvegardées sur cet appareil.");
     });
   </script>
 </body>
