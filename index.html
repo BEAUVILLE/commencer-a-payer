@@ -503,20 +503,53 @@
   </footer>
 </div>
 
-<script>
-function selectModule(moduleId, price, displayName) {
-  const phone = "221771342889"; // JB BEAUVILLE
-  const amount = price;
-  const reason = `DIGIY ${displayName}`;
+<!-- 🟢 PAIEMENT WAVE DIGIY -->
+<div style="
+  margin-top:20px;
+  padding:20px;
+  border-radius:16px;
+  background:#f0fdf4;
+  border:2px solid #16a34a;
+  text-align:center;
+">
+  <h3 style="
+    margin-bottom:10px;
+    font-size:18px;
+    font-weight:900;
+    color:#065f46;
+  ">
+    💳 Paiement via Wave
+  </h3>
 
-  const waveUrl =
-    "https://pay.wave.com/sn/send" +
-    "?amount=" + amount +
-    "&recipient=" + phone +
-    "&reason=" + encodeURIComponent(reason);
+  <p style="
+    font-size:15px;
+    font-weight:700;
+    color:#064e3b;
+    line-height:1.6;
+  ">
+    Ouvre ton application <strong>Wave</strong> et envoie le montant à :
+  </p>
 
-  window.location.href = waveUrl;
-}
+  <div style="
+    margin:12px 0;
+    font-size:18px;
+    font-weight:900;
+    color:#022c22;
+  ">
+    JB BEAUVILLE<br>
+    <span style="font-size:20px;">📞 77 134 28 89</span>
+  </div>
+
+  <p style="
+    font-size:14px;
+    font-weight:800;
+    color:#14532d;
+  ">
+    📝 Motif obligatoire :<br>
+    <strong>DIGIY + nom du module</strong><br>
+    <span style="font-size:13px;">(ex : DIGIY DRIVER, DIGIY PACK PRO)</span>
+  </p>
+</div>
 </script>
 
 </body>
