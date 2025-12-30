@@ -645,21 +645,31 @@
       <button class="cta-btn">Choisir DRIVER</button>
     </div>
 
-    <!-- RESTO PRO -->
-    <div class="module-card" onclick="selectModule('resto', 29500, 'DIGIY RESTO PRO')">
+    <!-- RESTO PRO - CORRIGÉ AVEC 3 PALIERS -->
+    <div class="module-card">
       <div class="module-icon">🍽️</div>
       <div class="module-name">DIGIY RESTO PRO</div>
-      <div class="module-desc">Gestion complète · Commandes multi-zones · Kitchen Display · Caisse intégrée</div>
-      <div class="price-section">
-        <div class="price-label">Prix fixe</div>
-        <div class="price-amount">29,500 F<span class="price-period">/mois</span></div>
+      <div class="module-desc">Gestion restaurant · 1 licence = 15 tables max · Plan · KDS · Caisse · Offline</div>
+      <div class="paliers">
+        <div class="palier-title">Par nombre de licences</div>
+        <div class="palier-option" onclick="selectModule('resto_essentiel', 9900, 'DIGIY RESTO PRO ESSENTIEL (2 licences · 15 tables)')">
+          <span>🥉 ESSENTIEL · 2 licences (15 tables)</span>
+          <strong>9,900 F</strong>
+        </div>
+        <div class="palier-option" onclick="selectModule('resto_standard', 14900, 'DIGIY RESTO PRO STANDARD (4 licences · 30 tables)')">
+          <span>🥈 STANDARD · 4 licences (30 tables)</span>
+          <strong>14,900 F</strong>
+        </div>
+        <div class="palier-option" onclick="selectModule('resto_pro', 24900, 'DIGIY RESTO PRO (6 licences · 45 tables)')">
+          <span>🥇 PRO · 6 licences (45 tables)</span>
+          <strong>24,900 F</strong>
+        </div>
       </div>
-      <button class="cta-btn">Choisir RESTO PRO</button>
     </div>
 
     <!-- RÉSA -->
     <div class="module-card">
-      <div class="module-icon">🍽️</div>
+      <div class="module-icon">📅</div>
       <div class="module-name">DIGIY RÉSA</div>
       <div class="module-desc">Réservations restaurant · Planning temps réel · Confirmations SMS</div>
       <div class="paliers">
@@ -719,7 +729,7 @@
 
     <!-- FRET CHAUFFEUR -->
     <div class="module-card">
-      <div class="module-icon">📦</div>
+      <div class="module-icon">🚚</div>
       <div class="module-name">DIGIY FRET CHAUFFEUR</div>
       <div class="module-desc">Livraisons · Accès missions fret · Wave/Orange Money · 0% commission</div>
       <div class="paliers">
@@ -838,5 +848,4 @@ function selectModule(moduleId, price, moduleName) {
 </script>
 
 </body>
-</html>
 </html>
