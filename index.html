@@ -18,7 +18,7 @@
     }
     *{box-sizing:border-box}
     body{ margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial; background:var(--bg); color:var(--text); }
-    .wrap{ max-width:1040px; margin:0 auto; padding:16px; }
+    .wrap{ max-width:1100px; margin:0 auto; padding:16px; }
     .card{ background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:14px; box-shadow:var(--shadow); }
     .row{ display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
     h1{ margin:0; font-size:20px; font-weight:1100; letter-spacing:.2px; }
@@ -29,7 +29,7 @@
     .small{ font-size:13px; color:var(--muted); line-height:1.35; }
     .hr{ height:1px; background:var(--line); margin:12px 0; }
     .grid{ display:grid; grid-template-columns:1fr; gap:12px; margin-top:12px; }
-    @media(min-width:960px){ .grid{ grid-template-columns:1.05fr .95fr; } }
+    @media(min-width:980px){ .grid{ grid-template-columns:1.03fr .97fr; } }
 
     .statusBig{
       margin-top:12px; padding:12px; border-radius:16px;
@@ -59,8 +59,7 @@
 
     .box{ border:1px solid var(--line); border-radius:16px; padding:12px; background:rgba(0,0,0,.12); }
     .cards{ display:grid; grid-template-columns:1fr; gap:10px; }
-    @media(min-width:720px){ .cards{ grid-template-columns:repeat(2,1fr); } }
-    @media(min-width:1020px){ .cards{ grid-template-columns:repeat(2,1fr); } }
+    @media(min-width:740px){ .cards{ grid-template-columns:repeat(2,1fr); } }
 
     .plan{
       border:1px solid var(--line); border-radius:16px; padding:12px;
@@ -71,19 +70,20 @@
     .badge{
       font-size:12px; padding:6px 10px; border-radius:999px;
       border:1px solid var(--line); color:var(--muted);
+      white-space:nowrap;
     }
     .badge.pop{ border-color:rgba(250,204,21,.55); color:var(--gold); }
     .price{ font-size:18px; font-weight:1200; }
     .list{ margin:0; padding-left:18px; color:var(--muted); font-size:13px; line-height:1.35; }
     .list li{ margin:4px 0; }
-    .k{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
-        font-size:12px; padding:2px 6px; border:1px solid var(--line); border-radius:8px; color:var(--muted);
-        background:rgba(0,0,0,.12);
-    }
     .actions2{ display:grid; grid-template-columns:1fr; gap:10px; }
     @media(min-width:560px){ .actions2{ grid-template-columns:1fr 1fr; } }
 
     .selectLine{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between; }
+    .k{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+        font-size:12px; padding:2px 6px; border:1px solid var(--line); border-radius:8px; color:var(--muted);
+        background:rgba(0,0,0,.12);
+    }
   </style>
 </head>
 
@@ -106,7 +106,10 @@
 
       <div>
         <h2>ℹ️ Paiement & Activation DIGIY</h2>
-        <p class="small">Effectue d'abord le paiement via <b>Wave</b>, puis confirme sur <b>WhatsApp</b>. (Cette page sait revenir automatiquement au planning)</p>
+        <p class="small">
+          Effectue d'abord le paiement via <b>Wave</b>, puis confirme sur <b>WhatsApp</b>.
+          (Cette page sait revenir automatiquement au planning)
+        </p>
       </div>
 
       <div class="statusBig warn" id="statusBig">
@@ -134,11 +137,13 @@
           <div class="hr"></div>
 
           <h2>💬 Confirmation WhatsApp</h2>
-          <p class="small">Après le paiement, envoie : ✅ le reçu Wave ✅ le module/pack choisi</p>
+          <p class="small">
+            Après le paiement, envoie : ✅ le reçu Wave ✅ le module/pack choisi
+          </p>
 
           <div class="hr"></div>
 
-          <div class="title" style="font-weight:1200;">📌 Résumé automatique</div>
+          <div style="font-weight:1200;">📌 Résumé automatique</div>
           <div class="small">
             📦 module: <span class="mono" id="sumModule">—</span><br/>
             📱 phone: <span class="mono" id="sumPhone">—</span><br/>
@@ -166,67 +171,142 @@
           <button class="btn bad" id="btnHelp">💬 Support WhatsApp</button>
 
           <div class="small" id="hint" style="margin-top:10px;"></div>
+
+          <div class="hr"></div>
+
+          <div class="small">
+            Astuce terrain : si tu reviens depuis le paiement, l’URL peut contenir
+            <span class="k">status=pending</span> pour afficher <b>EN ATTENTE</b> direct.
+          </div>
         </div>
 
         <!-- RIGHT: Modules & tarifs -->
         <div class="box">
           <h2>Choisis ton module PRO 🦅</h2>
-          <p class="small">Abonnement mensuel · 0% commission sur tes revenus · Tu gardes 100% de ce que tu gagnes</p>
-          <p class="small">✓ Paiement direct Wave ✓ Activation rapide ✓ Made in Sénégal</p>
+          <p class="small">
+            Abonnement · 0% commission sur tes revenus · Tu gardes 100% de ce que tu gagnes
+          </p>
+          <p class="small">
+            ✓ Paiement direct Wave ✓ Activation rapide ✓ Made in Sénégal
+          </p>
 
           <div class="hr"></div>
 
-          <h2>🧾 DIGIY POS PRO — Caisse Connectée</h2>
-          <p class="small">Gère ta boutique comme un PRO · 0% commission</p>
-
-          <div class="cards">
-            <div class="plan">
-              <div class="planHead">
-                <div>
-                  <div style="font-weight:1200;">💛 POS MENSUEL</div>
-                  <div class="small">Ventes illimitées · Gestion stock · Historique · Support WhatsApp</div>
+          <!-- RESTO PRO -->
+          <div class="plan">
+            <div class="planHead">
+              <div>
+                <div style="font-weight:1200;">🍽️ DIGIY RESTO PRO</div>
+                <div class="small">
+                  Gestion restaurant complète • Plan de salle • Commandes • KDS • Caisse • Offline
                 </div>
-                <span class="badge">Prix fixe</span>
               </div>
-              <div class="price">12,900 F / mois</div>
-              <button class="btn gold" data-choose="POS" data-plan="POS_MONTHLY" data-amount="12900">Choisir Mensuel</button>
+              <span class="badge pop">PRO</span>
             </div>
 
-            <div class="plan">
-              <div class="planHead">
-                <div>
-                  <div style="font-weight:1200;">💚 POS TRIMESTRIEL</div>
-                  <div class="small">Tous avantages MENSUEL + formation incluse</div>
+            <div class="small"><b>Par nombre de licences</b></div>
+
+            <div class="small">🥉 ESSENTIEL • 2 licences (15 tables)</div>
+            <div class="price">9,900 F / mois</div>
+            <button class="btn gold" data-choose="RESTO_PRO" data-plan="RESTO_PRO_ESSENTIEL" data-amount="9900">
+              Choisir ESSENTIEL
+            </button>
+
+            <div class="hr"></div>
+
+            <div class="small">🥈 STANDARD • 4 licences (30 tables)</div>
+            <div class="price">14,900 F / mois</div>
+            <button class="btn gold" data-choose="RESTO_PRO" data-plan="RESTO_PRO_STANDARD" data-amount="14900">
+              Choisir STANDARD
+            </button>
+
+            <div class="hr"></div>
+
+            <div class="small">🥇 PRO • 6 licences (45 tables)</div>
+            <div class="price">24,900 F / mois</div>
+            <button class="btn gold" data-choose="RESTO_PRO" data-plan="RESTO_PRO_FULL" data-amount="24900">
+              Choisir PRO
+            </button>
+
+            <ul class="list">
+              <li>Plan de salle interactif</li>
+              <li>Prise de commande multi-zones</li>
+              <li>Kitchen Display System (KDS)</li>
+              <li>Caisse + imprimante thermique</li>
+              <li>Mode hors ligne</li>
+              <li>✅ 0% commission</li>
+            </ul>
+          </div>
+
+          <div class="hr"></div>
+
+          <!-- DIGIY RESA -->
+          <div class="plan">
+            <div class="planHead">
+              <div>
+                <div style="font-weight:1200;">📅 DIGIY RÉSA</div>
+                <div class="small">
+                  Réservations restaurant • Planning temps réel • SMS auto • Gestion tables
                 </div>
-                <span class="badge">Économie 7%</span>
               </div>
-              <div class="price">36,000 F (12,000/mois)</div>
-              <button class="btn gold" data-choose="POS" data-plan="POS_QUARTER" data-amount="36000">Choisir Trimestriel</button>
+              <span class="badge">0% commission</span>
             </div>
 
-            <div class="plan">
-              <div class="planHead">
-                <div>
-                  <div style="font-weight:1200;">💙 POS SEMESTRIEL</div>
-                  <div class="small">Formation personnalisée + Saisie 50 produits OFFERTE</div>
+            <div class="small"><b>Par nombre de tables</b></div>
+
+            <button class="btn gold" data-choose="RESTO_RESA" data-plan="RESA_1_5" data-amount="9900">
+              🥉 1–5 tables — 9,900 F
+            </button>
+            <button class="btn gold" data-choose="RESTO_RESA" data-plan="RESA_6_9" data-amount="15000">
+              🥈 6–9 tables — 15,000 F
+            </button>
+            <button class="btn gold" data-choose="RESTO_RESA" data-plan="RESA_10_20" data-amount="25000">
+              🥇 10–20 tables — 25,000 F
+            </button>
+            <button class="btn gold" data-choose="RESTO_RESA" data-plan="RESA_21_30" data-amount="30000">
+              💎 21–30 tables — 30,000 F
+            </button>
+            <button class="btn gold" data-choose="RESTO_RESA" data-plan="RESA_30P" data-amount="50000">
+              👑 30+ tables — 50,000 F
+            </button>
+
+            <ul class="list">
+              <li>Réservations en ligne</li>
+              <li>Planning temps réel</li>
+              <li>Notifications SMS / WhatsApp</li>
+              <li>Gestion des tables</li>
+              <li>✅ 0% commission</li>
+            </ul>
+          </div>
+
+          <div class="hr"></div>
+
+          <!-- POS PRO -->
+          <div class="plan">
+            <div class="planHead">
+              <div>
+                <div style="font-weight:1200;">🧾 DIGIY POS PRO</div>
+                <div class="small">
+                  Caisse enregistreuse pro • Gestion stock • Ventes • Stats • Multi-utilisateurs
                 </div>
-                <span class="badge pop">⭐ POPULAIRE</span>
               </div>
-              <div class="price">68,000 F (11,333/mois)</div>
-              <button class="btn gold" data-choose="POS" data-plan="POS_SEMESTER" data-amount="68000">Choisir Semestriel</button>
+              <span class="badge pop">⭐ PRO</span>
             </div>
 
-            <div class="plan">
-              <div class="planHead">
-                <div>
-                  <div style="font-weight:1200;">💜 POS ANNUEL</div>
-                  <div class="small">Saisie 50 produits + Formation 2h + Support dédié inclus</div>
-                </div>
-                <span class="badge pop">🎁 MEILLEURE OFFRE</span>
-              </div>
-              <div class="price">125,000 F (10,417/mois)</div>
-              <button class="btn gold" data-choose="POS" data-plan="POS_YEAR" data-amount="125000">Choisir Annuel</button>
-            </div>
+            <div class="price">12,900 F / mois</div>
+            <button class="btn gold" data-choose="POS_PRO" data-plan="POS_PRO_MONTHLY" data-amount="12900">
+              Choisir POS PRO
+            </button>
+
+            <ul class="list">
+              <li>Caisse tactile intuitive</li>
+              <li>Gestion stock</li>
+              <li>Statistiques temps réel</li>
+              <li>Multi-utilisateurs + droits</li>
+              <li>Imprimante thermique 80mm</li>
+              <li>Mode hors ligne</li>
+              <li>✅ 0% commission</li>
+            </ul>
           </div>
 
           <div class="hr"></div>
@@ -234,6 +314,7 @@
           <h2>📦 Autres modules individuels</h2>
 
           <div class="cards">
+            <!-- DRIVER -->
             <div class="plan">
               <div class="planHead">
                 <div>
@@ -243,23 +324,23 @@
                 <span class="badge">Prix fixe</span>
               </div>
               <div class="price">9,900 F / mois</div>
-              <button class="btn gold" data-choose="DRIVER" data-plan="DRIVER_MONTHLY" data-amount="9900">Choisir DRIVER</button>
+              <button class="btn gold" data-choose="DRIVER" data-plan="DRIVER_MONTHLY" data-amount="9900">
+                Choisir DRIVER
+              </button>
             </div>
 
+            <!-- LOC (par logements) -->
             <div class="plan">
               <div class="planHead">
                 <div>
                   <div style="font-weight:1200;">🏠 DIGIY LOC</div>
-                  <div class="small">Location courte durée · Calendrier · Réservations en ligne · 0% commission</div>
+                  <div class="small">Location courte durée · Calendrier · Réservations · 0% commission</div>
                 </div>
                 <span class="badge">Par logements</span>
               </div>
               <div class="small">
-                1-5 logements : <b>9,900</b> F<br/>
-                6-9 logements : <b>15,000</b> F<br/>
-                10-20 logements : <b>25,000</b> F<br/>
-                21-30 logements : <b>30,000</b> F<br/>
-                30+ logements : <b>50,000</b> F
+                1–5 : <b>9,900</b> F · 6–9 : <b>15,000</b> F · 10–20 : <b>25,000</b> F<br/>
+                21–30 : <b>30,000</b> F · 30+ : <b>50,000</b> F
               </div>
               <div style="height:10px;"></div>
               <div class="row">
@@ -271,18 +352,22 @@
               </div>
             </div>
 
+            <!-- MARKET -->
             <div class="plan">
               <div class="planHead">
                 <div>
                   <div style="font-weight:1200;">🛒 DIGIY MARKET</div>
-                  <div class="small">Marketplace locale · Boutique en ligne · Gestion stock</div>
+                  <div class="small">Marketplace • Vente en ligne • Catalogue • Paiement mobile</div>
                 </div>
                 <span class="badge">Prix fixe</span>
               </div>
               <div class="price">12,900 F / mois</div>
-              <button class="btn gold" data-choose="MARKET" data-plan="MARKET_MONTHLY" data-amount="12900">Choisir MARKET</button>
+              <button class="btn gold" data-choose="MARKET" data-plan="MARKET_MONTHLY" data-amount="12900">
+                Choisir MARKET
+              </button>
             </div>
 
+            <!-- JOBS -->
             <div class="plan">
               <div class="planHead">
                 <div>
@@ -292,9 +377,12 @@
                 <span class="badge">Prix fixe</span>
               </div>
               <div class="price">7,900 F / mois</div>
-              <button class="btn gold" data-choose="JOBS" data-plan="JOBS_MONTHLY" data-amount="7900">Choisir JOBS</button>
+              <button class="btn gold" data-choose="JOBS" data-plan="JOBS_MONTHLY" data-amount="7900">
+                Choisir JOBS
+              </button>
             </div>
 
+            <!-- BUILD -->
             <div class="plan">
               <div class="planHead">
                 <div>
@@ -304,12 +392,13 @@
                 <span class="badge">Prix fixe</span>
               </div>
               <div class="price">9,900 F / mois</div>
-              <button class="btn gold" data-choose="BUILD" data-plan="BUILD_MONTHLY" data-amount="9900">Choisir BUILD</button>
+              <button class="btn gold" data-choose="BUILD" data-plan="BUILD_MONTHLY" data-amount="9900">
+                Choisir BUILD
+              </button>
             </div>
           </div>
 
           <div class="hr"></div>
-
           <div class="small">© DIGIYLYFE — Made in Sénégal 🇸🇳 · 0% commission · Paiement direct · Souveraineté digitale</div>
         </div>
       </div>
@@ -323,7 +412,7 @@
       // =============================
       const SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
       const SUPABASE_ANON_KEY =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc3Ftd2pqdXNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA";
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc3Ftd2pqdHNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA";
       const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
       const SUPPORT_WA = "+221771342889"; // JB BEAUVILLE
@@ -340,6 +429,7 @@
       }
       function fmt(n){
         n = Number(n||0);
+        if(!isFinite(n) || n<=0) return "—";
         return n.toLocaleString("fr-FR");
       }
 
@@ -347,12 +437,15 @@
       const from = (qs("from") || "").trim();
       const slug = (qs("slug") || "").trim();
       const phone = (qs("phone") || "").trim();
-      // module (if guard sends LOC) else —
-      let module = (qs("module") || "").trim();
-      let status = (qs("status") || "").trim().toLowerCase(); // pending etc
 
-      // Selected choice
-      let chosenModule = (qs("m") || module || "").trim(); // allow m=...
+      // module passed by guard (ex: LOC). If absent, we'll use chosenModule.
+      let module = (qs("module") || "").trim();
+
+      // optional status from URL (pending/active)
+      let status = (qs("status") || "").trim().toLowerCase();
+
+      // Selected choice (persistable)
+      let chosenModule = (qs("m") || module || "").trim();
       let chosenPlan = (qs("plan") || "").trim();
       let chosenAmount = (qs("amount") || "").trim();
 
@@ -361,12 +454,16 @@
       $("pillPhone").textContent = phone || "—";
       $("pillSlug").textContent = slug || "—";
 
-      $("sumModule").textContent = chosenModule || "—";
-      $("sumPhone").textContent = phone || "—";
-      $("sumSlug").textContent = slug || "—";
-      $("sumPlan").textContent = chosenPlan || "—";
-      $("sumAmount").textContent = chosenAmount ? (fmt(chosenAmount) + " F") : "—";
-      $("pillAmount").textContent = chosenAmount ? (fmt(chosenAmount) + " F") : "—";
+      function syncSummary(){
+        $("sumModule").textContent = chosenModule || "—";
+        $("sumPhone").textContent = phone || "—";
+        $("sumSlug").textContent = slug || "—";
+        $("sumPlan").textContent = chosenPlan || "—";
+        $("sumAmount").textContent = chosenAmount ? (fmt(chosenAmount) + " F") : "—";
+        $("pillAmount").textContent = chosenAmount ? (fmt(chosenAmount) + " F") : "—";
+        $("pillModule").textContent = chosenModule || "—";
+      }
+      syncSummary();
 
       function setHint(msg){ $("hint").textContent = msg || ""; }
       function setBig(text, tone, tagText){
@@ -414,15 +511,10 @@
         setQS("plan", chosenPlan);
         setQS("amount", chosenAmount);
 
-        $("pillModule").textContent = chosenModule || "—";
-        $("sumModule").textContent = chosenModule || "—";
-        $("sumPlan").textContent = chosenPlan || "—";
-        $("sumAmount").textContent = chosenAmount ? (fmt(chosenAmount) + " F") : "—";
-        $("pillAmount").textContent = chosenAmount ? (fmt(chosenAmount) + " F") : "—";
+        // if guard didn't provide module, set it for status check
+        module = module || chosenModule;
 
-        // If guard didn't provide module, set module for status check to chosenModule
-        module = chosenModule;
-
+        syncSummary();
         setHint("✅ Choix enregistré. Clique “Payer maintenant”.");
       }
 
@@ -494,7 +586,6 @@ Merci. — DIGIY`;
       };
 
       $("btnBack").onclick = safeBack;
-
       $("btnRefresh").onclick = ()=> checkStatus(true);
 
       async function checkStatus(manual){
@@ -515,10 +606,9 @@ Merci. — DIGIY`;
           return;
         }
 
-        // Module à checker : celui du guard sinon celui choisi
+        // Module to check: guard module if present, else chosen module, else LOC
         const m = (module || chosenModule || "LOC").toUpperCase();
 
-        // Si pending (manuel), on laisse le recheck possible (peut passer actif)
         try{
           const { data, error } = await sb.rpc("is_module_active", { p_phone: phone, p_module: m });
           if(error) throw error;
@@ -552,7 +642,7 @@ Merci. — DIGIY`;
         }
       }
 
-      // Auto-check
+      // Auto-check on load
       checkStatus(false);
     })();
   </script>
