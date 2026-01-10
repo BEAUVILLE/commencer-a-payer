@@ -1,619 +1,560 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8">
-  <title>Tarifs PRO DIGIY — 0% Commission</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#16a34a">
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <title>DIGIY PRO • Paiement & Activation</title>
+  <meta name="theme-color" content="#16a34a"/>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     :root{
-      --green:#16a34a;
+      --bg:#061b14; --card:#0b2a1f; --line:rgba(255,255,255,.14);
+      --text:#eafff1; --muted:rgba(234,255,241,.75);
+      --ok:#22c55e; --warn:#f59e0b; --bad:#ef4444;
+      --radius:18px; --shadow:0 18px 50px rgba(0,0,0,.35);
       --gold:#facc15;
-      --orange:#f97316;
-      --bg:#f8fafc;
-      --card:#ffffff;
-      --text:#0f172a;
-      --muted:#64748b;
-      --line:#e2e8f0;
-      --soft:#f1f5f9;
-      --ok:#22c55e;
-      --bad:#ef4444;
-      --sky:#0ea5e9;
     }
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{
-      font-family:system-ui,sans-serif;
-      background:linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
-      min-height:100vh;
-      padding:20px;
-      color:var(--text);
-    }
-    .container{max-width:1200px;margin:auto}
+    *{box-sizing:border-box}
+    body{ margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial; background:var(--bg); color:var(--text); }
+    .wrap{ max-width:1040px; margin:0 auto; padding:16px; }
+    .card{ background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:14px; box-shadow:var(--shadow); }
+    .row{ display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
+    h1{ margin:0; font-size:20px; font-weight:1100; letter-spacing:.2px; }
+    h2{ margin:0; font-size:16px; font-weight:1100; }
+    p{ margin:8px 0 0; color:var(--muted); line-height:1.35; }
+    .pill{ display:inline-flex; gap:8px; align-items:center; padding:8px 10px; border:1px solid var(--line); border-radius:999px; }
+    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace; }
+    .small{ font-size:13px; color:var(--muted); line-height:1.35; }
+    .hr{ height:1px; background:var(--line); margin:12px 0; }
+    .grid{ display:grid; grid-template-columns:1fr; gap:12px; margin-top:12px; }
+    @media(min-width:960px){ .grid{ grid-template-columns:1.05fr .95fr; } }
 
-    header{
-      background:#ffffff;
-      padding:20px 28px;
-      border-radius:20px;
-      box-shadow:0 8px 24px rgba(0,0,0,.08);
-      margin-bottom:18px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:16px;
-      flex-wrap:wrap;
+    .statusBig{
+      margin-top:12px; padding:12px; border-radius:16px;
+      border:1px solid var(--line);
+      display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+      font-weight:1100;
     }
-    .logo-section{display:flex;align-items:center;gap:14px}
-    .logo{
-      width:56px;height:56px;border-radius:18px;
-      background:linear-gradient(135deg,var(--gold),var(--orange));
-      display:flex;align-items:center;justify-content:center;
-      font-size:28px;
-      box-shadow:0 8px 20px rgba(249,115,22,0.25);
-    }
-    h1{
-      font-size:28px;
-      font-weight:900;
-      background:linear-gradient(135deg,var(--green),var(--gold));
-      -webkit-background-clip:text;
-      -webkit-text-fill-color:transparent;
-      margin:0;
-    }
-    .tagline{color:var(--muted);font-size:14px;font-weight:700;margin-top:4px}
+    .statusBig.ok{ border-color: rgba(34,197,94,.55); }
+    .statusBig.warn{ border-color: rgba(245,158,11,.55); }
+    .statusBig.bad{ border-color: rgba(239,68,68,.55); }
 
-    .nav{display:flex;gap:10px;flex-wrap:wrap}
+    .tag{ font-size:12px; padding:6px 10px; border-radius:999px; border:1px solid var(--line); color:var(--muted); }
+    .tag.ok{ color: var(--ok); border-color: rgba(34,197,94,.45); }
+    .tag.warn{ color: var(--warn); border-color: rgba(245,158,11,.45); }
+    .tag.bad{ color: var(--bad); border-color: rgba(239,68,68,.45); }
+
     .btn{
-      padding:12px 20px;
-      border-radius:999px;
-      text-decoration:none;
-      font-weight:900;
-      font-size:14px;
-      letter-spacing:.06em;
-      transition:all .2s;
-      display:inline-block;
-      border:2px solid var(--line);
-      background:#fff;
-      color:#0f172a;
-      cursor:pointer;
-      user-select:none;
+      border:1px solid var(--line); background:transparent; color:var(--text);
+      padding:12px 14px; border-radius:16px; cursor:pointer; font-weight:1100;
+      min-height:52px; width:100%;
     }
-    .btn:hover{border-color:var(--green)}
-    .btn-primary{
-      background:linear-gradient(135deg,var(--green),#22c55e);
-      color:#fff;
-      border-color:transparent;
-      box-shadow:0 10px 24px rgba(22,163,74,.25);
-    }
-    .btn-primary:hover{transform:translateY(-1px)}
-    .btn-sky{
-      background:linear-gradient(135deg,var(--sky),#22d3ee);
-      color:#042f2e;
-      border-color:transparent;
-      box-shadow:0 10px 24px rgba(14,165,233,.18);
-    }
+    .btn:disabled{ opacity:.55; cursor:not-allowed; }
+    .btn.ok{ border-color: rgba(34,197,94,.55); }
+    .btn.warn{ border-color: rgba(245,158,11,.55); }
+    .btn.bad{ border-color: rgba(239,68,68,.55); }
+    .btn.gold{ border-color: rgba(250,204,21,.65); }
 
-    .hero{
-      background:#ffffff;
-      padding:34px 28px;
-      border-radius:24px;
-      box-shadow:0 12px 32px rgba(0,0,0,.08);
-      text-align:center;
-      margin-bottom:22px;
-    }
-    .hero h2{
-      font-size:34px;
-      font-weight:900;
-      color:#0f172a;
-      margin-bottom:12px;
-      line-height:1.2;
-    }
-    .hero h2 span{
-      background:linear-gradient(135deg,var(--green),var(--gold));
-      -webkit-background-clip:text;
-      -webkit-text-fill-color:transparent;
-    }
-    .hero p{
-      font-size:18px;
-      color:var(--muted);
-      margin-bottom:18px;
-      font-weight:600;
-      line-height:1.6;
-    }
-    .hero-pills{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-    .pill{
-      background:var(--soft);
-      padding:10px 18px;
-      border-radius:999px;
-      font-size:14px;
-      font-weight:800;
-      color:#475569;
-      border:2px solid var(--line);
-    }
+    .box{ border:1px solid var(--line); border-radius:16px; padding:12px; background:rgba(0,0,0,.12); }
+    .cards{ display:grid; grid-template-columns:1fr; gap:10px; }
+    @media(min-width:720px){ .cards{ grid-template-columns:repeat(2,1fr); } }
+    @media(min-width:1020px){ .cards{ grid-template-columns:repeat(2,1fr); } }
 
-    .box{
-      background:#ffffff;
-      border-radius:20px;
-      box-shadow:0 8px 24px rgba(0,0,0,.08);
-      border:2px dashed var(--green);
-      padding:18px;
-      margin:0 0 20px;
+    .plan{
+      border:1px solid var(--line); border-radius:16px; padding:12px;
+      background:rgba(0,0,0,.10);
+      display:flex; flex-direction:column; gap:10px;
     }
-    .box h3{font-size:18px;font-weight:900;color:#065f46;margin-bottom:10px;text-align:center}
-    .box p{color:#334155;font-weight:700;line-height:1.6;text-align:center}
-    .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin-top:14px}
+    .planHead{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+    .badge{
+      font-size:12px; padding:6px 10px; border-radius:999px;
+      border:1px solid var(--line); color:var(--muted);
+    }
+    .badge.pop{ border-color:rgba(250,204,21,.55); color:var(--gold); }
+    .price{ font-size:18px; font-weight:1200; }
+    .list{ margin:0; padding-left:18px; color:var(--muted); font-size:13px; line-height:1.35; }
+    .list li{ margin:4px 0; }
+    .k{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+        font-size:12px; padding:2px 6px; border:1px solid var(--line); border-radius:8px; color:var(--muted);
+        background:rgba(0,0,0,.12);
+    }
+    .actions2{ display:grid; grid-template-columns:1fr; gap:10px; }
+    @media(min-width:560px){ .actions2{ grid-template-columns:1fr 1fr; } }
 
-    .subcard{
-      border-radius:16px;
-      padding:16px;
-      background:#f8fafc;
-      border:2px solid var(--line);
-    }
-    .subcard.green{background:#f0fdf4;border-color:rgba(22,163,74,.6)}
-    .subcard.sky{background:#ecfeff;border-color:rgba(14,165,233,.6)}
-
-    .big-number{
-      font-size:24px;font-weight:1000;color:var(--green);
-      letter-spacing:.4px;
-    }
-    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;}
-    .mini{
-      font-size:13px;color:var(--muted);font-weight:700;margin-top:8px;
-      text-align:center;
-    }
-
-    .section-title{
-      font-size:24px;
-      font-weight:900;
-      margin:34px 0 18px;
-      text-align:center;
-      color:#0f172a;
-    }
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
-      gap:20px;
-      margin-bottom:30px;
-    }
-    .module-card{
-      background:#ffffff;
-      padding:28px;
-      border-radius:20px;
-      box-shadow:0 8px 24px rgba(0,0,0,.08);
-      border:3px solid var(--line);
-      transition:all .3s;
-      cursor:pointer;
-      position:relative;
-    }
-    .module-card:hover{
-      transform:translateY(-4px);
-      box-shadow:0 16px 40px rgba(0,0,0,.12);
-      border-color:var(--green);
-    }
-    .module-card.featured{
-      border-color:var(--gold);
-      background:linear-gradient(135deg, #fffbeb 0%, #ffffff 100%);
-    }
-    .featured-badge{
-      position:absolute;
-      top:16px;
-      right:16px;
-      background:linear-gradient(135deg,var(--gold),#f59e0b);
-      color:#052e16;
-      padding:6px 12px;
-      border-radius:999px;
-      font-size:11px;
-      font-weight:900;
-      letter-spacing:.08em;
-    }
-    .module-icon{font-size:48px;margin-bottom:16px}
-    .module-name{font-size:22px;font-weight:900;margin-bottom:8px;color:#0f172a}
-    .module-desc{
-      color:var(--muted);
-      line-height:1.6;
-      font-weight:600;
-      font-size:14px;
-      margin-bottom:16px;
-      min-height:60px;
-    }
-    .price-section{
-      background:#f8fafc;
-      padding:16px;
-      border-radius:12px;
-      margin-bottom:16px;
-    }
-    .price-label{font-size:12px;color:var(--muted);font-weight:700;margin-bottom:6px}
-    .price-amount{font-size:32px;font-weight:900;color:var(--green);line-height:1}
-    .price-period{font-size:14px;color:var(--muted);font-weight:700}
-
-    .paliers{
-      background:#f1f5f9;
-      padding:12px;
-      border-radius:10px;
-      margin-bottom:16px;
-    }
-    .palier-title{font-size:12px;font-weight:800;color:#475569;margin-bottom:8px}
-    .palier-option{
-      padding:8px 12px;
-      background:#ffffff;
-      border-radius:8px;
-      margin-bottom:6px;
-      font-size:13px;
-      font-weight:800;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      border:2px solid transparent;
-      cursor:pointer;
-      transition:all .2s;
-    }
-    .palier-option:hover{border-color:var(--green);background:#f0fdf4}
-    .palier-option:last-child{margin-bottom:0}
-
-    .cta-btn{
-      width:100%;
-      padding:14px;
-      background:linear-gradient(135deg,var(--green),#22c55e);
-      color:#fff;
-      border:none;
-      border-radius:12px;
-      font-weight:900;
-      font-size:15px;
-      cursor:pointer;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      box-shadow:0 8px 20px rgba(22,163,74,0.3);
-      transition:all .2s;
-    }
-    .cta-btn:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(22,163,74,0.4)}
-
-    .pack-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
-    .economy-badge{
-      display:inline-block;
-      background:#dcfce7;
-      color:#166534;
-      padding:4px 10px;
-      border-radius:999px;
-      font-size:11px;
-      font-weight:900;
-      margin-left:8px;
-    }
-
-    footer{
-      text-align:center;
-      padding:40px 20px;
-      color:var(--muted);
-      font-weight:700;
-      font-size:14px;
-      line-height:1.6;
-    }
-
-    @media(max-width:600px){
-      .hero h2{font-size:28px}
-      .grid{grid-template-columns:1fr}
-      header{padding:16px}
-    }
+    .selectLine{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between; }
   </style>
 </head>
 
 <body>
-<div class="container">
-  <header>
-    <div class="logo-section">
-      <div class="logo">🦅</div>
+  <div class="wrap">
+    <div class="card">
+      <div class="row">
+        <div>
+          <h1>DIGIY PRO</h1>
+          <p class="small"><b>0% Commission</b> · Paiement Direct</p>
+        </div>
+        <div class="row">
+          <span class="pill">📦 module: <span class="mono" id="pillModule">—</span></span>
+          <span class="pill">📱 phone: <span class="mono" id="pillPhone">—</span></span>
+          <span class="pill">🏷️ slug: <span class="mono" id="pillSlug">—</span></span>
+        </div>
+      </div>
+
+      <div class="hr"></div>
+
       <div>
-        <h1>DIGIY PRO</h1>
-        <div class="tagline">0% Commission · Paiement Direct</div>
-      </div>
-    </div>
-
-    <div class="nav">
-      <a href="https://digiylyfe.com" class="btn">← Retour DIGIY Hub</a>
-      <a href="#" id="btnBack" class="btn">↩️ Revenir</a>
-      <a href="#" id="btnPaid" class="btn btn-sky">✅ J’ai payé (WhatsApp)</a>
-    </div>
-  </header>
-
-  <!-- 🟢 INFO PAIEMENT + WHATSAPP + RÉSUMÉ AUTO -->
-  <div class="box">
-    <h3>ℹ️ Paiement & Activation DIGIY</h3>
-    <p>
-      Effectue d'abord le paiement via <strong>Wave</strong>, puis confirme sur <strong>WhatsApp</strong>.
-      <br><span class="mono" style="font-size:12px;color:var(--muted);font-weight:800;">(Cette page sait revenir automatiquement au planning)</span>
-    </p>
-
-    <div class="grid2">
-      <!-- PAIEMENT WAVE -->
-      <div class="subcard green">
-        <h4 style="font-size:16px;font-weight:1000;color:#065f46;margin-bottom:10px;text-align:center;">💳 Paiement via Wave</h4>
-        <p style="font-size:14px;font-weight:800;color:#064e3b;text-align:center;">
-          Ouvre Wave et envoie le montant à :
-        </p>
-
-        <div style="margin:14px 0;padding:14px;background:#dcfce7;border-radius:12px;border:2px solid rgba(22,163,74,.6);text-align:center;">
-          <div style="font-size:18px;font-weight:1000;color:#022c22;margin-bottom:6px;">📱 JB BEAUVILLE</div>
-          <div class="big-number">+221 77 134 28 89</div>
-        </div>
-
-        <div class="mini">Montant = prix du module choisi</div>
+        <h2>ℹ️ Paiement & Activation DIGIY</h2>
+        <p class="small">Effectue d'abord le paiement via <b>Wave</b>, puis confirme sur <b>WhatsApp</b>. (Cette page sait revenir automatiquement au planning)</p>
       </div>
 
-      <!-- CONFIRMATION WHATSAPP + RÉSUMÉ -->
-      <div class="subcard sky">
-        <h4 style="font-size:16px;font-weight:1000;color:#075985;margin-bottom:8px;text-align:center;">💬 Confirmation WhatsApp</h4>
+      <div class="statusBig warn" id="statusBig">
+        <div id="statusText">⏳ Vérification du statut…</div>
+        <span class="tag warn" id="tag">EN COURS</span>
+      </div>
 
-        <div style="background:#cffafe;border-radius:12px;padding:12px;border:2px solid rgba(14,165,233,.35);">
-          <div style="font-weight:1000;color:#022c22;text-align:center;">📌 Résumé automatique</div>
-          <div style="margin-top:8px;font-size:13px;font-weight:900;color:#0f172a;line-height:1.7;">
-            <div>📦 module: <span class="mono" id="sumModule">—</span></div>
-            <div>📱 phone: <span class="mono" id="sumPhone">—</span></div>
-            <div>🏷️ slug: <span class="mono" id="sumSlug">—</span></div>
+      <div class="grid">
+        <!-- LEFT: Paiement + résumé -->
+        <div class="box">
+          <h2>💳 Paiement via Wave</h2>
+          <p class="small">Ouvre Wave et envoie le montant à :</p>
+
+          <div class="hr"></div>
+
+          <div class="selectLine">
+            <div>
+              <div style="font-weight:1200;">📱 JB BEAUVILLE</div>
+              <div class="mono" style="font-weight:1100;">+221 77 134 28 89</div>
+              <div class="small">Montant = prix du module choisi</div>
+            </div>
+            <div class="pill">Montant: <span class="mono" id="pillAmount">—</span></div>
           </div>
+
+          <div class="hr"></div>
+
+          <h2>💬 Confirmation WhatsApp</h2>
+          <p class="small">Après le paiement, envoie : ✅ le reçu Wave ✅ le module/pack choisi</p>
+
+          <div class="hr"></div>
+
+          <div class="title" style="font-weight:1200;">📌 Résumé automatique</div>
+          <div class="small">
+            📦 module: <span class="mono" id="sumModule">—</span><br/>
+            📱 phone: <span class="mono" id="sumPhone">—</span><br/>
+            🏷️ slug: <span class="mono" id="sumSlug">—</span><br/>
+            🧾 plan: <span class="mono" id="sumPlan">—</span><br/>
+            💰 montant: <span class="mono" id="sumAmount">—</span>
+          </div>
+
+          <div class="hr"></div>
+
+          <div class="actions2">
+            <button class="btn gold" id="btnPayNow">⚡ Payer maintenant (WhatsApp)</button>
+            <button class="btn warn" id="btnIpaid">✅ J’ai payé (mettre EN ATTENTE)</button>
+          </div>
+
+          <div style="height:10px;"></div>
+
+          <div class="actions2">
+            <button class="btn warn" id="btnRefresh">🔄 Rafraîchir statut</button>
+            <button class="btn ok" id="btnBack" disabled>✅ Retour au planning</button>
+          </div>
+
+          <div style="height:10px;"></div>
+
+          <button class="btn bad" id="btnHelp">💬 Support WhatsApp</button>
+
+          <div class="small" id="hint" style="margin-top:10px;"></div>
         </div>
 
-        <div style="height:10px;"></div>
+        <!-- RIGHT: Modules & tarifs -->
+        <div class="box">
+          <h2>Choisis ton module PRO 🦅</h2>
+          <p class="small">Abonnement mensuel · 0% commission sur tes revenus · Tu gardes 100% de ce que tu gagnes</p>
+          <p class="small">✓ Paiement direct Wave ✓ Activation rapide ✓ Made in Sénégal</p>
 
-        <p style="font-size:14px;font-weight:800;color:#0f172a;line-height:1.6;text-align:center;">
-          Après le paiement, envoie :
-          <br>✅ le <strong>reçu Wave</strong>
-          <br>✅ le <strong>module/pack</strong> choisi
-        </p>
+          <div class="hr"></div>
 
-        <div style="text-align:center;margin-top:10px;">
-          <a class="btn btn-primary" id="btnOpenWA" href="#" style="display:inline-block;">Ouvrir WhatsApp</a>
+          <h2>🧾 DIGIY POS PRO — Caisse Connectée</h2>
+          <p class="small">Gère ta boutique comme un PRO · 0% commission</p>
+
+          <div class="cards">
+            <div class="plan">
+              <div class="planHead">
+                <div>
+                  <div style="font-weight:1200;">💛 POS MENSUEL</div>
+                  <div class="small">Ventes illimitées · Gestion stock · Historique · Support WhatsApp</div>
+                </div>
+                <span class="badge">Prix fixe</span>
+              </div>
+              <div class="price">12,900 F / mois</div>
+              <button class="btn gold" data-choose="POS" data-plan="POS_MONTHLY" data-amount="12900">Choisir Mensuel</button>
+            </div>
+
+            <div class="plan">
+              <div class="planHead">
+                <div>
+                  <div style="font-weight:1200;">💚 POS TRIMESTRIEL</div>
+                  <div class="small">Tous avantages MENSUEL + formation incluse</div>
+                </div>
+                <span class="badge">Économie 7%</span>
+              </div>
+              <div class="price">36,000 F (12,000/mois)</div>
+              <button class="btn gold" data-choose="POS" data-plan="POS_QUARTER" data-amount="36000">Choisir Trimestriel</button>
+            </div>
+
+            <div class="plan">
+              <div class="planHead">
+                <div>
+                  <div style="font-weight:1200;">💙 POS SEMESTRIEL</div>
+                  <div class="small">Formation personnalisée + Saisie 50 produits OFFERTE</div>
+                </div>
+                <span class="badge pop">⭐ POPULAIRE</span>
+              </div>
+              <div class="price">68,000 F (11,333/mois)</div>
+              <button class="btn gold" data-choose="POS" data-plan="POS_SEMESTER" data-amount="68000">Choisir Semestriel</button>
+            </div>
+
+            <div class="plan">
+              <div class="planHead">
+                <div>
+                  <div style="font-weight:1200;">💜 POS ANNUEL</div>
+                  <div class="small">Saisie 50 produits + Formation 2h + Support dédié inclus</div>
+                </div>
+                <span class="badge pop">🎁 MEILLEURE OFFRE</span>
+              </div>
+              <div class="price">125,000 F (10,417/mois)</div>
+              <button class="btn gold" data-choose="POS" data-plan="POS_YEAR" data-amount="125000">Choisir Annuel</button>
+            </div>
+          </div>
+
+          <div class="hr"></div>
+
+          <h2>📦 Autres modules individuels</h2>
+
+          <div class="cards">
+            <div class="plan">
+              <div class="planHead">
+                <div>
+                  <div style="font-weight:1200;">🚗 DIGIY DRIVER</div>
+                  <div class="small">VTC sans commission · Paiement direct aux chauffeurs</div>
+                </div>
+                <span class="badge">Prix fixe</span>
+              </div>
+              <div class="price">9,900 F / mois</div>
+              <button class="btn gold" data-choose="DRIVER" data-plan="DRIVER_MONTHLY" data-amount="9900">Choisir DRIVER</button>
+            </div>
+
+            <div class="plan">
+              <div class="planHead">
+                <div>
+                  <div style="font-weight:1200;">🏠 DIGIY LOC</div>
+                  <div class="small">Location courte durée · Calendrier · Réservations en ligne · 0% commission</div>
+                </div>
+                <span class="badge">Par logements</span>
+              </div>
+              <div class="small">
+                1-5 logements : <b>9,900</b> F<br/>
+                6-9 logements : <b>15,000</b> F<br/>
+                10-20 logements : <b>25,000</b> F<br/>
+                21-30 logements : <b>30,000</b> F<br/>
+                30+ logements : <b>50,000</b> F
+              </div>
+              <div style="height:10px;"></div>
+              <div class="row">
+                <button class="btn gold" data-choose="LOC" data-plan="LOC_1_5" data-amount="9900">1–5</button>
+                <button class="btn gold" data-choose="LOC" data-plan="LOC_6_9" data-amount="15000">6–9</button>
+                <button class="btn gold" data-choose="LOC" data-plan="LOC_10_20" data-amount="25000">10–20</button>
+                <button class="btn gold" data-choose="LOC" data-plan="LOC_21_30" data-amount="30000">21–30</button>
+                <button class="btn gold" data-choose="LOC" data-plan="LOC_30P" data-amount="50000">30+</button>
+              </div>
+            </div>
+
+            <div class="plan">
+              <div class="planHead">
+                <div>
+                  <div style="font-weight:1200;">🛒 DIGIY MARKET</div>
+                  <div class="small">Marketplace locale · Boutique en ligne · Gestion stock</div>
+                </div>
+                <span class="badge">Prix fixe</span>
+              </div>
+              <div class="price">12,900 F / mois</div>
+              <button class="btn gold" data-choose="MARKET" data-plan="MARKET_MONTHLY" data-amount="12900">Choisir MARKET</button>
+            </div>
+
+            <div class="plan">
+              <div class="planHead">
+                <div>
+                  <div style="font-weight:1200;">💼 DIGIY JOBS</div>
+                  <div class="small">Emploi & recrutement · Offres · CV</div>
+                </div>
+                <span class="badge">Prix fixe</span>
+              </div>
+              <div class="price">7,900 F / mois</div>
+              <button class="btn gold" data-choose="JOBS" data-plan="JOBS_MONTHLY" data-amount="7900">Choisir JOBS</button>
+            </div>
+
+            <div class="plan">
+              <div class="planHead">
+                <div>
+                  <div style="font-weight:1200;">🏗️ DIGIY BUILD</div>
+                  <div class="small">Services construction · Devis · Planning</div>
+                </div>
+                <span class="badge">Prix fixe</span>
+              </div>
+              <div class="price">9,900 F / mois</div>
+              <button class="btn gold" data-choose="BUILD" data-plan="BUILD_MONTHLY" data-amount="9900">Choisir BUILD</button>
+            </div>
+          </div>
+
+          <div class="hr"></div>
+
+          <div class="small">© DIGIYLYFE — Made in Sénégal 🇸🇳 · 0% commission · Paiement direct · Souveraineté digitale</div>
         </div>
-
-        <div class="mini">Activation rapide après vérification du paiement.</div>
       </div>
     </div>
   </div>
 
-  <div class="hero">
-    <h2>Choisis ton <span>module PRO</span> 🦅</h2>
-    <p>
-      Abonnement mensuel · 0% commission sur tes revenus<br>
-      Tu gardes 100% de ce que tu gagnes
-    </p>
-    <div class="hero-pills">
-      <div class="pill">✓ Paiement direct Wave</div>
-      <div class="pill">✓ Activation rapide</div>
-      <div class="pill">✓ Made in Sénégal</div>
-    </div>
-  </div>
+  <script>
+    (function(){
+      // =============================
+      // SUPABASE (statut)
+      // =============================
+      const SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
+      const SUPABASE_ANON_KEY =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc3Ftd2pqdXNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA";
+      const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  <!-- ========================================== -->
-  <!-- 🧾 DIGIY POS PRO -->
-  <!-- ========================================== -->
-  <div class="section-title">🧾 DIGIY POS PRO — Caisse Connectée</div>
-  <p style="text-align:center;color:var(--muted);font-weight:800;margin-bottom:24px;">
-    Gère ta boutique comme un PRO · 0% commission
-  </p>
+      const SUPPORT_WA = "+221771342889"; // JB BEAUVILLE
+      const $ = (id)=>document.getElementById(id);
 
-  <div class="grid">
-    <div class="module-card" onclick="selectModule('pos_monthly', 12900, 'DIGIY POS PRO MENSUEL')">
-      <div class="module-icon">💛</div>
-      <div class="module-name">POS MENSUEL</div>
-      <div class="module-desc">Ventes illimitées · Gestion stock · Historique · Support WhatsApp</div>
-      <div class="price-section">
-        <div class="price-label">Prix fixe</div>
-        <div class="price-amount">12,900 F<span class="price-period">/mois</span></div>
-      </div>
-      <button class="cta-btn">Choisir Mensuel</button>
-    </div>
+      function qs(name){
+        try{ return new URL(location.href).searchParams.get(name) || ""; }catch(_){ return ""; }
+      }
+      function setQS(name, value){
+        const u = new URL(location.href);
+        if(value === null || value === undefined || value === "") u.searchParams.delete(name);
+        else u.searchParams.set(name, value);
+        history.replaceState({}, "", u.toString());
+      }
+      function fmt(n){
+        n = Number(n||0);
+        return n.toLocaleString("fr-FR");
+      }
 
-    <div class="module-card" onclick="selectModule('pos_quarterly', 36000, 'DIGIY POS PRO TRIMESTRIEL')">
-      <div class="module-icon">💚</div>
-      <div class="module-name">POS TRIMESTRIEL</div>
-      <div class="module-desc">Tous avantages MENSUEL + formation incluse</div>
-      <div class="price-section">
-        <div class="price-label">3 mois · Économie 7%</div>
-        <div class="price-amount">36,000 F<span class="price-period"> (12,000/mois)</span></div>
-      </div>
-      <button class="cta-btn">Choisir Trimestriel</button>
-    </div>
+      // Params from guard
+      const from = (qs("from") || "").trim();
+      const slug = (qs("slug") || "").trim();
+      const phone = (qs("phone") || "").trim();
+      // module (if guard sends LOC) else —
+      let module = (qs("module") || "").trim();
+      let status = (qs("status") || "").trim().toLowerCase(); // pending etc
 
-    <div class="module-card featured" onclick="selectModule('pos_semestrial', 68000, 'DIGIY POS PRO SEMESTRIEL')">
-      <div class="featured-badge">⭐ POPULAIRE</div>
-      <div class="module-icon">💙</div>
-      <div class="module-name">POS SEMESTRIEL</div>
-      <div class="module-desc">Formation personnalisée + Saisie 50 produits OFFERTE</div>
-      <div class="price-section">
-        <div class="price-label">6 mois · Économie 12%</div>
-        <div class="price-amount">68,000 F<span class="price-period"> (11,333/mois)</span></div>
-      </div>
-      <button class="cta-btn">Choisir Semestriel</button>
-    </div>
+      // Selected choice
+      let chosenModule = (qs("m") || module || "").trim(); // allow m=...
+      let chosenPlan = (qs("plan") || "").trim();
+      let chosenAmount = (qs("amount") || "").trim();
 
-    <div class="module-card" onclick="selectModule('pos_annual', 125000, 'DIGIY POS PRO ANNUEL')" style="border-color:var(--gold);">
-      <div class="featured-badge" style="background:linear-gradient(135deg,#16a34a,#22c55e);color:#fff;">🎁 MEILLEURE OFFRE</div>
-      <div class="module-icon">💜</div>
-      <div class="module-name">POS ANNUEL</div>
-      <div class="module-desc">Saisie 50 produits + Formation 2h + Support dédié inclus</div>
-      <div class="price-section">
-        <div class="price-label">12 mois · Économie 19%</div>
-        <div class="price-amount">125,000 F<span class="price-period"> (10,417/mois)</span></div>
-      </div>
-      <button class="cta-btn">Choisir Annuel</button>
-    </div>
-  </div>
+      // UI init
+      $("pillModule").textContent = chosenModule || "—";
+      $("pillPhone").textContent = phone || "—";
+      $("pillSlug").textContent = slug || "—";
 
-  <!-- ========================================== -->
-  <!-- AUTRES MODULES (extrait utile : LOC / DRIVER + reste) -->
-  <!-- ========================================== -->
-  <div class="section-title">📦 Autres modules individuels</div>
+      $("sumModule").textContent = chosenModule || "—";
+      $("sumPhone").textContent = phone || "—";
+      $("sumSlug").textContent = slug || "—";
+      $("sumPlan").textContent = chosenPlan || "—";
+      $("sumAmount").textContent = chosenAmount ? (fmt(chosenAmount) + " F") : "—";
+      $("pillAmount").textContent = chosenAmount ? (fmt(chosenAmount) + " F") : "—";
 
-  <div class="grid">
-    <div class="module-card" onclick="selectModule('driver', 9900, 'DIGIY DRIVER')">
-      <div class="module-icon">🚗</div>
-      <div class="module-name">DIGIY DRIVER</div>
-      <div class="module-desc">VTC sans commission · Paiement direct aux chauffeurs</div>
-      <div class="price-section">
-        <div class="price-label">Prix fixe</div>
-        <div class="price-amount">9,900 F<span class="price-period">/mois</span></div>
-      </div>
-      <button class="cta-btn">Choisir DRIVER</button>
-    </div>
+      function setHint(msg){ $("hint").textContent = msg || ""; }
+      function setBig(text, tone, tagText){
+        const el = $("statusBig");
+        el.className = "statusBig " + (tone || "warn");
+        $("statusText").textContent = text;
+        const tag = $("tag");
+        tag.className = "tag " + (tone || "warn");
+        tag.textContent = tagText || "—";
+      }
 
-    <div class="module-card">
-      <div class="module-icon">🏠</div>
-      <div class="module-name">DIGIY LOC</div>
-      <div class="module-desc">Location courte durée · Calendrier · Réservations en ligne · 0% commission</div>
-      <div class="paliers">
-        <div class="palier-title">Par nombre de logements</div>
-        <div class="palier-option" onclick="selectModule('loc', 9900, 'DIGIY LOC (1-5 logements)')">
-          <span>1-5 logements</span><strong>9,900 F</strong>
-        </div>
-        <div class="palier-option" onclick="selectModule('loc', 15000, 'DIGIY LOC (6-9 logements)')">
-          <span>6-9 logements</span><strong>15,000 F</strong>
-        </div>
-        <div class="palier-option" onclick="selectModule('loc', 25000, 'DIGIY LOC (10-20 logements)')">
-          <span>10-20 logements</span><strong>25,000 F</strong>
-        </div>
-        <div class="palier-option" onclick="selectModule('loc', 30000, 'DIGIY LOC (21-30 logements)')">
-          <span>21-30 logements</span><strong>30,000 F</strong>
-        </div>
-        <div class="palier-option" onclick="selectModule('loc', 50000, 'DIGIY LOC (30+ logements)')">
-          <span>30+ logements</span><strong>50,000 F</strong>
-        </div>
-      </div>
-    </div>
+      function safeBack(){
+        if(from){ location.replace(from); return; }
+        // fallback: login LOC PRO
+        location.replace("https://beauville.github.io/digiy-loc-pro/login.html" + (slug ? "?slug="+encodeURIComponent(slug) : ""));
+      }
 
-    <div class="module-card" onclick="selectModule('market', 12900, 'DIGIY MARKET')">
-      <div class="module-icon">🛒</div>
-      <div class="module-name">DIGIY MARKET</div>
-      <div class="module-desc">Marketplace locale · Boutique en ligne · Gestion stock</div>
-      <div class="price-section">
-        <div class="price-label">Prix fixe</div>
-        <div class="price-amount">12,900 F<span class="price-period">/mois</span></div>
-      </div>
-      <button class="cta-btn">Choisir MARKET</button>
-    </div>
+      function wa(msg){
+        location.href = "https://wa.me/" + SUPPORT_WA.replace(/\+/g,"") + "?text=" + encodeURIComponent(msg);
+      }
 
-    <div class="module-card" onclick="selectModule('jobs', 7900, 'DIGIY JOBS')">
-      <div class="module-icon">💼</div>
-      <div class="module-name">DIGIY JOBS</div>
-      <div class="module-desc">Emploi & recrutement · Offres · CV</div>
-      <div class="price-section">
-        <div class="price-label">Prix fixe</div>
-        <div class="price-amount">7,900 F<span class="price-period">/mois</span></div>
-      </div>
-      <button class="cta-btn">Choisir JOBS</button>
-    </div>
+      function ensureChoice(){
+        if(!phone){
+          setHint("⚠️ Téléphone manquant. Cette page doit recevoir ?phone=+221... via le guard.");
+          return false;
+        }
+        if(!chosenModule){
+          setHint("⚠️ Choisis un module (bouton ‘Choisir’).");
+          return false;
+        }
+        if(!chosenAmount){
+          setHint("⚠️ Choisis un tarif (montant).");
+          return false;
+        }
+        return true;
+      }
 
-    <div class="module-card" onclick="selectModule('build', 9900, 'DIGIY BUILD')">
-      <div class="module-icon">🏗️</div>
-      <div class="module-name">DIGIY BUILD</div>
-      <div class="module-desc">Services construction · Devis · Planning</div>
-      <div class="price-section">
-        <div class="price-label">Prix fixe</div>
-        <div class="price-amount">9,900 F<span class="price-period">/mois</span></div>
-      </div>
-      <button class="cta-btn">Choisir BUILD</button>
-    </div>
-  </div>
+      function pick(mod, plan, amount){
+        chosenModule = String(mod||"").trim().toUpperCase();
+        chosenPlan = String(plan||"").trim();
+        chosenAmount = String(amount||"").trim();
 
-  <footer>
-    © DIGIYLYFE — Made in Sénégal 🇸🇳<br>
-    0% commission · Paiement direct · Souveraineté digitale
-  </footer>
-</div>
+        // persist in URL for share/reload
+        setQS("m", chosenModule);
+        setQS("plan", chosenPlan);
+        setQS("amount", chosenAmount);
 
-<script>
-(function(){
-  // ====== CONFIG TERRAIN ======
-  const SUPPORT_WA = "221771342889"; // ✅ WhatsApp (sans +)
-  const WAVE_NAME = "JB BEAUVILLE";
-  const WAVE_PHONE_PRETTY = "+221 77 134 28 89";
+        $("pillModule").textContent = chosenModule || "—";
+        $("sumModule").textContent = chosenModule || "—";
+        $("sumPlan").textContent = chosenPlan || "—";
+        $("sumAmount").textContent = chosenAmount ? (fmt(chosenAmount) + " F") : "—";
+        $("pillAmount").textContent = chosenAmount ? (fmt(chosenAmount) + " F") : "—";
 
-  // ====== URL PARAMS ======
-  const u = new URL(location.href);
-  const qp = (k)=> u.searchParams.get(k) || "";
+        // If guard didn't provide module, set module for status check to chosenModule
+        module = chosenModule;
 
-  const from = qp("from");
-  const slug = qp("slug");
-  const phone = qp("phone");
-  const module = qp("module");
+        setHint("✅ Choix enregistré. Clique “Payer maintenant”.");
+      }
 
-  // fallback : planning LOC PRO avec slug si présent
-  const fallbackPlanning = "https://beauville.github.io/digiy-loc-pro/planning.html"
-    + (slug ? ("?slug=" + encodeURIComponent(slug)) : "");
+      document.querySelectorAll("[data-choose]").forEach(btn=>{
+        btn.addEventListener("click", ()=>{
+          pick(btn.getAttribute("data-choose"), btn.getAttribute("data-plan"), btn.getAttribute("data-amount"));
+        });
+      });
 
-  const back = from || fallbackPlanning;
+      $("btnPayNow").onclick = ()=>{
+        if(!ensureChoice()) return;
 
-  // UI summary
-  const setText = (id, v)=>{ const el = document.getElementById(id); if(el) el.textContent = v || "—"; };
-  setText("sumModule", module || "—");
-  setText("sumPhone", phone || "—");
-  setText("sumSlug", slug || "—");
+        const msg =
+`DIGIY PRO • Paiement Wave
 
-  // back button
-  const btnBack = document.getElementById("btnBack");
-  if(btnBack){
-    btnBack.onclick = (e)=>{ e.preventDefault(); location.href = back; };
-  }
+Bénéficiaire: JB BEAUVILLE
+Wave/WhatsApp: ${SUPPORT_WA}
 
-  // WhatsApp open (generic)
-  const btnOpenWA = document.getElementById("btnOpenWA");
-  if(btnOpenWA){
-    const msg =
-`Bonjour 🦅
+📦 Module: ${chosenModule}
+🧾 Plan: ${chosenPlan || "—"}
+💰 Montant: ${fmt(chosenAmount)} F CFA
+📱 Téléphone: ${phone || "—"}
+🏷️ Slug: ${slug || "—"}
 
-Je confirme mon paiement DIGIY.
+Je paie via Wave maintenant.
+Merci de confirmer et d’activer après réception du paiement.
 
-📦 module: ${module || "—"}
-📱 phone: ${phone || "—"}
-🏷️ slug: ${slug || "—"}
+— DIGIY`;
+        wa(msg);
+      };
 
-✅ Je joins le reçu Wave ici.`;
+      $("btnIpaid").onclick = ()=>{
+        if(!ensureChoice()) return;
 
-    btnOpenWA.href = "https://wa.me/" + SUPPORT_WA + "?text=" + encodeURIComponent(msg);
-  }
+        status = "pending";
+        setQS("status", "pending");
+        setBig("🟠 Paiement signalé. Activation en cours.", "warn", "EN ATTENTE");
+        setHint("Envoie le reçu Wave sur WhatsApp. Puis clique ‘Rafraîchir statut’.");
 
-  // "J’ai payé" button (same msg + returns possible)
-  const btnPaid = document.getElementById("btnPaid");
-  if(btnPaid){
-    btnPaid.onclick = (e)=>{
-      e.preventDefault();
-      const msg =
-`DIGIY — J’ai payé ✅
+        const msg =
+`DIGIY PRO • Confirmation paiement
 
-📦 module: ${module || "—"}
-📱 phone: ${phone || "—"}
-🏷️ slug: ${slug || "—"}
+📦 Module: ${chosenModule}
+🧾 Plan: ${chosenPlan || "—"}
+💰 Montant: ${fmt(chosenAmount)} F CFA
+📱 Téléphone: ${phone || "—"}
+🏷️ Slug: ${slug || "—"}
 
-Merci d’activer mon accès après vérification.
-(Je joins le reçu Wave)`;
+Je viens de payer via Wave.
+Je joins le reçu ici.
 
-      location.href = "https://wa.me/" + SUPPORT_WA + "?text=" + encodeURIComponent(msg);
-    };
-  }
+Merci. — DIGIY`;
+        wa(msg);
+      };
 
-  // expose helper (optional)
-  window.DIGIY_PAY_CTX = { from, slug, phone, module, back, WAVE_NAME, WAVE_PHONE_PRETTY };
-})();
+      $("btnHelp").onclick = ()=>{
+        const msg =
+`DIGIY PRO • Support
 
-// === ton sélecteur modules/pack (inchangé, mais enrichi avec slug/phone/moduleId) ===
-function selectModule(moduleId, price, moduleName) {
-  const u = new URL(location.href);
-  const slug = u.searchParams.get("slug") || "";
-  const phone = u.searchParams.get("phone") || "";
-  const moduleFromGuard = u.searchParams.get("module") || "";
+📦 Module: ${chosenModule || module || "—"}
+🧾 Plan: ${chosenPlan || "—"}
+💰 Montant: ${chosenAmount ? (fmt(chosenAmount)+" F") : "—"}
+📱 Téléphone: ${phone || "—"}
+🏷️ Slug: ${slug || "—"}
+Statut page: ${status || "—"}
 
-  const message = encodeURIComponent(
-    `Bonjour! 🦅\n\n` +
-    `Je veux commander:\n` +
-    `📦 ${moduleName}\n` +
-    `🧩 moduleId: ${moduleId}\n` +
-    `💰 Prix: ${price.toLocaleString('fr-FR')} F\n` +
-    (phone ? `📱 phone: ${phone}\n` : "") +
-    (slug ? `🏷️ slug: ${slug}\n` : "") +
-    (moduleFromGuard ? `🔁 module (guard): ${moduleFromGuard}\n` : "") +
-    `\nJe vais faire le paiement Wave maintenant et t'envoyer le reçu.`
-  );
+Merci. — DIGIY`;
+        wa(msg);
+      };
 
-  window.open(`https://wa.me/221771342889?text=${message}`, '_blank');
-}
-</script>
+      $("btnBack").onclick = safeBack;
 
+      $("btnRefresh").onclick = ()=> checkStatus(true);
+
+      async function checkStatus(manual){
+        $("btnRefresh").disabled = true;
+        setHint("");
+
+        if(status === "pending"){
+          setBig("🟠 Paiement en attente de validation.", "warn", "EN ATTENTE");
+        }else{
+          setBig("⏳ Vérification du statut…", "warn", "EN COURS");
+        }
+
+        if(!phone){
+          setBig("🔴 Téléphone manquant (URL incomplète).", "bad", "INACTIF");
+          setHint("On attend ?phone=+221... (envoyé par le guard).");
+          $("btnBack").disabled = true;
+          $("btnRefresh").disabled = false;
+          return;
+        }
+
+        // Module à checker : celui du guard sinon celui choisi
+        const m = (module || chosenModule || "LOC").toUpperCase();
+
+        // Si pending (manuel), on laisse le recheck possible (peut passer actif)
+        try{
+          const { data, error } = await sb.rpc("is_module_active", { p_phone: phone, p_module: m });
+          if(error) throw error;
+
+          const active = !!data;
+
+          if(active){
+            setQS("status", "active");
+            status = "active";
+            setBig("🟢 Abonnement ACTIF. Accès ouvert.", "ok", "ACTIF");
+            setHint("Tu peux revenir au planning maintenant.");
+            $("btnBack").disabled = false;
+          }else{
+            if(status === "pending"){
+              setBig("🟠 Paiement EN ATTENTE (pas encore activé).", "warn", "EN ATTENTE");
+              setHint("Si tu as envoyé la preuve Wave, ça va passer ACTIF après validation.");
+              $("btnBack").disabled = true;
+            }else{
+              setBig("🔴 Abonnement INACTIF. Paiement requis.", "bad", "INACTIF");
+              setHint("Choisis un module + tarif, puis clique “Payer maintenant”.");
+              $("btnBack").disabled = true;
+            }
+          }
+        }catch(e){
+          console.error(e);
+          setBig("🔴 Erreur vérification statut.", "bad", "ERREUR");
+          setHint("Supabase/RPC: " + String(e?.message || e));
+          $("btnBack").disabled = true;
+        }finally{
+          $("btnRefresh").disabled = false;
+        }
+      }
+
+      // Auto-check
+      checkStatus(false);
+    })();
+  </script>
 </body>
 </html>
-
