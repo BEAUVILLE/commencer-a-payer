@@ -96,7 +96,8 @@
           <p class="small"><b>0% Commission</b> · Paiement Direct</p>
         </div>
         <div class="row">
-          <span class="pill">📦 module: <span class="mono" id="pillModule">—</span></span>
+          <span class="pill">📦 accès: <span class="mono" id="pillAccess">—</span></span>
+          <span class="pill">📦 choisi: <span class="mono" id="pillModule">—</span></span>
           <span class="pill">📱 phone: <span class="mono" id="pillPhone">—</span></span>
           <span class="pill">🏷️ slug: <span class="mono" id="pillSlug">—</span></span>
         </div>
@@ -145,6 +146,7 @@
 
           <div style="font-weight:1200;">📌 Résumé automatique</div>
           <div class="small">
+            📦 accès: <span class="mono" id="sumAccess">—</span><br/>
             📦 module: <span class="mono" id="sumModule">—</span><br/>
             📱 phone: <span class="mono" id="sumPhone">—</span><br/>
             🏷️ slug: <span class="mono" id="sumSlug">—</span><br/>
@@ -433,28 +435,40 @@
         return n.toLocaleString("fr-FR");
       }
 
+      function normPhone(p){
+        p = String(p||"").trim().replace(/\s+/g,"").replace(/[^\d+]/g,"");
+        if(p.startsWith("00221")) p = "+221" + p.slice(5);
+        if(!p.startsWith("+") && p.startsWith("221")) p = "+" + p;
+        if(!p.startsWith("+221") && /^\d{9}$/.test(p)) p = "+221" + p;
+        return p;
+      }
+
       // Params from guard
       const from = (qs("from") || "").trim();
       const slug = (qs("slug") || "").trim();
-      const phone = (qs("phone") || "").trim();
 
-      // module passed by guard (ex: LOC). If absent, we'll use chosenModule.
-      let module = (qs("module") || "").trim();
+      // 🔒 phone canonique +221...
+      const phone = normPhone(qs("phone") || "");
+
+      // 🔒 module d’accès (celui que le guard protège): LOC / DRIVER / ...
+      const accessModule = String(qs("module") || "").trim().toUpperCase(); // ex: LOC
 
       // optional status from URL (pending/active)
       let status = (qs("status") || "").trim().toLowerCase();
 
-      // Selected choice (persistable)
-      let chosenModule = (qs("m") || module || "").trim();
+      // Selected choice (persistable): produit vendu sur cette page
+      let chosenModule = (qs("m") || "").trim().toUpperCase();
       let chosenPlan = (qs("plan") || "").trim();
       let chosenAmount = (qs("amount") || "").trim();
 
       // UI init
+      $("pillAccess").textContent = accessModule || "—";
       $("pillModule").textContent = chosenModule || "—";
       $("pillPhone").textContent = phone || "—";
       $("pillSlug").textContent = slug || "—";
 
       function syncSummary(){
+        $("sumAccess").textContent = accessModule || "—";
         $("sumModule").textContent = chosenModule || "—";
         $("sumPhone").textContent = phone || "—";
         $("sumSlug").textContent = slug || "—";
@@ -477,7 +491,7 @@
 
       function safeBack(){
         if(from){ location.replace(from); return; }
-        // fallback: login LOC PRO
+        // fallback: si pas de "from", retour vers login LOC PRO
         location.replace("https://beauville.github.io/digiy-loc-pro/login.html" + (slug ? "?slug="+encodeURIComponent(slug) : ""));
       }
 
@@ -489,6 +503,10 @@
         if(!phone){
           setHint("⚠️ Téléphone manquant. Cette page doit recevoir ?phone=+221... via le guard.");
           return false;
+        }
+        if(!accessModule){
+          // pas bloquant: on peut afficher, mais pour vérifier statut on fallback LOC
+          setHint("⚠️ Module d’accès manquant (?module=LOC). On continue en mode fallback LOC.");
         }
         if(!chosenModule){
           setHint("⚠️ Choisis un module (bouton ‘Choisir’).");
@@ -511,9 +529,6 @@
         setQS("plan", chosenPlan);
         setQS("amount", chosenAmount);
 
-        // if guard didn't provide module, set it for status check
-        module = module || chosenModule;
-
         syncSummary();
         setHint("✅ Choix enregistré. Clique “Payer maintenant”.");
       }
@@ -533,7 +548,8 @@
 Bénéficiaire: JB BEAUVILLE
 Wave/WhatsApp: ${SUPPORT_WA}
 
-📦 Module: ${chosenModule}
+📦 Accès: ${accessModule || "LOC (fallback)"}
+📦 Produit: ${chosenModule}
 🧾 Plan: ${chosenPlan || "—"}
 💰 Montant: ${fmt(chosenAmount)} F CFA
 📱 Téléphone: ${phone || "—"}
@@ -557,7 +573,8 @@ Merci de confirmer et d’activer après réception du paiement.
         const msg =
 `DIGIY PRO • Confirmation paiement
 
-📦 Module: ${chosenModule}
+📦 Accès: ${accessModule || "LOC (fallback)"}
+📦 Produit: ${chosenModule}
 🧾 Plan: ${chosenPlan || "—"}
 💰 Montant: ${fmt(chosenAmount)} F CFA
 📱 Téléphone: ${phone || "—"}
@@ -574,7 +591,8 @@ Merci. — DIGIY`;
         const msg =
 `DIGIY PRO • Support
 
-📦 Module: ${chosenModule || module || "—"}
+📦 Accès: ${accessModule || "LOC (fallback)"}
+📦 Produit: ${chosenModule || "—"}
 🧾 Plan: ${chosenPlan || "—"}
 💰 Montant: ${chosenAmount ? (fmt(chosenAmount)+" F") : "—"}
 📱 Téléphone: ${phone || "—"}
@@ -606,8 +624,13 @@ Merci. — DIGIY`;
           return;
         }
 
-        // Module to check: guard module if present, else chosen module, else LOC
-        const m = (module || chosenModule || "LOC").toUpperCase();
+        // ✅ Module à vérifier = module d’accès UNIQUEMENT (jamais chosenModule)
+        const m = (accessModule || "LOC").toUpperCase();
+
+        if(!accessModule){
+          // info utile (sans bloquer)
+          setHint("⚠️ Module d’accès manquant (?module=LOC). Vérif effectuée en fallback LOC.");
+        }
 
         try{
           const { data, error } = await sb.rpc("is_module_active", { p_phone: phone, p_module: m });
@@ -628,7 +651,7 @@ Merci. — DIGIY`;
               $("btnBack").disabled = true;
             }else{
               setBig("🔴 Abonnement INACTIF. Paiement requis.", "bad", "INACTIF");
-              setHint("Choisis un module + tarif, puis clique “Payer maintenant”.");
+              setHint("Choisis un produit + tarif, puis clique “Payer maintenant”.");
               $("btnBack").disabled = true;
             }
           }
