@@ -290,405 +290,123 @@
   </div>
 
   <script>
-    (function(){
-      "use strict";
+(function(){
+"use strict";
 
-      // =========================
-      // SUPABASE
-      // =========================
-      const SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
-      const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc3Ftd2pqdHNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA";
-      const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+/* =========================
+SUPABASE
+========================= */
+const SUPABASE_URL="https://wesqmwjjtsefyjnluosj.supabase.co";
+const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc3Ftd2pqdHNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA";
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 
-      const SUPPORT_WA = "+221771342889";
-      const RECIPIENT_WAVE = "+221771342889";
+const SUPPORT_WA="+221771342889";
+const RECIPIENT_WAVE="+221771342889";
 
-      const $ = (id)=>document.getElementById(id);
-      let pollingInterval = null;
+const $=id=>document.getElementById(id);
+let pollingInterval=null;
 
-      // =========================
-      // HELPERS
-      // =========================
-      function qs(name){
-        try{ return new URL(location.href).searchParams.get(name) || ""; }catch(e){ return ""; }
-      }
-      function setQS(name, value){
-        const u = new URL(location.href);
-        if(value === null || value === undefined || value === "") u.searchParams.delete(name);
-        else u.searchParams.set(name, value);
-        history.replaceState({}, "", u.toString());
-      }
-      function fmt(n){
-        n = Number(n||0);
-        if(!isFinite(n) || n<=0) return "—";
-        return n.toLocaleString("fr-FR");
-      }
-      function normPhone(p){
-        p = String(p||"").trim().replace(/\s+/g,"").replace(/[^\d+]/g,"");
-        if(p.startsWith("00221")) p = "+221" + p.slice(5);
-        if(!p.startsWith("+") && p.startsWith("221")) p = "+" + p;
-        if(!p.startsWith("+221") && /^\d{9}$/.test(p)) p = "+221" + p;
-        return p;
-      }
-      function wa(msg){
-        location.href = "https://wa.me/" + SUPPORT_WA.replace(/\+/g,"") + "?text=" + encodeURIComponent(msg);
-      }
+/* =========================
+HELPERS
+========================= */
+function qs(name){try{return new URL(location.href).searchParams.get(name)||"";}catch(e){return"";}}
+function fmt(n){return Number(n||0).toLocaleString("fr-FR");}
+function normPhone(p){
+p=String(p||"").replace(/\s+/g,"");
+if(p.startsWith("221"))p="+"+p;
+return p;
+}
 
-      // =========================
-      // STATE (URL)
-      // =========================
-      const from = (qs("from") || "").trim();
-      const slug = (qs("slug") || "").trim();
-      const phone = normPhone(qs("phone") || "");
-      const accessModule = String(qs("module") || "").trim().toUpperCase();
+/* =========================
+STATE
+========================= */
+const slug=qs("slug");
+const phone=normPhone(qs("phone"));
+const accessModule=qs("module").toUpperCase();
+let chosenModule=qs("m");
+let chosenPlan=qs("plan");
+let chosenAmount=qs("amount");
 
-      let status = (qs("status") || "").trim().toLowerCase();
-      let chosenModule = (qs("m") || "").trim().toUpperCase();
-      let chosenPlan = (qs("plan") || "").trim();
-      let chosenAmount = (qs("amount") || "").trim();
+/* =========================
+PAY BUTTON
+========================= */
+$("btnPayNow").onclick=async function(){
 
-      // =========================
-      // UI INIT
-      // =========================
-      $("pillAccess").textContent = accessModule || "—";
-      $("pillModule").textContent = chosenModule || "—";
-      $("pillPhone").textContent = phone || "—";
-      $("pillSlug").textContent = slug || "—";
+if(!phone||!chosenModule||!chosenAmount){
+alert("Choisis un module et vérifie ton numéro frérot");
+return;
+}
 
-      function syncSummary(){
-        $("sumAccess").textContent = accessModule || "—";
-        $("sumModule").textContent = chosenModule || "—";
-        $("sumPhone").textContent = phone || "—";
-        $("sumSlug").textContent = slug || "—";
-        $("sumPlan").textContent = chosenPlan || "—";
-        $("sumAmount").textContent = chosenAmount ? (fmt(chosenAmount) + " F") : "—";
-        $("pillAmount").textContent = chosenAmount ? (fmt(chosenAmount) + " F") : "—";
-        $("pillModule").textContent = chosenModule || "—";
-      }
-      function setHint(msg){ $("hint").textContent = msg || ""; }
-      function setBig(text, tone, tagText){
-        const el = $("statusBig");
-        el.className = "statusBig " + (tone || "warn");
-        $("statusText").textContent = text;
-        const tag = $("tag");
-        tag.className = "tag " + (tone || "warn");
-        tag.textContent = tagText || "—";
-      }
-      syncSummary();
+const prenom=localStorage.getItem("digiy_prenom")||"DIGIY";
+const nom=localStorage.getItem("digiy_nom")||"CLIENT";
 
-      function safeBack(){
-        if(from){ location.replace(from); return; }
-        location.replace("https://beauville.github.io/digiy-loc-pro/login.html" + (slug ? "?slug="+encodeURIComponent(slug) : ""));
-      }
+const payload={
+p_phone:phone,
+p_module:chosenModule||"UNKNOWN",
+p_plan:chosenPlan||"DEFAULT",
+p_montant:Number(chosenAmount||0),
+p_nom:nom,
+p_prenom:prenom,
+p_email:localStorage.getItem("digiy_email")||null,
+p_access_module:accessModule||"LOC",
+p_slug:slug||"no-slug",
+p_metadata:{source:"pay-page"}
+};
 
-      function ensureChoice(){
-        if(!phone){ setHint("Téléphone manquant (paramètre ?phone=...)."); return false; }
-        if(!accessModule){ setHint("Accès module manquant (?module=LOC / DRIVER / ...)."); return false; }
-        if(!chosenModule){ setHint("Choisis un module."); return false; }
-        if(!chosenAmount){ setHint("Choisis un tarif."); return false; }
-        return true;
-      }
+try{
+$("btnPayNow").disabled=true;
+$("statusText").textContent="🏦 Enregistrement caisse...";
 
-      function pick(mod, plan, amount){
-        chosenModule = String(mod||"").trim().toUpperCase();
-        chosenPlan = String(plan||"").trim();
-        chosenAmount = String(amount||"").trim();
-        setQS("m", chosenModule);
-        setQS("plan", chosenPlan);
-        setQS("amount", chosenAmount);
-        syncSummary();
-        setHint("Choix enregistré.");
-      }
+const enc=await sb.rpc("digiy_caisse_enregistrer",payload);
+if(enc.error)throw enc.error;
 
-      // branche les boutons de choix
-      document.querySelectorAll("[data-choose]").forEach((btn)=>{
-        btn.addEventListener("click", ()=>{
-          pick(btn.getAttribute("data-choose"), btn.getAttribute("data-plan"), btn.getAttribute("data-amount"));
-        });
-      });
+const encaissementId=enc.data.id;
 
-      // =========================
-      // QR MODAL
-      // =========================
-      function showPaymentQR(params){
-        const modal = $("qrModal");
-        const qrImage = $("qrImage");
+$("statusText").textContent="💳 Création paiement Wave...";
 
-        const qrCode = params.qrCode || "";
-        if(qrCode.startsWith("data:image") || qrCode.startsWith("http")){
-          qrImage.src = qrCode;
-        }else{
-          qrImage.src = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + encodeURIComponent(qrCode);
-        }
+const pay=await sb.rpc("digiy_pay_create_request",{
+p_module:"subscription",
+p_module_ref_id:encaissementId,
+p_amount_fcfa:payload.p_montant,
+p_payer_phone:phone,
+p_recipient_phone:RECIPIENT_WAVE,
+p_provider:"wave",
+p_description:"DIGIY "+chosenModule+" "+prenom+" "+nom,
+p_metadata:JSON.stringify({encaissement_id:encaissementId,slug})
+});
+if(pay.error)throw pay.error;
 
-        $("qrAmount").textContent = fmt(params.amount) + " F CFA";
-        $("qrModule").textContent = "Module: " + params.module;
-        $("qrPlan").textContent = "Plan: " + params.plan;
+const paymentId=pay.data.id;
+const qr=pay.data.qr_code||pay.data.payment_link;
 
-        modal.style.display = "flex";
-        startPaymentPolling(params.paymentId);
-      }
+$("qrImage").src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data="+encodeURIComponent(qr);
+$("qrModal").style.display="flex";
 
-      window.closeQRModal = function(){
-        $("qrModal").style.display = "none";
-        if(pollingInterval) clearInterval(pollingInterval);
-        pollingInterval = null;
-        $("btnPayNow").disabled = false;
-      };
+pollWave(paymentId);
 
-      async function startPaymentPolling(paymentId){
-        if(pollingInterval) clearInterval(pollingInterval);
+}catch(e){
+console.error(e);
+alert("Erreur caisse ou paiement frérot");
+$("btnPayNow").disabled=false;
+}
+};
 
-        pollingInterval = setInterval(async ()=>{
-          try{
-            const res = await sb.rpc("digiy_pay_check_status", { p_payment_id: paymentId });
-            if(res.error) throw res.error;
+/* =========================
+POLL WAVE
+========================= */
+async function pollWave(paymentId){
+pollingInterval=setInterval(async()=>{
+const res=await sb.rpc("digiy_pay_check_status",{p_payment_id:paymentId});
+if(res.data?.status==="completed"){
+clearInterval(pollingInterval);
+await sb.rpc("digiy_set_module_active",{p_phone:phone,p_module:accessModule});
+$("statusText").textContent="✅ Paiement confirmé & module activé";
+$("qrModal").style.display="none";
+}
+},3000);
+}
 
-            const data = res.data || {};
-            if(data.status === "completed"){
-              clearInterval(pollingInterval);
-              pollingInterval = null;
-              closeQRModal();
-              setBig("Paiement confirmé!", "ok", "PAYÉ");
-              setHint("Activation en cours...");
-              setTimeout(()=>checkStatus(true), 2000);
-            }
-            if(data.status === "failed"){
-              clearInterval(pollingInterval);
-              pollingInterval = null;
-              closeQRModal();
-              setBig("Paiement échoué", "bad", "ÉCHEC");
-              setHint("Réessaie ou contacte le support.");
-            }
-          }catch(e){
-            console.error("Polling error:", e);
-          }
-        }, 3000);
-
-        // timeout 10 min
-        setTimeout(()=>{
-          if(!pollingInterval) return;
-          clearInterval(pollingInterval);
-          pollingInterval = null;
-          closeQRModal();
-          setBig("Temps écoulé", "warn", "TIMEOUT");
-          setHint("Paiement non détecté. Vérifie ton compte Wave.");
-        }, 600000);
-      }
-
-      // =========================
-      // CLIENT INFO
-      // =========================
-      const savedPrenom = localStorage.getItem("digiy_prenom") || "";
-      const savedNom = localStorage.getItem("digiy_nom") || "";
-      const savedEmail = localStorage.getItem("digiy_email") || "";
-      if(savedPrenom) $("inputPrenom").value = savedPrenom;
-      if(savedNom) $("inputNom").value = savedNom;
-      if(savedEmail) $("inputEmail").value = savedEmail;
-
-      $("btnSaveInfo").onclick = function(){
-        const prenom = $("inputPrenom").value.trim();
-        const nom = $("inputNom").value.trim();
-        const email = $("inputEmail").value.trim();
-
-        if(!prenom || !nom){
-          alert("⚠️ Prénom et Nom sont obligatoires frérot!");
-          return;
-        }
-        localStorage.setItem("digiy_prenom", prenom);
-        localStorage.setItem("digiy_nom", nom);
-        if(email) localStorage.setItem("digiy_email", email);
-
-        $("clientInfoBox").style.display = "none";
-        setHint("✅ Infos enregistrées! Clique sur 'Payer maintenant' 👇");
-        $("btnPayNow").scrollIntoView({ behavior:"smooth", block:"center" });
-      };
-
-      // =========================
-      // ACTIONS
-      // =========================
-      $("btnPayNow").onclick = async function(){
-        if(!ensureChoice()) return;
-
-        const prenom = localStorage.getItem("digiy_prenom") || "";
-        const nom = localStorage.getItem("digiy_nom") || "";
-        if(!prenom || !nom){
-          $("clientInfoBox").style.display = "block";
-          $("clientInfoBox").scrollIntoView({ behavior:"smooth", block:"center" });
-          setHint("👆 Remplis tes infos d'abord frérot!");
-          return;
-        }
-
-        try{
-          setBig("🔄 Enregistrement caisse centrale...", "warn", "EN COURS");
-          $("btnPayNow").disabled = true;
-
-          // 1) encaissement
-          const encaissement = await sb.rpc("digiy_caisse_enregistrer", {
-            p_phone: phone,
-            p_module: chosenModule,
-            p_plan: chosenPlan,
-            p_montant: parseInt(chosenAmount,10),
-            p_nom: nom,
-            p_prenom: prenom,
-            p_email: localStorage.getItem("digiy_email") || null,
-            p_access_module: accessModule,
-            p_slug: slug,
-            p_metadata: {
-              user_agent: navigator.userAgent,
-              timestamp: new Date().toISOString(),
-              page_url: location.href
-            }
-          });
-          if(encaissement.error) throw encaissement.error;
-
-          const encaissementId = encaissement.data?.id;
-          if(!encaissementId) throw new Error("encaissement_id_missing");
-
-          // 2) paiement wave
-          setBig("💳 Création du paiement Wave...", "warn", "EN COURS");
-
-          const metaObj = {
-            encaissement_id: encaissementId,
-            access_module: accessModule,
-            chosen_module: chosenModule,
-            chosen_plan: chosenPlan,
-            slug: slug,
-            phone: phone,
-            nom: nom,
-            prenom: prenom
-          };
-
-          const pay = await sb.rpc("digiy_pay_create_request", {
-            p_module: "subscription",
-            p_module_ref_id: encaissementId,
-            p_amount_fcfa: parseInt(chosenAmount,10),
-            p_payer_phone: phone,
-            p_recipient_phone: RECIPIENT_WAVE,
-            p_provider: "wave",
-            p_description: "DIGIY PRO - " + chosenModule + " - " + chosenPlan + " - " + prenom + " " + nom,
-            p_metadata: JSON.stringify(metaObj)
-          });
-          if(pay.error) throw pay.error;
-
-          const data = pay.data || {};
-          if(!data.ok) throw new Error(data.reason || "payment_creation_failed");
-
-          const paymentId = data.id;
-
-          setBig("✅ QR généré!", "ok", "PRÊT");
-          showPaymentQR({
-            paymentId,
-            encaissementId,
-            qrCode: data.qr_code || data.payment_link,
-            amount: chosenAmount,
-            module: chosenModule,
-            plan: chosenPlan
-          });
-
-        }catch(e){
-          console.error("❌ Erreur:", e);
-          setBig("❌ Erreur", "bad", "ERREUR");
-          setHint("Erreur: " + (e.message || e));
-          $("btnPayNow").disabled = false;
-        }
-      };
-
-      $("btnWaConfirm").onclick = function(){
-        if(!ensureChoice()) return;
-
-        let msg = "DIGIY PRO - Confirmation paiement Wave\n\n";
-        msg += "Bénéficiaire: JB BEAUVILLE\n";
-        msg += "Wave: " + SUPPORT_WA + "\n\n";
-        msg += "Accès: " + (accessModule || "LOC") + "\n";
-        msg += "Produit: " + chosenModule + "\n";
-        msg += "Plan: " + (chosenPlan || "—") + "\n";
-        msg += "Montant: " + fmt(chosenAmount) + " F CFA\n";
-        msg += "Téléphone: " + (phone || "—") + "\n";
-        msg += "Slug: " + (slug || "—") + "\n\n";
-        msg += "Je viens de payer via Wave.\n";
-        msg += "Je joins le reçu Wave ici.\n\n";
-        msg += "Merci d'activer mon accès. — DIGIY";
-
-        wa(msg);
-
-        status = "pending";
-        setQS("status", "pending");
-        setBig("Confirmation envoyée.", "warn", "EN ATTENTE");
-        setHint("Envoie le reçu Wave.");
-      };
-
-      $("btnHelp").onclick = function(){
-        let msg = "DIGIY PRO - Support\n\n";
-        msg += "Accès: " + (accessModule || "LOC") + "\n";
-        msg += "Produit: " + (chosenModule || "—") + "\n";
-        msg += "Plan: " + (chosenPlan || "—") + "\n";
-        msg += "Montant: " + (chosenAmount ? (fmt(chosenAmount)+" F") : "—") + "\n";
-        msg += "Téléphone: " + (phone || "—") + "\n";
-        msg += "Slug: " + (slug || "—") + "\n";
-        msg += "Statut: " + (status || "—") + "\n\n";
-        msg += "J'ai besoin d'aide. Merci. — DIGIY";
-        wa(msg);
-      };
-
-      $("btnBack").onclick = safeBack;
-      $("btnRefresh").onclick = ()=>checkStatus(true);
-
-      // =========================
-      // STATUS CHECK
-      // =========================
-      async function checkStatus(){
-        $("btnRefresh").disabled = true;
-        setHint("");
-
-        setBig("Vérification...", "warn", "EN COURS");
-
-        if(!phone){
-          setBig("Téléphone manquant.", "bad", "INACTIF");
-          setHint("On attend ?phone=+221...");
-          $("btnBack").disabled = true;
-          $("btnRefresh").disabled = false;
-          return;
-        }
-
-        const m = (accessModule || "LOC").toUpperCase();
-
-        try{
-          const res = await sb.rpc("is_module_active", { p_phone: phone, p_module: m });
-          if(res.error) throw res.error;
-
-          const active = !!res.data;
-          if(active){
-            setQS("status", "active");
-            status = "active";
-            setBig("Abonnement ACTIF.", "ok", "ACTIF");
-            setHint("Tu peux revenir au planning.");
-            $("btnBack").disabled = false;
-          }else{
-            if(status === "pending"){
-              setBig("Paiement EN ATTENTE.", "warn", "EN ATTENTE");
-              setHint("Activation après validation.");
-              $("btnBack").disabled = true;
-            }else{
-              setBig("Abonnement INACTIF.", "bad", "INACTIF");
-              setHint("Choisis un produit puis paie.");
-              $("btnBack").disabled = true;
-            }
-          }
-        }catch(e){
-          console.error(e);
-          setBig("Erreur vérification.", "bad", "ERREUR");
-          setHint("Supabase: " + String(e.message || e));
-          $("btnBack").disabled = true;
-        }finally{
-          $("btnRefresh").disabled = false;
-        }
-      }
-
-      // init
-      checkStatus();
-
-    })();
-  </script>
+})();
+</script>
 </body>
 </html>
