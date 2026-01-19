@@ -84,6 +84,105 @@
         font-size:12px; padding:2px 6px; border:1px solid var(--line); border-radius:8px; color:var(--muted);
         background:rgba(0,0,0,.12);
     }
+
+    .qr-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .qr-container {
+      background: #fff;
+      border-radius: 24px;
+      padding: 40px;
+      max-width: 500px;
+      width: 90%;
+      text-align: center;
+      animation: slideUp 0.4s ease;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .qr-container h2 {
+      color: #000;
+      margin: 0 0 20px;
+      font-size: 24px;
+    }
+    .qr-image {
+      width: 300px;
+      height: 300px;
+      margin: 20px auto;
+      border: 3px solid #22c55e;
+      border-radius: 16px;
+      padding: 10px;
+      background: #fff;
+    }
+    .qr-amount {
+      font-size: 36px;
+      font-weight: 900;
+      color: #facc15;
+      margin: 20px 0;
+    }
+    .qr-details {
+      color: #666;
+      font-size: 14px;
+      margin: 10px 0;
+      font-weight: 900;
+    }
+    .qr-status {
+      background: #f0fdf4;
+      border: 2px solid #22c55e;
+      border-radius: 12px;
+      padding: 15px;
+      margin: 20px 0;
+    }
+    .qr-status-text {
+      color: #16a34a;
+      font-weight: 900;
+      font-size: 16px;
+    }
+    .qr-status-sub {
+      color: #666;
+      font-size: 12px;
+      margin-top: 5px;
+    }
+    .qr-btn-close {
+      width: 100%;
+      padding: 15px;
+      background: #ef4444;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-weight: 900;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+    .qr-btn-close:hover {
+      background: #dc2626;
+    }
+    .qr-instructions {
+      background: #fef3c7;
+      border: 2px solid #f59e0b;
+      border-radius: 12px;
+      padding: 15px;
+      margin: 15px 0;
+      color: #92400e;
+      font-weight: 900;
+      font-size: 13px;
+    }
   </style>
 </head>
 
@@ -119,10 +218,9 @@
       </div>
 
       <div class="grid">
-        <!-- LEFT: Paiement + résumé -->
         <div class="box">
           <h2>💳 Paiement via Wave</h2>
-          <p class="small">Ouvre Wave et envoie le montant à :</p>
+          <p class="small">Scanne le QR avec ton app Wave :</p>
 
           <div class="hr"></div>
 
@@ -157,8 +255,8 @@
           <div class="hr"></div>
 
           <div class="actions2">
-            <button class="btn gold" id="btnPayNow">⚡ Payer maintenant (WhatsApp)</button>
-            <button class="btn warn" id="btnIpaid">✅ J’ai payé (mettre EN ATTENTE)</button>
+            <button class="btn gold" id="btnPayNow">⚡ Payer maintenant (Wave QR)</button>
+            <button class="btn warn" id="btnWaConfirm">💬 Confirmer sur WhatsApp</button>
           </div>
 
           <div style="height:10px;"></div>
@@ -177,12 +275,10 @@
           <div class="hr"></div>
 
           <div class="small">
-            Astuce terrain : si tu reviens depuis le paiement, l’URL peut contenir
-            <span class="k">status=pending</span> pour afficher <b>EN ATTENTE</b> direct.
+            🔥 <b>Nouveau :</b> Paiement automatique avec QR Wave ! Le statut se met à jour en temps réel.
           </div>
         </div>
 
-        <!-- RIGHT: Modules & tarifs -->
         <div class="box">
           <h2>Choisis ton module PRO 🦅</h2>
           <p class="small">
@@ -194,7 +290,6 @@
 
           <div class="hr"></div>
 
-          <!-- RESTO PRO -->
           <div class="plan">
             <div class="planHead">
               <div>
@@ -242,7 +337,6 @@
 
           <div class="hr"></div>
 
-          <!-- DIGIY RESA -->
           <div class="plan">
             <div class="planHead">
               <div>
@@ -283,7 +377,6 @@
 
           <div class="hr"></div>
 
-          <!-- POS PRO -->
           <div class="plan">
             <div class="planHead">
               <div>
@@ -316,7 +409,6 @@
           <h2>📦 Autres modules individuels</h2>
 
           <div class="cards">
-            <!-- DRIVER -->
             <div class="plan">
               <div class="planHead">
                 <div>
@@ -331,7 +423,6 @@
               </button>
             </div>
 
-            <!-- LOC (par logements) -->
             <div class="plan">
               <div class="planHead">
                 <div>
@@ -354,7 +445,6 @@
               </div>
             </div>
 
-            <!-- MARKET -->
             <div class="plan">
               <div class="planHead">
                 <div>
@@ -369,7 +459,6 @@
               </button>
             </div>
 
-            <!-- JOBS -->
             <div class="plan">
               <div class="planHead">
                 <div>
@@ -384,7 +473,6 @@
               </button>
             </div>
 
-            <!-- BUILD -->
             <div class="plan">
               <div class="planHead">
                 <div>
@@ -407,28 +495,61 @@
     </div>
   </div>
 
+  <div class="qr-modal" id="qrModal">
+    <div class="qr-container">
+      <h2>📱 Scanner pour payer</h2>
+      
+      <img id="qrImage" src="" alt="QR Code" class="qr-image" />
+      
+      <div class="qr-amount" id="qrAmount">—</div>
+      
+      <div class="qr-details">
+        <div id="qrModule">Module: —</div>
+        <div id="qrPlan">Plan: —</div>
+      </div>
+
+      <div class="qr-instructions">
+        📱 Ouvre ton app <b>Wave</b><br/>
+        👉 Scanne ce QR code<br/>
+        ✅ Confirme le paiement
+      </div>
+      
+      <div class="qr-status">
+        <div class="qr-status-text">⏳ En attente du paiement...</div>
+        <div class="qr-status-sub">Le statut se met à jour automatiquement</div>
+      </div>
+      
+      <button class="qr-btn-close" onclick="closeQRModal()">
+        ❌ Annuler
+      </button>
+    </div>
+  </div>
+
   <script>
     (function(){
-      // =============================
-      // SUPABASE (statut)
-      // =============================
+      "use strict";
+      
       const SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
-      const SUPABASE_ANON_KEY =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc3Ftd2pqdHNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA";
+      const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc3Ftd2pqdHNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA";
       const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-      const SUPPORT_WA = "+221771342889"; // JB BEAUVILLE
-      const $ = (id)=>document.getElementById(id);
+      const SUPPORT_WA = "+221771342889";
+      const RECIPIENT_WAVE = "+221771342889";
+      
+      const $ = function(id){ return document.getElementById(id); };
+      let pollingInterval = null;
 
       function qs(name){
-        try{ return new URL(location.href).searchParams.get(name) || ""; }catch(_){ return ""; }
+        try{ return new URL(location.href).searchParams.get(name) || ""; }catch(e){ return ""; }
       }
+      
       function setQS(name, value){
         const u = new URL(location.href);
         if(value === null || value === undefined || value === "") u.searchParams.delete(name);
         else u.searchParams.set(name, value);
         history.replaceState({}, "", u.toString());
       }
+      
       function fmt(n){
         n = Number(n||0);
         if(!isFinite(n) || n<=0) return "—";
@@ -443,25 +564,19 @@
         return p;
       }
 
-      // Params from guard
+      function wa(msg){
+        location.href = "https://wa.me/" + SUPPORT_WA.replace(/\+/g,"") + "?text=" + encodeURIComponent(msg);
+      }
+
       const from = (qs("from") || "").trim();
       const slug = (qs("slug") || "").trim();
-
-      // 🔒 phone canonique +221...
       const phone = normPhone(qs("phone") || "");
-
-      // 🔒 module d’accès (celui que le guard protège): LOC / DRIVER / ...
-      const accessModule = String(qs("module") || "").trim().toUpperCase(); // ex: LOC
-
-      // optional status from URL (pending/active)
+      const accessModule = String(qs("module") || "").trim().toUpperCase();
       let status = (qs("status") || "").trim().toLowerCase();
-
-      // Selected choice (persistable): produit vendu sur cette page
       let chosenModule = (qs("m") || "").trim().toUpperCase();
       let chosenPlan = (qs("plan") || "").trim();
       let chosenAmount = (qs("amount") || "").trim();
 
-      // UI init
       $("pillAccess").textContent = accessModule || "—";
       $("pillModule").textContent = chosenModule || "—";
       $("pillPhone").textContent = phone || "—";
@@ -480,6 +595,7 @@
       syncSummary();
 
       function setHint(msg){ $("hint").textContent = msg || ""; }
+      
       function setBig(text, tone, tagText){
         const el = $("statusBig");
         el.className = "statusBig " + (tone || "warn");
@@ -491,29 +607,20 @@
 
       function safeBack(){
         if(from){ location.replace(from); return; }
-        // fallback: si pas de "from", retour vers login LOC PRO
         location.replace("https://beauville.github.io/digiy-loc-pro/login.html" + (slug ? "?slug="+encodeURIComponent(slug) : ""));
-      }
-
-      function wa(msg){
-        location.href = "https://wa.me/" + SUPPORT_WA.replace(/\+/g,"") + "?text=" + encodeURIComponent(msg);
       }
 
       function ensureChoice(){
         if(!phone){
-          setHint("⚠️ Téléphone manquant. Cette page doit recevoir ?phone=+221... via le guard.");
+          setHint("Téléphone manquant.");
           return false;
         }
-        if(!accessModule){
-          // pas bloquant: on peut afficher, mais pour vérifier statut on fallback LOC
-          setHint("⚠️ Module d’accès manquant (?module=LOC). On continue en mode fallback LOC.");
-        }
         if(!chosenModule){
-          setHint("⚠️ Choisis un module (bouton ‘Choisir’).");
+          setHint("Choisis un module.");
           return false;
         }
         if(!chosenAmount){
-          setHint("⚠️ Choisis un tarif (montant).");
+          setHint("Choisis un tarif.");
           return false;
         }
         return true;
@@ -524,116 +631,212 @@
         chosenPlan = String(plan||"").trim();
         chosenAmount = String(amount||"").trim();
 
-        // persist in URL for share/reload
         setQS("m", chosenModule);
         setQS("plan", chosenPlan);
         setQS("amount", chosenAmount);
 
         syncSummary();
-        setHint("✅ Choix enregistré. Clique “Payer maintenant”.");
+        setHint("Choix enregistré.");
       }
 
-      document.querySelectorAll("[data-choose]").forEach(btn=>{
-        btn.addEventListener("click", ()=>{
+      document.querySelectorAll("[data-choose]").forEach(function(btn){
+        btn.addEventListener("click", function(){
           pick(btn.getAttribute("data-choose"), btn.getAttribute("data-plan"), btn.getAttribute("data-amount"));
         });
       });
 
-      $("btnPayNow").onclick = ()=>{
-        if(!ensureChoice()) return;
+      function showPaymentQR(params) {
+        const modal = $("qrModal");
+        const qrImage = $("qrImage");
+        const qrAmount = $("qrAmount");
+        const qrModule = $("qrModule");
+        const qrPlan = $("qrPlan");
 
-        const msg =
-`DIGIY PRO • Paiement Wave
+        const qrCode = params.qrCode;
+        if (qrCode.startsWith('data:image') || qrCode.startsWith('http')) {
+          qrImage.src = qrCode;
+        } else {
+          qrImage.src = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + encodeURIComponent(qrCode);
+        }
 
-Bénéficiaire: JB BEAUVILLE
-Wave/WhatsApp: ${SUPPORT_WA}
+        qrAmount.textContent = fmt(params.amount) + ' F CFA';
+        qrModule.textContent = 'Module: ' + params.module;
+        qrPlan.textContent = 'Plan: ' + params.plan;
 
-📦 Accès: ${accessModule || "LOC (fallback)"}
-📦 Produit: ${chosenModule}
-🧾 Plan: ${chosenPlan || "—"}
-💰 Montant: ${fmt(chosenAmount)} F CFA
-📱 Téléphone: ${phone || "—"}
-🏷️ Slug: ${slug || "—"}
+        modal.style.display = 'flex';
+        
+        startPaymentPolling(params.paymentId);
+      }
 
-Je paie via Wave maintenant.
-Merci de confirmer et d’activer après réception du paiement.
-
-— DIGIY`;
-        wa(msg);
+      window.closeQRModal = function() {
+        $("qrModal").style.display = 'none';
+        if (pollingInterval) clearInterval(pollingInterval);
+        $("btnPayNow").disabled = false;
       };
 
-      $("btnIpaid").onclick = ()=>{
+      async function startPaymentPolling(paymentId) {
+        if (pollingInterval) clearInterval(pollingInterval);
+        
+        pollingInterval = setInterval(async function(){
+          try {
+            const result = await sb.rpc("digiy_pay_check_status", {
+              p_payment_id: paymentId
+            });
+
+            const data = result.data;
+            const error = result.error;
+
+            if (error) throw error;
+
+            if (data.status === 'completed') {
+              clearInterval(pollingInterval);
+              closeQRModal();
+              
+              setBig("Paiement confirmé!", "ok", "PAYÉ");
+              setHint("Activation en cours...");
+              
+              setTimeout(function(){
+                checkStatus(true);
+              }, 2000);
+            }
+
+            if (data.status === 'failed') {
+              clearInterval(pollingInterval);
+              closeQRModal();
+              setBig("Paiement échoué", "bad", "ÉCHEC");
+              setHint("Réessaie ou contacte le support.");
+            }
+
+          } catch(e) {
+            console.error('Polling error:', e);
+          }
+        }, 3000);
+
+        setTimeout(function(){
+          if (pollingInterval) {
+            clearInterval(pollingInterval);
+            closeQRModal();
+            setBig("Temps écoulé", "warn", "TIMEOUT");
+            setHint("Paiement non détecté. Vérifie ton compte Wave.");
+          }
+        }, 600000);
+      }
+
+      $("btnPayNow").onclick = async function(){
         if(!ensureChoice()) return;
 
+        try {
+          setBig("Création du paiement...", "warn", "EN COURS");
+          $("btnPayNow").disabled = true;
+
+          const metaObj = {
+            access_module: accessModule,
+            chosen_module: chosenModule,
+            chosen_plan: chosenPlan,
+            slug: slug,
+            phone: phone
+          };
+
+          const result = await sb.rpc("digiy_pay_create_request", {
+            p_module: "subscription",
+            p_module_ref_id: null,
+            p_amount_fcfa: parseInt(chosenAmount),
+            p_payer_phone: phone,
+            p_recipient_phone: RECIPIENT_WAVE,
+            p_provider: "wave",
+            p_description: "DIGIY PRO - " + chosenModule + " - " + chosenPlan,
+            p_metadata: JSON.stringify(metaObj)
+          });
+
+          const data = result.data;
+          const error = result.error;
+
+          if (error) throw error;
+          if (!data.ok) throw new Error(data.reason || "payment_creation_failed");
+
+          setBig("QR généré!", "ok", "PRÊT");
+          
+          showPaymentQR({
+            paymentId: data.id,
+            qrCode: data.qr_code || data.payment_link,
+            amount: chosenAmount,
+            module: chosenModule,
+            plan: chosenPlan
+          });
+
+        } catch(e) {
+          console.error(e);
+          setBig("Erreur création paiement", "bad", "ERREUR");
+          setHint("Erreur: " + (e.message || e));
+          $("btnPayNow").disabled = false;
+        }
+      };
+
+      $("btnWaConfirm").onclick = function(){
+        if(!ensureChoice()) return;
+
+        var msg = "DIGIY PRO - Confirmation paiement Wave\n\n";
+        msg += "Bénéficiaire: JB BEAUVILLE\n";
+        msg += "Wave: " + SUPPORT_WA + "\n\n";
+        msg += "Accès: " + (accessModule || "LOC") + "\n";
+        msg += "Produit: " + chosenModule + "\n";
+        msg += "Plan: " + (chosenPlan || "—") + "\n";
+        msg += "Montant: " + fmt(chosenAmount) + " F CFA\n";
+        msg += "Téléphone: " + (phone || "—") + "\n";
+        msg += "Slug: " + (slug || "—") + "\n\n";
+        msg += "Je viens de payer via Wave.\n";
+        msg += "Je joins le reçu Wave ici.\n\n";
+        msg += "Merci d'activer mon accès. — DIGIY";
+        
+        wa(msg);
+        
         status = "pending";
         setQS("status", "pending");
-        setBig("🟠 Paiement signalé. Activation en cours.", "warn", "EN ATTENTE");
-        setHint("Envoie le reçu Wave sur WhatsApp. Puis clique ‘Rafraîchir statut’.");
-
-        const msg =
-`DIGIY PRO • Confirmation paiement
-
-📦 Accès: ${accessModule || "LOC (fallback)"}
-📦 Produit: ${chosenModule}
-🧾 Plan: ${chosenPlan || "—"}
-💰 Montant: ${fmt(chosenAmount)} F CFA
-📱 Téléphone: ${phone || "—"}
-🏷️ Slug: ${slug || "—"}
-
-Je viens de payer via Wave.
-Je joins le reçu ici.
-
-Merci. — DIGIY`;
-        wa(msg);
+        setBig("Confirmation envoyée.", "warn", "EN ATTENTE");
+        setHint("Envoie le reçu Wave.");
       };
 
-      $("btnHelp").onclick = ()=>{
-        const msg =
-`DIGIY PRO • Support
-
-📦 Accès: ${accessModule || "LOC (fallback)"}
-📦 Produit: ${chosenModule || "—"}
-🧾 Plan: ${chosenPlan || "—"}
-💰 Montant: ${chosenAmount ? (fmt(chosenAmount)+" F") : "—"}
-📱 Téléphone: ${phone || "—"}
-🏷️ Slug: ${slug || "—"}
-Statut page: ${status || "—"}
-
-Merci. — DIGIY`;
+      $("btnHelp").onclick = function(){
+        var msg = "DIGIY PRO - Support\n\n";
+        msg += "Accès: " + (accessModule || "LOC") + "\n";
+        msg += "Produit: " + (chosenModule || "—") + "\n";
+        msg += "Plan: " + (chosenPlan || "—") + "\n";
+        msg += "Montant: " + (chosenAmount ? (fmt(chosenAmount)+" F") : "—") + "\n";
+        msg += "Téléphone: " + (phone || "—") + "\n";
+        msg += "Slug: " + (slug || "—") + "\n";
+        msg += "Statut: " + (status || "—") + "\n\n";
+        msg += "J'ai besoin d'aide. Merci. — DIGIY";
         wa(msg);
       };
 
       $("btnBack").onclick = safeBack;
-      $("btnRefresh").onclick = ()=> checkStatus(true);
+      $("btnRefresh").onclick = function(){ checkStatus(true); };
 
       async function checkStatus(manual){
         $("btnRefresh").disabled = true;
         setHint("");
 
         if(status === "pending"){
-          setBig("🟠 Paiement en attente de validation.", "warn", "EN ATTENTE");
+          setBig("Paiement en attente.", "warn", "EN ATTENTE");
         }else{
-          setBig("⏳ Vérification du statut…", "warn", "EN COURS");
+          setBig("Vérification...", "warn", "EN COURS");
         }
 
         if(!phone){
-          setBig("🔴 Téléphone manquant (URL incomplète).", "bad", "INACTIF");
-          setHint("On attend ?phone=+221... (envoyé par le guard).");
+          setBig("Téléphone manquant.", "bad", "INACTIF");
+          setHint("On attend ?phone=+221...");
           $("btnBack").disabled = true;
           $("btnRefresh").disabled = false;
           return;
         }
 
-        // ✅ Module à vérifier = module d’accès UNIQUEMENT (jamais chosenModule)
         const m = (accessModule || "LOC").toUpperCase();
 
-        if(!accessModule){
-          // info utile (sans bloquer)
-          setHint("⚠️ Module d’accès manquant (?module=LOC). Vérif effectuée en fallback LOC.");
-        }
-
         try{
-          const { data, error } = await sb.rpc("is_module_active", { p_phone: phone, p_module: m });
+          const result = await sb.rpc("is_module_active", { p_phone: phone, p_module: m });
+          const data = result.data;
+          const error = result.error;
+          
           if(error) throw error;
 
           const active = !!data;
@@ -641,31 +844,30 @@ Merci. — DIGIY`;
           if(active){
             setQS("status", "active");
             status = "active";
-            setBig("🟢 Abonnement ACTIF. Accès ouvert.", "ok", "ACTIF");
-            setHint("Tu peux revenir au planning maintenant.");
+            setBig("Abonnement ACTIF.", "ok", "ACTIF");
+            setHint("Tu peux revenir au planning.");
             $("btnBack").disabled = false;
           }else{
             if(status === "pending"){
-              setBig("🟠 Paiement EN ATTENTE (pas encore activé).", "warn", "EN ATTENTE");
-              setHint("Si tu as envoyé la preuve Wave, ça va passer ACTIF après validation.");
+              setBig("Paiement EN ATTENTE.", "warn", "EN ATTENTE");
+              setHint("Activation après validation.");
               $("btnBack").disabled = true;
             }else{
-              setBig("🔴 Abonnement INACTIF. Paiement requis.", "bad", "INACTIF");
-              setHint("Choisis un produit + tarif, puis clique “Payer maintenant”.");
+              setBig("Abonnement INACTIF.", "bad", "INACTIF");
+              setHint("Choisis un produit puis paie.");
               $("btnBack").disabled = true;
             }
           }
         }catch(e){
           console.error(e);
-          setBig("🔴 Erreur vérification statut.", "bad", "ERREUR");
-          setHint("Supabase/RPC: " + String(e?.message || e));
+          setBig("Erreur vérification.", "bad", "ERREUR");
+          setHint("Supabase: " + String(e.message || e));
           $("btnBack").disabled = true;
         }finally{
           $("btnRefresh").disabled = false;
         }
       }
 
-      // Auto-check on load
       checkStatus(false);
     })();
   </script>
