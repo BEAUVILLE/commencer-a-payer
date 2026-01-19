@@ -315,6 +315,49 @@
     function escapeHtml(s){
       return String(s??"").replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m]));
     }
+/* ========================
+   DIGIY — CHECK SESSION + LOAD PRO
+======================== */
+(async function(){
+  try{
+    if(!window.DIGIY_GUARD){
+      alert("Guard non chargé");
+      location.replace("pin-caisse.html");
+      return;
+    }
+
+    const sess = window.DIGIY_GUARD.requireSession();
+    if(sess.role !== "caisse_admin"){
+      location.replace("pin-caisse.html");
+      return;
+    }
+
+    const url = new URL(location.href);
+    const slug = (sess.slug || url.searchParams.get("slug") || "").trim();
+
+    if(!slug){
+      document.getElementById("who").textContent =
+        "Accès PRO • Session OK • slug manquant";
+      return;
+    }
+
+    const { data } = await window.DIGIY_GUARD.sb
+      .rpc("digiy_get_business_by_slug",{ p_slug: slug });
+
+    if(data?.ok){
+      document.getElementById("who").textContent =
+        "🦅 " + data.name + " • " + data.phone + " • slug: " + data.slug;
+    }else{
+      document.getElementById("who").textContent =
+        "Slug introuvable : " + slug;
+    }
+
+  }catch(e){
+    console.warn(e);
+    location.replace("pin-caisse.html");
+  }
+})();
+    
   </script>
 </body>
 </html>
