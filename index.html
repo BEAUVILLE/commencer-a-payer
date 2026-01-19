@@ -183,6 +183,21 @@
       font-weight: 900;
       font-size: 13px;
     }
+
+    input[type="text"], input[type="email"] {
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(0,0,0,.12);
+      color: var(--text);
+      font-size: 15px;
+      font-weight: 500;
+      width: 100%;
+    }
+    input[type="text"]:focus, input[type="email"]:focus {
+      outline: none;
+      border-color: var(--ok);
+    }
   </style>
 </head>
 
@@ -215,6 +230,28 @@
       <div class="statusBig warn" id="statusBig">
         <div id="statusText">⏳ Vérification du statut…</div>
         <span class="tag warn" id="tag">EN COURS</span>
+      </div>
+
+      <!-- 👤 SECTION INFOS CLIENT -->
+      <div class="card" id="clientInfoBox" style="margin-top:16px; display:none;">
+        <h2>👤 Tes informations</h2>
+        <p class="small">Pour bien enregistrer ton abonnement dans la caisse DIGIYLYFE</p>
+        
+        <div class="hr"></div>
+        
+        <div style="display:grid; gap:12px;">
+          <input type="text" id="inputPrenom" placeholder="Prénom *">
+          <input type="text" id="inputNom" placeholder="Nom *">
+          <input type="email" id="inputEmail" placeholder="Email (optionnel)">
+        </div>
+        
+        <div class="hr"></div>
+        
+        <button class="btn ok" id="btnSaveInfo">✅ Valider mes infos</button>
+        
+        <p class="small" style="margin-top:8px; color:var(--muted);">
+          * Champs obligatoires · Ces infos sont enregistrées pour ton abonnement
+        </p>
       </div>
 
       <div class="grid">
@@ -722,29 +759,72 @@
         }, 600000);
       }
 
+      // BOUTON PAYER MAINTENANT - AVEC CAISSE CENTRALE
       $("btnPayNow").onclick = async function(){
         if(!ensureChoice()) return;
 
+        // Vérifier si les infos client sont remplies
+        const prenom = localStorage.getItem('digiy_prenom') || '';
+        const nom = localStorage.getItem('digiy_nom') || '';
+        
+        if(!prenom || !nom) {
+          $("clientInfoBox").style.display = 'block';
+          $("clientInfoBox").scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setHint("👆 Remplis tes infos d'abord frérot!");
+          return;
+        }
+
         try {
-          setBig("Création du paiement...", "warn", "EN COURS");
+          setBig("🔄 Enregistrement caisse centrale...", "warn", "EN COURS");
           $("btnPayNow").disabled = true;
 
+          // 1️⃣ ENREGISTRER dans la CAISSE CENTRALE
+          console.log("📝 Enregistrement encaissement...");
+          
+          const encaissement = await sb.rpc("digiy_caisse_enregistrer", {
+            p_phone: phone,
+            p_module: chosenModule,
+            p_plan: chosenPlan,
+            p_montant: parseInt(chosenAmount),
+            p_nom: nom,
+            p_prenom: prenom,
+            p_email: localStorage.getItem('digiy_email') || null,
+            p_access_module: accessModule,
+            p_slug: slug,
+            p_metadata: {
+              user_agent: navigator.userAgent,
+              timestamp: new Date().toISOString(),
+              page_url: location.href
+            }
+          });
+
+          if(encaissement.error) throw encaissement.error;
+          
+          const encaissementId = encaissement.data.id;
+          console.log("✅ Encaissement enregistré:", encaissementId);
+
+          // 2️⃣ CRÉER le paiement WAVE
+          setBig("💳 Création du paiement Wave...", "warn", "EN COURS");
+          
           const metaObj = {
+            encaissement_id: encaissementId,
             access_module: accessModule,
             chosen_module: chosenModule,
             chosen_plan: chosenPlan,
             slug: slug,
-            phone: phone
+            phone: phone,
+            nom: nom,
+            prenom: prenom
           };
 
           const result = await sb.rpc("digiy_pay_create_request", {
             p_module: "subscription",
-            p_module_ref_id: null,
+            p_module_ref_id: encaissementId,
             p_amount_fcfa: parseInt(chosenAmount),
             p_payer_phone: phone,
             p_recipient_phone: RECIPIENT_WAVE,
             p_provider: "wave",
-            p_description: "DIGIY PRO - " + chosenModule + " - " + chosenPlan,
+            p_description: "DIGIY PRO - " + chosenModule + " - " + chosenPlan + " - " + prenom + " " + nom,
             p_metadata: JSON.stringify(metaObj)
           });
 
@@ -754,10 +834,19 @@
           if (error) throw error;
           if (!data.ok) throw new Error(data.reason || "payment_creation_failed");
 
-          setBig("QR généré!", "ok", "PRÊT");
+          const paymentId = data.id;
+          console.log("✅ Paiement créé:", paymentId);
+
+          // 3️⃣ LIER payment_id à l'encaissement
+          await sb.from('encaissements_digiylyfe')
+            .update({ payment_id: paymentId })
+            .eq('id', encaissementId);
+
+          setBig("✅ QR généré!", "ok", "PRÊT");
           
           showPaymentQR({
-            paymentId: data.id,
+            paymentId: paymentId,
+            encaissementId: encaissementId,
             qrCode: data.qr_code || data.payment_link,
             amount: chosenAmount,
             module: chosenModule,
@@ -765,8 +854,8 @@
           });
 
         } catch(e) {
-          console.error(e);
-          setBig("Erreur création paiement", "bad", "ERREUR");
+          console.error("❌ Erreur:", e);
+          setBig("❌ Erreur", "bad", "ERREUR");
           setHint("Erreur: " + (e.message || e));
           $("btnPayNow").disabled = false;
         }
@@ -811,6 +900,37 @@
 
       $("btnBack").onclick = safeBack;
       $("btnRefresh").onclick = function(){ checkStatus(true); };
+
+      // BOUTON SAUVEGARDER INFOS CLIENT
+      $("btnSaveInfo").onclick = function(){
+        const prenom = $("inputPrenom").value.trim();
+        const nom = $("inputNom").value.trim();
+        const email = $("inputEmail").value.trim();
+        
+        if(!prenom || !nom) {
+          alert("⚠️ Prénom et Nom sont obligatoires frérot!");
+          return;
+        }
+        
+        localStorage.setItem('digiy_prenom', prenom);
+        localStorage.setItem('digiy_nom', nom);
+        if(email) localStorage.setItem('digiy_email', email);
+        
+        $("clientInfoBox").style.display = 'none';
+        setHint("✅ Infos enregistrées! Clique sur 'Payer maintenant' 👇");
+        
+        // Scroll vers le bouton de paiement
+        $("btnPayNow").scrollIntoView({ behavior: 'smooth', block: 'center' });
+      };
+
+      // PRÉ-REMPLIR SI DÉJÀ ENREGISTRÉ
+      const savedPrenom = localStorage.getItem('digiy_prenom');
+      const savedNom = localStorage.getItem('digiy_nom');
+      const savedEmail = localStorage.getItem('digiy_email');
+
+      if(savedPrenom) $("inputPrenom").value = savedPrenom;
+      if(savedNom) $("inputNom").value = savedNom;
+      if(savedEmail) $("inputEmail").value = savedEmail;
 
       async function checkStatus(manual){
         $("btnRefresh").disabled = true;
