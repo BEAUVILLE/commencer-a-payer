@@ -45,9 +45,7 @@
       position:sticky;top:12px;backdrop-filter: blur(10px);
       z-index:10;
     }
-    .brand{
-      display:flex;gap:12px;align-items:center;
-    }
+    .brand{display:flex;gap:12px;align-items:center}
     .logo{
       width:42px;height:42px;border-radius:14px;
       background:linear-gradient(135deg,var(--gold),var(--gold2));
@@ -190,7 +188,7 @@
         </table>
 
         <div class="muted" style="margin-top:8px">
-          ⚠️ Tout ce qui s’affiche ici doit venir de requêtes **RLS-safe**. Aucune donnée sensible ne doit “fuiter” côté public.
+          ⚠️ Tout ce qui s’affiche ici doit venir de requêtes <b>RLS-safe</b>. Aucune donnée sensible ne doit “fuiter” côté public.
         </div>
       </div>
 
@@ -198,9 +196,9 @@
         <h2>🛡️ Sécurité (niveau 1 posé)</h2>
         <div class="muted" style="line-height:1.5">
           ✅ Page marquée <b>noindex</b><br/>
-          ✅ Accès contrôlé par <b>Guard</b> (session + module)<br/>
-          ✅ Les vraies protections se font côté Supabase : <b>RLS + RPC</b><br/><br/>
-          Prochaine étape : <b>double verrou</b> (PIN + rôle “caisse_admin”) + <b>journal</b> des accès.
+          ✅ Accès contrôlé (session + rôle)<br/>
+          ✅ Vraie sécurité côté Supabase : <b>RLS + RPC</b><br/><br/>
+          Prochaine étape : <b>double verrou</b> (PIN + rôle “caisse_admin” serveur) + <b>journal</b> des accès.
         </div>
 
         <div style="height:12px"></div>
@@ -213,47 +211,75 @@
   <script>
     "use strict";
 
-    // ✅ Utilise ton Guard DIGIY : si pas connecté -> dehors
-    // Idée: on exige module="pay" ou "caisse" (selon ta convention)
+    // =========================
+    // BOOT UNIQUE (pas de double script)
+    // =========================
     (async function boot(){
       try{
         if(!window.DIGIY_GUARD || !window.DIGIY_GUARD.requireSession){
           alert("Guard manquant. Vérifie guard.js");
-          location.replace("index.html");
+          location.replace("pin-caisse.html");
           return;
         }
 
-        // verrouillage: session requise
-        const sess = await window.DIGIY_GUARD.requireSession({ module: "pay" });
-        // sess peut contenir owner_id/business_id/slug selon ton guard
-        document.getElementById("who").textContent =
-          "Accès PRO • Session OK • " + (sess?.slug ? ("slug: "+sess.slug) : "DIGIY");
+        // 1) session requise
+        const sess = window.DIGIY_GUARD.requireSession();
+
+        // 2) rôle caisse_admin requis
+        if(sess.role !== "caisse_admin"){
+          location.replace("pin-caisse.html");
+          return;
+        }
+
+        // 3) slug (session > URL)
+        const url = new URL(location.href);
+        const slug = (sess.slug || url.searchParams.get("slug") || "").trim();
+
+        // 4) afficher identité pro si slug présent
+        if(slug){
+          const { data } = await window.DIGIY_GUARD.sb
+            .rpc("digiy_get_business_by_slug",{ p_slug: slug });
+
+          if(data?.ok){
+            document.getElementById("who").textContent =
+              "🦅 " + data.name + " • " + data.phone + " • slug: " + data.slug;
+          }else{
+            document.getElementById("who").textContent =
+              "Accès PRO • slug introuvable : " + slug;
+          }
+        }else{
+          document.getElementById("who").textContent =
+            "Accès PRO • Session OK • slug manquant";
+        }
 
         wireUI();
         await refreshAll();
 
       }catch(e){
         console.warn(e);
-        location.replace("index.html");
+        location.replace("pin-caisse.html");
       }
     })();
 
     function wireUI(){
       document.getElementById("btnRefresh").addEventListener("click", refreshAll);
+
       document.getElementById("btnLogout").addEventListener("click", async ()=>{
         try{
           if(window.DIGIY_GUARD?.logout) await window.DIGIY_GUARD.logout();
         }finally{
-          location.replace("index.html");
+          location.replace("pin-caisse.html");
         }
       });
+
       document.getElementById("btnHardMode").addEventListener("click", ()=>{
-        alert("Hard Mode arrive: rôle caisse_admin + PIN + journalisation.");
+        alert("Hard Mode arrive: rôle caisse_admin (serveur) + PIN + journalisation.");
       });
     }
 
-    // ⚠️ IMPORTANT : ici je mets des appels “placeholders”.
-    // On branchera TES RPC RLS-safe (ex: digiy_pay_dashboard_stats / digiy_pay_dashboard_recent)
+    // =========================
+    // DASHBOARD DATA (RPC)
+    // =========================
     async function refreshAll(){
       setKpi("kpiDay","…");
       setKpi("kpiCount","…");
@@ -262,7 +288,6 @@
 
       const sb = window.DIGIY_GUARD?.sb;
       if(!sb){
-        // si ton guard expose supabase client autrement, adapte ici
         setKpi("kpiDay","—");
         setKpi("kpiCount","—");
         setKpi("kpiPending","—");
@@ -308,56 +333,17 @@
     }
 
     function setKpi(id,v){ document.getElementById(id).textContent = v; }
+
     function fmtMoney(n){
       try{ return new Intl.NumberFormat("fr-FR").format(Number(n)) + " FCFA"; }
       catch(e){ return String(n)+" FCFA"; }
     }
+
     function escapeHtml(s){
-      return String(s??"").replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m]));
+      return String(s??"").replace(/[&<>"']/g, m=>({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+      }[m]));
     }
-/* ========================
-   DIGIY — CHECK SESSION + LOAD PRO
-======================== */
-(async function(){
-  try{
-    if(!window.DIGIY_GUARD){
-      alert("Guard non chargé");
-      location.replace("pin-caisse.html");
-      return;
-    }
-
-    const sess = window.DIGIY_GUARD.requireSession();
-    if(sess.role !== "caisse_admin"){
-      location.replace("pin-caisse.html");
-      return;
-    }
-
-    const url = new URL(location.href);
-    const slug = (sess.slug || url.searchParams.get("slug") || "").trim();
-
-    if(!slug){
-      document.getElementById("who").textContent =
-        "Accès PRO • Session OK • slug manquant";
-      return;
-    }
-
-    const { data } = await window.DIGIY_GUARD.sb
-      .rpc("digiy_get_business_by_slug",{ p_slug: slug });
-
-    if(data?.ok){
-      document.getElementById("who").textContent =
-        "🦅 " + data.name + " • " + data.phone + " • slug: " + data.slug;
-    }else{
-      document.getElementById("who").textContent =
-        "Slug introuvable : " + slug;
-    }
-
-  }catch(e){
-    console.warn(e);
-    location.replace("pin-caisse.html");
-  }
-})();
-    
   </script>
 </body>
 </html>
