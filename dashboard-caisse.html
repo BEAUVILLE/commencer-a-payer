@@ -1,567 +1,320 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>DIGIY • Dashboard Caisse Centrale</title>
-  <meta name="theme-color" content="#16a34a"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>DIGIY PAY ♾️ — Caisse Centrale (PRO)</title>
+  <meta name="theme-color" content="#020617" />
+  <meta name="robots" content="noindex,nofollow" />
 
+  <!-- Supabase + Guard -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="./guard.js?v=caisse-pro"></script>
 
   <style>
     :root{
-      --bg:#061b14; --card:#0b2a1f; --line:rgba(255,255,255,.14);
-      --text:#eafff1; --muted:rgba(234,255,241,.75);
-      --ok:#22c55e; --warn:#f59e0b; --bad:#ef4444; --gold:#facc15;
-      --radius:18px; --shadow:0 18px 50px rgba(0,0,0,.35);
+      --bg:#020617;
+      --bg2:#0b1224;
+      --card:rgba(255,255,255,.06);
+      --line:rgba(148,163,184,.20);
+      --text:#e5e7eb;
+      --muted:#a7b0c0;
+      --gold:#facc15;
+      --gold2:#f59e0b;
+      --ok:#22c55e;
+      --bad:#fb7185;
+      --shadow:0 24px 70px rgba(0,0,0,.45);
     }
-    *{box-sizing:border-box; margin:0; padding:0;}
-    body{ 
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial; 
-      background:var(--bg); 
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      min-height:100vh;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto;
       color:var(--text);
-      padding:16px;
+      background:
+        radial-gradient(circle at 15% 10%, rgba(250,204,21,.12), transparent 45%),
+        radial-gradient(circle at 80% 35%, rgba(34,197,94,.10), transparent 45%),
+        linear-gradient(135deg,var(--bg),var(--bg2));
+      padding:18px;
     }
-    .wrap{ max-width:1400px; margin:0 auto; }
-    .card{ 
-      background:var(--card); 
-      border:1px solid var(--line); 
-      border-radius:var(--radius); 
-      padding:20px; 
-      box-shadow:var(--shadow); 
-      margin-bottom:16px;
+    .wrap{max-width:1100px;margin:0 auto}
+    .top{
+      display:flex;gap:12px;align-items:center;justify-content:space-between;
+      padding:14px 14px;border:1px solid var(--line);
+      background:rgba(2,6,23,.55);
+      border-radius:16px;box-shadow:var(--shadow);
+      position:sticky;top:12px;backdrop-filter: blur(10px);
+      z-index:10;
     }
-    h1{ font-size:28px; font-weight:1200; margin-bottom:8px; }
-    h2{ font-size:20px; font-weight:1100; margin-bottom:12px; }
-    h3{ font-size:16px; font-weight:1000; margin-bottom:8px; }
-    .small{ font-size:13px; color:var(--muted); line-height:1.4; }
-    .hr{ height:1px; background:var(--line); margin:16px 0; }
-    
-    .kpi-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
-      gap:16px;
-      margin-bottom:20px;
+    .brand{
+      display:flex;gap:12px;align-items:center;
     }
-    .kpi{
-      background:rgba(0,0,0,.2);
-      border:1px solid var(--line);
-      border-radius:16px;
-      padding:20px;
-      text-align:center;
+    .logo{
+      width:42px;height:42px;border-radius:14px;
+      background:linear-gradient(135deg,var(--gold),var(--gold2));
+      display:grid;place-items:center;color:#111827;font-weight:900;
+      box-shadow:0 14px 40px rgba(250,204,21,.25);
     }
-    .kpi-icon{ font-size:36px; margin-bottom:8px; }
-    .kpi-value{ font-size:32px; font-weight:1200; margin:8px 0; }
-    .kpi-label{ font-size:13px; color:var(--muted); text-transform:uppercase; letter-spacing:.5px; }
-    .kpi.ok{ border-color:rgba(34,197,94,.55); }
-    .kpi.warn{ border-color:rgba(245,158,11,.55); }
-    .kpi.gold{ border-color:rgba(250,204,21,.55); }
-    
-    .chart-container{
-      position:relative;
-      height:300px;
-      margin:20px 0;
-    }
-    
-    table{
-      width:100%;
-      border-collapse:collapse;
-      margin-top:16px;
-    }
-    th{
-      background:rgba(0,0,0,.3);
-      padding:12px;
-      text-align:left;
-      font-weight:1100;
-      border-bottom:2px solid var(--line);
-      font-size:13px;
-      text-transform:uppercase;
-      letter-spacing:.5px;
-    }
-    td{
-      padding:12px;
-      border-bottom:1px solid var(--line);
-      font-size:14px;
-    }
-    tr:hover{ background:rgba(255,255,255,.05); }
-    
-    .badge{
-      display:inline-block;
-      padding:6px 12px;
-      border-radius:999px;
-      font-size:11px;
-      font-weight:1000;
-      text-transform:uppercase;
-      letter-spacing:.5px;
-    }
-    .badge.ok{ background:rgba(34,197,94,.2); color:var(--ok); border:1px solid rgba(34,197,94,.5); }
-    .badge.warn{ background:rgba(245,158,11,.2); color:var(--warn); border:1px solid rgba(245,158,11,.5); }
-    .badge.bad{ background:rgba(239,68,68,.2); color:var(--bad); border:1px solid rgba(239,68,68,.5); }
-    
+    .titles h1{font-size:16px;letter-spacing:.2px}
+    .titles p{font-size:12px;color:var(--muted);margin-top:2px}
+
+    .actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
     .btn{
       border:1px solid var(--line);
-      background:transparent;
+      background:rgba(255,255,255,.06);
       color:var(--text);
-      padding:12px 20px;
-      border-radius:12px;
+      padding:10px 12px;border-radius:12px;
+      text-decoration:none;font-weight:800;
+      display:inline-flex;align-items:center;gap:8px;
+      transition:.18s;
       cursor:pointer;
-      font-weight:1000;
-      font-size:14px;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
     }
-    .btn:hover{ background:rgba(255,255,255,.1); }
-    .btn.ok{ border-color:rgba(34,197,94,.55); }
-    
-    .filters{
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-bottom:20px;
+    .btn:hover{transform:translateY(-1px);border-color:rgba(250,204,21,.35)}
+    .btn.gold{
+      background:linear-gradient(135deg,var(--gold),var(--gold2));
+      color:#111827;border-color:rgba(250,204,21,.35);
+      box-shadow:0 16px 46px rgba(250,204,21,.22);
     }
-    select{
-      padding:10px 16px;
+    .btn.danger{border-color:rgba(251,113,133,.35)}
+    .btn.small{padding:9px 10px;font-size:13px}
+
+    .grid{
+      margin-top:14px;
+      display:grid;grid-template-columns:1.2fr .8fr;
+      gap:14px;
+    }
+    @media(max-width:980px){.grid{grid-template-columns:1fr}}
+
+    .card{
       border:1px solid var(--line);
-      border-radius:12px;
-      background:rgba(0,0,0,.2);
-      color:var(--text);
-      font-weight:500;
-      cursor:pointer;
-    }
-    
-    .auth-box{
-      max-width:400px;
-      margin:100px auto;
-      text-align:center;
-    }
-    input[type="tel"], input[type="password"]{
-      width:100%;
+      background:rgba(255,255,255,.06);
+      border-radius:18px;
       padding:14px;
-      margin:10px 0;
+      box-shadow:var(--shadow);
+    }
+    .card h2{font-size:14px;margin-bottom:10px}
+    .muted{color:var(--muted);font-size:13px}
+
+    .kpis{
+      display:grid;grid-template-columns:repeat(3,1fr);gap:12px;
+    }
+    @media(max-width:680px){.kpis{grid-template-columns:1fr}}
+    .kpi{
       border:1px solid var(--line);
-      border-radius:12px;
-      background:rgba(0,0,0,.2);
-      color:var(--text);
-      font-size:16px;
-      font-weight:500;
+      background:rgba(2,6,23,.35);
+      border-radius:16px;padding:12px;
     }
-    
-    .mono{ font-family: ui-monospace, Menlo, Monaco, monospace; }
-    
-    #loading{
-      display:none;
-      text-align:center;
-      padding:40px;
-      font-size:18px;
+    .kpi .label{font-size:12px;color:var(--muted)}
+    .kpi .val{font-size:22px;font-weight:900;margin-top:4px}
+    .kpi .hint{font-size:12px;color:var(--muted);margin-top:2px}
+
+    .table{
+      width:100%;border-collapse:separate;border-spacing:0 10px;
+      margin-top:10px;
+    }
+    .row{
+      background:rgba(2,6,23,.35);
+      border:1px solid var(--line);
+    }
+    .table th{color:var(--muted);font-size:12px;text-align:left;padding:6px 10px}
+    .table td{padding:10px 10px;font-size:13px}
+    .pill{
+      display:inline-flex;align-items:center;gap:7px;
+      padding:4px 10px;border-radius:999px;
+      font-size:12px;font-weight:900;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.05);
+    }
+    .pill.ok{border-color:rgba(34,197,94,.30)}
+    .pill.bad{border-color:rgba(251,113,133,.30)}
+    .pill.wait{border-color:rgba(250,204,21,.28)}
+    .footer{
+      margin-top:14px;
       color:var(--muted);
-    }
-    
-    .grid-2{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:16px;
-    }
-    @media(max-width:768px){
-      .grid-2{ grid-template-columns:1fr; }
+      font-size:12px;
+      text-align:center;
     }
   </style>
 </head>
 
 <body>
   <div class="wrap">
-    <!-- AUTH BOX -->
-    <div class="card auth-box" id="authBox">
-      <h1>🔐 Accès Dashboard</h1>
-      <p class="small">Réservé au propriétaire DIGIYLYFE</p>
-      <div class="hr"></div>
-      <input type="tel" id="authPhone" placeholder="Téléphone (+221...)">
-      <input type="password" id="authPin" placeholder="PIN">
-      <button class="btn ok" id="btnAuth" style="width:100%; margin-top:10px;">
-        ✅ Connexion
-      </button>
-      <p class="small" style="margin-top:12px;" id="authError"></p>
+    <div class="top">
+      <div class="brand">
+        <div class="logo">🦅</div>
+        <div class="titles">
+          <h1>DIGIY PAY ♾️ — Caisse Centrale</h1>
+          <p id="who" class="muted">Accès PRO • Confidentialité maximale • Session protégée</p>
+        </div>
+      </div>
+
+      <div class="actions">
+        <a class="btn small" id="btnBack" href="index.html">⬅️ Retour</a>
+        <button class="btn small" id="btnRefresh">🔄 Rafraîchir</button>
+        <button class="btn danger small" id="btnLogout">🚪 Logout</button>
+      </div>
     </div>
 
-    <!-- DASHBOARD -->
-    <div id="dashboard" style="display:none;">
-      <!-- HEADER -->
+    <div class="grid">
       <div class="card">
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
-          <div>
-            <h1>🏦 CAISSE CENTRALE DIGIYLYFE</h1>
-            <p class="small">Dashboard temps réel • 0% Commission • Made in Sénégal 🇸🇳</p>
+        <h2>📊 Vue caisse (live)</h2>
+        <div class="kpis">
+          <div class="kpi">
+            <div class="label">Total encaissé (jour)</div>
+            <div class="val" id="kpiDay">—</div>
+            <div class="hint">Tous modules confondus</div>
           </div>
-          <div style="display:flex; gap:10px;">
-            <button class="btn ok" id="btnRefresh">🔄 Actualiser</button>
-            <button class="btn" id="btnLogout">🚪 Déconnexion</button>
+          <div class="kpi">
+            <div class="label">Transactions (jour)</div>
+            <div class="val" id="kpiCount">—</div>
+            <div class="hint">paid / pending / failed</div>
           </div>
+          <div class="kpi">
+            <div class="label">En attente</div>
+            <div class="val" id="kpiPending">—</div>
+            <div class="hint">à surveiller</div>
+          </div>
+        </div>
+
+        <table class="table" aria-label="Transactions récentes">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Module</th>
+              <th>Montant</th>
+              <th>Canal</th>
+              <th>Statut</th>
+              <th>Ref</th>
+            </tr>
+          </thead>
+          <tbody id="txBody"></tbody>
+        </table>
+
+        <div class="muted" style="margin-top:8px">
+          ⚠️ Tout ce qui s’affiche ici doit venir de requêtes **RLS-safe**. Aucune donnée sensible ne doit “fuiter” côté public.
         </div>
       </div>
 
-      <!-- LOADING -->
-      <div id="loading">⏳ Chargement des données...</div>
-
-      <!-- KPIs -->
-      <div class="kpi-grid" id="kpiGrid">
-        <div class="kpi gold">
-          <div class="kpi-icon">💰</div>
-          <div class="kpi-value" id="kpiTotal">—</div>
-          <div class="kpi-label">Total Encaissements</div>
-        </div>
-        
-        <div class="kpi ok">
-          <div class="kpi-icon">✅</div>
-          <div class="kpi-value" id="kpiConfirmes">—</div>
-          <div class="kpi-label">Confirmés / Actifs</div>
-        </div>
-        
-        <div class="kpi warn">
-          <div class="kpi-icon">⏳</div>
-          <div class="kpi-value" id="kpiAttente">—</div>
-          <div class="kpi-label">En Attente</div>
-        </div>
-        
-        <div class="kpi gold">
-          <div class="kpi-icon">📊</div>
-          <div class="kpi-value" id="kpiMRR">—</div>
-          <div class="kpi-label">MRR (Monthly)</div>
-        </div>
-      </div>
-
-      <!-- CHARTS -->
-      <div class="grid-2">
-        <div class="card">
-          <h3>📦 Encaissements par Module</h3>
-          <div class="chart-container">
-            <canvas id="chartModules"></canvas>
-          </div>
-        </div>
-        
-        <div class="card">
-          <h3>📈 Évolution des Encaissements</h3>
-          <div class="chart-container">
-            <canvas id="chartTimeline"></canvas>
-          </div>
-        </div>
-      </div>
-
-      <!-- FILTERS -->
       <div class="card">
-        <h2>📋 Liste des Encaissements</h2>
-        <div class="filters">
-          <select id="filterStatut">
-            <option value="">Tous les statuts</option>
-            <option value="EN_ATTENTE">En attente</option>
-            <option value="WAVE_RECU">Wave reçu</option>
-            <option value="CONFIRME">Confirmé</option>
-            <option value="ACTIF">Actif</option>
-            <option value="ANNULE">Annulé</option>
-          </select>
-          
-          <select id="filterModule">
-            <option value="">Tous les modules</option>
-            <option value="RESTO_PRO">RESTO PRO</option>
-            <option value="RESTO_RESA">RESTO RÉSA</option>
-            <option value="POS_PRO">POS PRO</option>
-            <option value="DRIVER">DRIVER</option>
-            <option value="LOC">LOC</option>
-            <option value="MARKET">MARKET</option>
-            <option value="JOBS">JOBS</option>
-            <option value="BUILD">BUILD</option>
-          </select>
-          
-          <select id="filterPeriode">
-            <option value="7">7 derniers jours</option>
-            <option value="30" selected>30 derniers jours</option>
-            <option value="90">90 derniers jours</option>
-            <option value="365">1 an</option>
-            <option value="all">Tout</option>
-          </select>
+        <h2>🛡️ Sécurité (niveau 1 posé)</h2>
+        <div class="muted" style="line-height:1.5">
+          ✅ Page marquée <b>noindex</b><br/>
+          ✅ Accès contrôlé par <b>Guard</b> (session + module)<br/>
+          ✅ Les vraies protections se font côté Supabase : <b>RLS + RPC</b><br/><br/>
+          Prochaine étape : <b>double verrou</b> (PIN + rôle “caisse_admin”) + <b>journal</b> des accès.
         </div>
 
-        <div style="overflow-x:auto;">
-          <table>
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Client</th>
-                <th>Téléphone</th>
-                <th>Module</th>
-                <th>Plan</th>
-                <th>Montant</th>
-                <th>Statut</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody id="tableBody">
-              <tr><td colspan="8" style="text-align:center; padding:40px;">Chargement...</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- MODULE BREAKDOWN -->
-      <div class="card">
-        <h2>📊 Analyse par Module</h2>
-        <div id="moduleStats"></div>
+        <div style="height:12px"></div>
+        <button class="btn gold" id="btnHardMode">🔒 Activer “Hard Mode” (bientôt)</button>
+        <div class="footer">Aigle Royal • DIGIY PAY • Souveraineté digitale</div>
       </div>
     </div>
   </div>
 
   <script>
-    (function(){
-      "use strict";
-      
-      const SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
-      const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc3Ftd2pqdHNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA";
-      const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    "use strict";
 
-      const ADMIN_PHONE = "+221771342889";
-      const ADMIN_PIN = "3435"; // Change ça frérot!
-      
-      const $ = id => document.getElementById(id);
-      let allData = [];
-      let chartModules = null;
-      let chartTimeline = null;
-
-      // AUTH
-      $("btnAuth").onclick = async function(){
-        const phone = $("authPhone").value.trim();
-        const pin = $("authPin").value.trim();
-        
-        if(phone !== ADMIN_PHONE || pin !== ADMIN_PIN){
-          $("authError").textContent = "❌ Accès refusé!";
+    // ✅ Utilise ton Guard DIGIY : si pas connecté -> dehors
+    // Idée: on exige module="pay" ou "caisse" (selon ta convention)
+    (async function boot(){
+      try{
+        if(!window.DIGIY_GUARD || !window.DIGIY_GUARD.requireSession){
+          alert("Guard manquant. Vérifie guard.js");
+          location.replace("index.html");
           return;
         }
-        
-        localStorage.setItem("digiy_dashboard_auth", "ok");
-        showDashboard();
-      };
 
-      $("btnLogout").onclick = function(){
-        localStorage.removeItem("digiy_dashboard_auth");
-        location.reload();
-      };
+        // verrouillage: session requise
+        const sess = await window.DIGIY_GUARD.requireSession({ module: "pay" });
+        // sess peut contenir owner_id/business_id/slug selon ton guard
+        document.getElementById("who").textContent =
+          "Accès PRO • Session OK • " + (sess?.slug ? ("slug: "+sess.slug) : "DIGIY");
 
-      // CHECK AUTH
-      if(localStorage.getItem("digiy_dashboard_auth") === "ok"){
-        showDashboard();
+        wireUI();
+        await refreshAll();
+
+      }catch(e){
+        console.warn(e);
+        location.replace("index.html");
       }
-
-      function showDashboard(){
-        $("authBox").style.display = "none";
-        $("dashboard").style.display = "block";
-        loadData();
-      }
-
-      // LOAD DATA
-      async function loadData(){
-        $("loading").style.display = "block";
-        
-        try{
-          const periode = $("filterPeriode").value;
-          let query = sb.from("encaissements_digiylyfe").select("*").order("created_at", { ascending: false });
-          
-          if(periode !== "all"){
-            const dateDebut = new Date();
-            dateDebut.setDate(dateDebut.getDate() - parseInt(periode));
-            query = query.gte("created_at", dateDebut.toISOString());
-          }
-          
-          const result = await query;
-          
-          if(result.error) throw result.error;
-          
-          allData = result.data || [];
-          renderAll();
-          
-        }catch(e){
-          console.error(e);
-          alert("Erreur chargement: " + e.message);
-        }finally{
-          $("loading").style.display = "none";
-        }
-      }
-
-      function renderAll(){
-        renderKPIs();
-        renderTable();
-        renderCharts();
-        renderModuleStats();
-      }
-
-      function fmt(n){
-        return Number(n||0).toLocaleString("fr-FR");
-      }
-
-      function renderKPIs(){
-        const filtered = filterData();
-        
-        const total = filtered.reduce((sum, row) => sum + (row.montant||0), 0);
-        const confirmes = filtered.filter(r => ["CONFIRME","ACTIF"].includes(r.statut)).length;
-        const attente = filtered.filter(r => r.statut === "EN_ATTENTE").length;
-        const mrr = filtered.filter(r => ["CONFIRME","ACTIF"].includes(r.statut)).reduce((sum, row) => sum + (row.montant||0), 0);
-        
-        $("kpiTotal").textContent = fmt(total) + " F";
-        $("kpiConfirmes").textContent = confirmes;
-        $("kpiAttente").textContent = attente;
-        $("kpiMRR").textContent = fmt(mrr) + " F";
-      }
-
-      function renderTable(){
-        const filtered = filterData();
-        const tbody = $("tableBody");
-        
-        if(filtered.length === 0){
-          tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:40px;">Aucun encaissement</td></tr>';
-          return;
-        }
-        
-        tbody.innerHTML = filtered.map(row => {
-          const date = new Date(row.created_at).toLocaleDateString("fr-FR", {day:"2-digit", month:"short", year:"numeric"});
-          const nom = [row.prenom, row.nom].filter(Boolean).join(" ") || "—";
-          const statut = row.statut || "—";
-          
-          let badgeClass = "badge";
-          if(["CONFIRME","ACTIF"].includes(statut)) badgeClass += " ok";
-          else if(statut === "EN_ATTENTE") badgeClass += " warn";
-          else if(statut === "ANNULE") badgeClass += " bad";
-          
-          return `
-            <tr>
-              <td>${date}</td>
-              <td><b>${nom}</b></td>
-              <td class="mono">${row.phone||"—"}</td>
-              <td><b>${row.module}</b></td>
-              <td class="small">${row.plan||"—"}</td>
-              <td><b>${fmt(row.montant)} F</b></td>
-              <td><span class="${badgeClass}">${statut}</span></td>
-              <td class="small mono">${row.payment_id ? row.payment_id.slice(0,8)+"..." : "—"}</td>
-            </tr>
-          `;
-        }).join("");
-      }
-
-      function renderCharts(){
-        const filtered = filterData();
-        
-        // Chart Modules
-        const moduleData = {};
-        filtered.forEach(row => {
-          const m = row.module || "AUTRE";
-          moduleData[m] = (moduleData[m]||0) + (row.montant||0);
-        });
-        
-        const moduleLabels = Object.keys(moduleData);
-        const moduleValues = Object.values(moduleData);
-        
-        if(chartModules) chartModules.destroy();
-        chartModules = new Chart($("chartModules"), {
-          type: "doughnut",
-          data: {
-            labels: moduleLabels,
-            datasets: [{
-              data: moduleValues,
-              backgroundColor: ["#22c55e","#facc15","#f59e0b","#ef4444","#3b82f6","#8b5cf6","#ec4899","#06b6d4"]
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: { position: "bottom", labels: { color: "#eafff1" } }
-            }
-          }
-        });
-        
-        // Chart Timeline
-        const timelineData = {};
-        filtered.forEach(row => {
-          const date = new Date(row.created_at).toLocaleDateString("fr-FR");
-          timelineData[date] = (timelineData[date]||0) + (row.montant||0);
-        });
-        
-        const timelineLabels = Object.keys(timelineData).slice(-14);
-        const timelineValues = timelineLabels.map(d => timelineData[d]||0);
-        
-        if(chartTimeline) chartTimeline.destroy();
-        chartTimeline = new Chart($("chartTimeline"), {
-          type: "line",
-          data: {
-            labels: timelineLabels,
-            datasets: [{
-              label: "Encaissements (F CFA)",
-              data: timelineValues,
-              borderColor: "#22c55e",
-              backgroundColor: "rgba(34,197,94,0.1)",
-              tension: 0.4,
-              fill: true
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: { labels: { color: "#eafff1" } }
-            },
-            scales: {
-              x: { ticks: { color: "#eafff1" }, grid: { color: "rgba(255,255,255,0.1)" } },
-              y: { ticks: { color: "#eafff1" }, grid: { color: "rgba(255,255,255,0.1)" } }
-            }
-          }
-        });
-      }
-
-      function renderModuleStats(){
-        const filtered = filterData();
-        const moduleStats = {};
-        
-        filtered.forEach(row => {
-          const m = row.module || "AUTRE";
-          if(!moduleStats[m]){
-            moduleStats[m] = { count: 0, total: 0, actifs: 0 };
-          }
-          moduleStats[m].count++;
-          moduleStats[m].total += (row.montant||0);
-          if(["CONFIRME","ACTIF"].includes(row.statut)) moduleStats[m].actifs++;
-        });
-        
-        const html = Object.entries(moduleStats).map(([module, stats]) => `
-          <div style="display:flex; justify-content:space-between; align-items:center; padding:12px; border:1px solid var(--line); border-radius:12px; margin:8px 0;">
-            <div>
-              <b style="font-size:16px;">${module}</b>
-              <div class="small">${stats.count} abonnements · ${stats.actifs} actifs</div>
-            </div>
-            <div style="text-align:right;">
-              <b style="font-size:20px; color:var(--gold);">${fmt(stats.total)} F</b>
-              <div class="small">MRR: ${fmt(stats.total / (stats.count||1))} F/mois</div>
-            </div>
-          </div>
-        `).join("");
-        
-        $("moduleStats").innerHTML = html || '<p class="small">Aucune donnée</p>';
-      }
-
-      function filterData(){
-        let data = allData;
-        
-        const statut = $("filterStatut").value;
-        const module = $("filterModule").value;
-        
-        if(statut) data = data.filter(r => r.statut === statut);
-        if(module) data = data.filter(r => r.module === module);
-        
-        return data;
-      }
-
-      // EVENTS
-      $("btnRefresh").onclick = loadData;
-      $("filterStatut").onchange = renderAll;
-      $("filterModule").onchange = renderAll;
-      $("filterPeriode").onchange = loadData;
     })();
+
+    function wireUI(){
+      document.getElementById("btnRefresh").addEventListener("click", refreshAll);
+      document.getElementById("btnLogout").addEventListener("click", async ()=>{
+        try{
+          if(window.DIGIY_GUARD?.logout) await window.DIGIY_GUARD.logout();
+        }finally{
+          location.replace("index.html");
+        }
+      });
+      document.getElementById("btnHardMode").addEventListener("click", ()=>{
+        alert("Hard Mode arrive: rôle caisse_admin + PIN + journalisation.");
+      });
+    }
+
+    // ⚠️ IMPORTANT : ici je mets des appels “placeholders”.
+    // On branchera TES RPC RLS-safe (ex: digiy_pay_dashboard_stats / digiy_pay_dashboard_recent)
+    async function refreshAll(){
+      setKpi("kpiDay","…");
+      setKpi("kpiCount","…");
+      setKpi("kpiPending","…");
+      document.getElementById("txBody").innerHTML = "";
+
+      const sb = window.DIGIY_GUARD?.sb;
+      if(!sb){
+        // si ton guard expose supabase client autrement, adapte ici
+        setKpi("kpiDay","—");
+        setKpi("kpiCount","—");
+        setKpi("kpiPending","—");
+        return;
+      }
+
+      // 1) Stats
+      const { data:stats, error:err1 } = await sb.rpc("digiy_pay_dashboard_stats", {});
+      if(err1){
+        console.warn(err1);
+        setKpi("kpiDay","—");
+        setKpi("kpiCount","—");
+        setKpi("kpiPending","—");
+      }else{
+        setKpi("kpiDay", fmtMoney(stats?.total_day || 0));
+        setKpi("kpiCount", String(stats?.tx_count_day || 0));
+        setKpi("kpiPending", String(stats?.pending || 0));
+      }
+
+      // 2) Récents
+      const { data:rows, error:err2 } = await sb.rpc("digiy_pay_dashboard_recent", { p_limit: 20 });
+      if(err2){
+        console.warn(err2);
+        document.getElementById("txBody").innerHTML =
+          `<tr><td colspan="6" class="muted">RPC manquante ou bloquée par RLS (normal tant qu’on n’a pas posé).</td></tr>`;
+        return;
+      }
+
+      document.getElementById("txBody").innerHTML = (rows||[]).map(r=>{
+        const st = (r.status||"pending").toLowerCase();
+        const pillClass = st==="paid" ? "ok" : (st==="failed" ? "bad" : "wait");
+        const label = st==="paid" ? "✅ PAID" : (st==="failed" ? "❌ FAIL" : "⏳ PENDING");
+        return `
+          <tr class="row">
+            <td>${escapeHtml(r.created_at?.slice(0,19)?.replace("T"," ") || "—")}</td>
+            <td>${escapeHtml(r.module || "—")}</td>
+            <td><b>${fmtMoney(r.amount || 0)}</b></td>
+            <td>${escapeHtml(r.channel || "—")}</td>
+            <td><span class="pill ${pillClass}">${label}</span></td>
+            <td class="muted">${escapeHtml(r.external_ref || r.id || "—")}</td>
+          </tr>`;
+      }).join("");
+    }
+
+    function setKpi(id,v){ document.getElementById(id).textContent = v; }
+    function fmtMoney(n){
+      try{ return new Intl.NumberFormat("fr-FR").format(Number(n)) + " FCFA"; }
+      catch(e){ return String(n)+" FCFA"; }
+    }
+    function escapeHtml(s){
+      return String(s??"").replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m]));
+    }
   </script>
 </body>
 </html>
