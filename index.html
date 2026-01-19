@@ -88,14 +88,20 @@
     .qr-modal {
       display: none;
       position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
       background: rgba(0, 0, 0, 0.95);
       z-index: 9999;
       align-items: center;
       justify-content: center;
       animation: fadeIn 0.3s ease;
     }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
     .qr-container {
       background: #fff;
       border-radius: 24px;
@@ -105,32 +111,93 @@
       text-align: center;
       animation: slideUp 0.4s ease;
     }
-    @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-    .qr-container h2 { color: #000; margin: 0 0 20px; font-size: 24px; }
+    @keyframes slideUp {
+      from { transform: translateY(50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .qr-container h2 {
+      color: #000;
+      margin: 0 0 20px;
+      font-size: 24px;
+    }
     .qr-image {
-      width: 300px; height: 300px; margin: 20px auto;
-      border: 3px solid #22c55e; border-radius: 16px; padding: 10px; background: #fff;
+      width: 300px;
+      height: 300px;
+      margin: 20px auto;
+      border: 3px solid #22c55e;
+      border-radius: 16px;
+      padding: 10px;
+      background: #fff;
     }
-    .qr-amount { font-size: 36px; font-weight: 900; color: #facc15; margin: 20px 0; }
-    .qr-details { color: #666; font-size: 14px; margin: 10px 0; font-weight: 900; }
-    .qr-status { background: #f0fdf4; border: 2px solid #22c55e; border-radius: 12px; padding: 15px; margin: 20px 0; }
-    .qr-status-text { color: #16a34a; font-weight: 900; font-size: 16px; }
-    .qr-status-sub { color: #666; font-size: 12px; margin-top: 5px; }
+    .qr-amount {
+      font-size: 36px;
+      font-weight: 900;
+      color: #facc15;
+      margin: 20px 0;
+    }
+    .qr-details {
+      color: #666;
+      font-size: 14px;
+      margin: 10px 0;
+      font-weight: 900;
+    }
+    .qr-status {
+      background: #f0fdf4;
+      border: 2px solid #22c55e;
+      border-radius: 12px;
+      padding: 15px;
+      margin: 20px 0;
+    }
+    .qr-status-text {
+      color: #16a34a;
+      font-weight: 900;
+      font-size: 16px;
+    }
+    .qr-status-sub {
+      color: #666;
+      font-size: 12px;
+      margin-top: 5px;
+    }
     .qr-btn-close {
-      width: 100%; padding: 15px; background: #ef4444; color: #fff;
-      border: none; border-radius: 12px; font-weight: 900; cursor: pointer; font-size: 16px; margin-top: 10px;
+      width: 100%;
+      padding: 15px;
+      background: #ef4444;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-weight: 900;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 10px;
     }
-    .qr-btn-close:hover { background: #dc2626; }
+    .qr-btn-close:hover {
+      background: #dc2626;
+    }
     .qr-instructions {
-      background: #fef3c7; border: 2px solid #f59e0b; border-radius: 12px;
-      padding: 15px; margin: 15px 0; color: #92400e; font-weight: 900; font-size: 13px;
+      background: #fef3c7;
+      border: 2px solid #f59e0b;
+      border-radius: 12px;
+      padding: 15px;
+      margin: 15px 0;
+      color: #92400e;
+      font-weight: 900;
+      font-size: 13px;
     }
 
     input[type="text"], input[type="email"] {
-      padding: 14px; border: 1px solid var(--line); border-radius: 12px;
-      background: rgba(0,0,0,.12); color: var(--text); font-size: 15px; font-weight: 500; width: 100%;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(0,0,0,.12);
+      color: var(--text);
+      font-size: 15px;
+      font-weight: 500;
+      width: 100%;
     }
-    input[type="text"]:focus, input[type="email"]:focus { outline: none; border-color: var(--ok); }
+    input[type="text"]:focus, input[type="email"]:focus {
+      outline: none;
+      border-color: var(--ok);
+    }
   </style>
 </head>
 
@@ -169,19 +236,19 @@
       <div class="card" id="clientInfoBox" style="margin-top:16px; display:none;">
         <h2>👤 Tes informations</h2>
         <p class="small">Pour bien enregistrer ton abonnement dans la caisse DIGIYLYFE</p>
-
+        
         <div class="hr"></div>
-
+        
         <div style="display:grid; gap:12px;">
           <input type="text" id="inputPrenom" placeholder="Prénom *">
           <input type="text" id="inputNom" placeholder="Nom *">
           <input type="email" id="inputEmail" placeholder="Email (optionnel)">
         </div>
-
+        
         <div class="hr"></div>
-
+        
         <button class="btn ok" id="btnSaveInfo">✅ Valider mes infos</button>
-
+        
         <p class="small" style="margin-top:8px; color:var(--muted);">
           * Champs obligatoires · Ces infos sont enregistrées pour ton abonnement
         </p>
@@ -206,7 +273,9 @@
           <div class="hr"></div>
 
           <h2>💬 Confirmation WhatsApp</h2>
-          <p class="small">Après le paiement, envoie : ✅ le reçu Wave ✅ le module/pack choisi</p>
+          <p class="small">
+            Après le paiement, envoie : ✅ le reçu Wave ✅ le module/pack choisi
+          </p>
 
           <div class="hr"></div>
 
@@ -249,13 +318,212 @@
 
         <div class="box">
           <h2>Choisis ton module PRO 🦅</h2>
-          <p class="small">Abonnement · 0% commission · Tu gardes 100% de ce que tu gagnes</p>
-          <p class="small">✓ Paiement direct Wave ✓ Activation rapide ✓ Made in Sénégal</p>
+          <p class="small">
+            Abonnement · 0% commission sur tes revenus · Tu gardes 100% de ce que tu gagnes
+          </p>
+          <p class="small">
+            ✓ Paiement direct Wave ✓ Activation rapide ✓ Made in Sénégal
+          </p>
 
           <div class="hr"></div>
 
-          <!-- (Tes plans : inchangés) -->
-          <!-- ... garde tes blocs plans tels quels ... -->
+          <div class="plan">
+            <div class="planHead">
+              <div>
+                <div style="font-weight:1200;">🍽️ DIGIY RESTO PRO</div>
+                <div class="small">
+                  Gestion restaurant complète • Plan de salle • Commandes • KDS • Caisse • Offline
+                </div>
+              </div>
+              <span class="badge pop">PRO</span>
+            </div>
+
+            <div class="small"><b>Par nombre de licences</b></div>
+
+            <div class="small">🥉 ESSENTIEL • 2 licences (15 tables)</div>
+            <div class="price">9,900 F / mois</div>
+            <button class="btn gold" data-choose="RESTO_PRO" data-plan="RESTO_PRO_ESSENTIEL" data-amount="9900">
+              Choisir ESSENTIEL
+            </button>
+
+            <div class="hr"></div>
+
+            <div class="small">🥈 STANDARD • 4 licences (30 tables)</div>
+            <div class="price">14,900 F / mois</div>
+            <button class="btn gold" data-choose="RESTO_PRO" data-plan="RESTO_PRO_STANDARD" data-amount="14900">
+              Choisir STANDARD
+            </button>
+
+            <div class="hr"></div>
+
+            <div class="small">🥇 PRO • 6 licences (45 tables)</div>
+            <div class="price">24,900 F / mois</div>
+            <button class="btn gold" data-choose="RESTO_PRO" data-plan="RESTO_PRO_FULL" data-amount="24900">
+              Choisir PRO
+            </button>
+
+            <ul class="list">
+              <li>Plan de salle interactif</li>
+              <li>Prise de commande multi-zones</li>
+              <li>Kitchen Display System (KDS)</li>
+              <li>Caisse + imprimante thermique</li>
+              <li>Mode hors ligne</li>
+              <li>✅ 0% commission</li>
+            </ul>
+          </div>
+
+          <div class="hr"></div>
+
+          <div class="plan">
+            <div class="planHead">
+              <div>
+                <div style="font-weight:1200;">📅 DIGIY RÉSA</div>
+                <div class="small">
+                  Réservations restaurant • Planning temps réel • SMS auto • Gestion tables
+                </div>
+              </div>
+              <span class="badge">0% commission</span>
+            </div>
+
+            <div class="small"><b>Par nombre de tables</b></div>
+
+            <button class="btn gold" data-choose="RESTO_RESA" data-plan="RESA_1_5" data-amount="9900">
+              🥉 1–5 tables — 9,900 F
+            </button>
+            <button class="btn gold" data-choose="RESTO_RESA" data-plan="RESA_6_9" data-amount="15000">
+              🥈 6–9 tables — 15,000 F
+            </button>
+            <button class="btn gold" data-choose="RESTO_RESA" data-plan="RESA_10_20" data-amount="25000">
+              🥇 10–20 tables — 25,000 F
+            </button>
+            <button class="btn gold" data-choose="RESTO_RESA" data-plan="RESA_21_30" data-amount="30000">
+              💎 21–30 tables — 30,000 F
+            </button>
+            <button class="btn gold" data-choose="RESTO_RESA" data-plan="RESA_30P" data-amount="50000">
+              👑 30+ tables — 50,000 F
+            </button>
+
+            <ul class="list">
+              <li>Réservations en ligne</li>
+              <li>Planning temps réel</li>
+              <li>Notifications SMS / WhatsApp</li>
+              <li>Gestion des tables</li>
+              <li>✅ 0% commission</li>
+            </ul>
+          </div>
+
+          <div class="hr"></div>
+
+          <div class="plan">
+            <div class="planHead">
+              <div>
+                <div style="font-weight:1200;">🧾 DIGIY POS PRO</div>
+                <div class="small">
+                  Caisse enregistreuse pro • Gestion stock • Ventes • Stats • Multi-utilisateurs
+                </div>
+              </div>
+              <span class="badge pop">⭐ PRO</span>
+            </div>
+
+            <div class="price">12,900 F / mois</div>
+            <button class="btn gold" data-choose="POS_PRO" data-plan="POS_PRO_MONTHLY" data-amount="12900">
+              Choisir POS PRO
+            </button>
+
+            <ul class="list">
+              <li>Caisse tactile intuitive</li>
+              <li>Gestion stock</li>
+              <li>Statistiques temps réel</li>
+              <li>Multi-utilisateurs + droits</li>
+              <li>Imprimante thermique 80mm</li>
+              <li>Mode hors ligne</li>
+              <li>✅ 0% commission</li>
+            </ul>
+          </div>
+
+          <div class="hr"></div>
+
+          <h2>📦 Autres modules individuels</h2>
+
+          <div class="cards">
+            <div class="plan">
+              <div class="planHead">
+                <div>
+                  <div style="font-weight:1200;">🚗 DIGIY DRIVER</div>
+                  <div class="small">VTC sans commission · Paiement direct aux chauffeurs</div>
+                </div>
+                <span class="badge">Prix fixe</span>
+              </div>
+              <div class="price">9,900 F / mois</div>
+              <button class="btn gold" data-choose="DRIVER" data-plan="DRIVER_MONTHLY" data-amount="9900">
+                Choisir DRIVER
+              </button>
+            </div>
+
+            <div class="plan">
+              <div class="planHead">
+                <div>
+                  <div style="font-weight:1200;">🏠 DIGIY LOC</div>
+                  <div class="small">Location courte durée · Calendrier · Réservations · 0% commission</div>
+                </div>
+                <span class="badge">Par logements</span>
+              </div>
+              <div class="small">
+                1–5 : <b>9,900</b> F · 6–9 : <b>15,000</b> F · 10–20 : <b>25,000</b> F<br/>
+                21–30 : <b>30,000</b> F · 30+ : <b>50,000</b> F
+              </div>
+              <div style="height:10px;"></div>
+              <div class="row">
+                <button class="btn gold" data-choose="LOC" data-plan="LOC_1_5" data-amount="9900">1–5</button>
+                <button class="btn gold" data-choose="LOC" data-plan="LOC_6_9" data-amount="15000">6–9</button>
+                <button class="btn gold" data-choose="LOC" data-plan="LOC_10_20" data-amount="25000">10–20</button>
+                <button class="btn gold" data-choose="LOC" data-plan="LOC_21_30" data-amount="30000">21–30</button>
+                <button class="btn gold" data-choose="LOC" data-plan="LOC_30P" data-amount="50000">30+</button>
+              </div>
+            </div>
+
+            <div class="plan">
+              <div class="planHead">
+                <div>
+                  <div style="font-weight:1200;">🛒 DIGIY MARKET</div>
+                  <div class="small">Marketplace • Vente en ligne • Catalogue • Paiement mobile</div>
+                </div>
+                <span class="badge">Prix fixe</span>
+              </div>
+              <div class="price">12,900 F / mois</div>
+              <button class="btn gold" data-choose="MARKET" data-plan="MARKET_MONTHLY" data-amount="12900">
+                Choisir MARKET
+              </button>
+            </div>
+
+            <div class="plan">
+              <div class="planHead">
+                <div>
+                  <div style="font-weight:1200;">💼 DIGIY JOBS</div>
+                  <div class="small">Emploi & recrutement · Offres · CV</div>
+                </div>
+                <span class="badge">Prix fixe</span>
+              </div>
+              <div class="price">7,900 F / mois</div>
+              <button class="btn gold" data-choose="JOBS" data-plan="JOBS_MONTHLY" data-amount="7900">
+                Choisir JOBS
+              </button>
+            </div>
+
+            <div class="plan">
+              <div class="planHead">
+                <div>
+                  <div style="font-weight:1200;">🏗️ DIGIY BUILD</div>
+                  <div class="small">Services construction · Devis · Planning</div>
+                </div>
+                <span class="badge">Prix fixe</span>
+              </div>
+              <div class="price">9,900 F / mois</div>
+              <button class="btn gold" data-choose="BUILD" data-plan="BUILD_MONTHLY" data-amount="9900">
+                Choisir BUILD
+              </button>
+            </div>
+          </div>
 
           <div class="hr"></div>
           <div class="small">© DIGIYLYFE — Made in Sénégal 🇸🇳 · 0% commission · Paiement direct · Souveraineté digitale</div>
@@ -267,8 +535,11 @@
   <div class="qr-modal" id="qrModal">
     <div class="qr-container">
       <h2>📱 Scanner pour payer</h2>
+      
       <img id="qrImage" src="" alt="QR Code" class="qr-image" />
+      
       <div class="qr-amount" id="qrAmount">—</div>
+      
       <div class="qr-details">
         <div id="qrModule">Module: —</div>
         <div id="qrPlan">Plan: —</div>
@@ -279,400 +550,446 @@
         👉 Scanne ce QR code<br/>
         ✅ Confirme le paiement
       </div>
-
+      
       <div class="qr-status">
         <div class="qr-status-text">⏳ En attente du paiement...</div>
         <div class="qr-status-sub">Le statut se met à jour automatiquement</div>
       </div>
-
-      <button class="qr-btn-close" onclick="closeQRModal()">❌ Annuler</button>
+      
+      <button class="qr-btn-close" onclick="closeQRModal()">
+        ❌ Annuler
+      </button>
     </div>
   </div>
 
   <script>
-(function(){
-  "use strict";
+    (function(){
+      "use strict";
+      
+      const SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
+      const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc3Ftd2pqdHNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA";
+      const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  // ======== MINI DEBUG BAR (preuve que le JS tourne) ========
-  function debugBar(txt){
-    try{
-      const d = document.createElement("div");
-      d.textContent = txt;
-      d.style.cssText =
-        "position:fixed;bottom:10px;left:10px;z-index:99999;padding:8px 10px;border-radius:12px;" +
-        "background:rgba(34,197,94,.18);border:1px solid rgba(34,197,94,.45);color:#eafff1;" +
-        "font:700 12px system-ui";
-      document.body.appendChild(d);
-      setTimeout(()=>d.remove(), 4500);
-    }catch(e){}
-  }
+      const SUPPORT_WA = "+221771342889";
+      const RECIPIENT_WAVE = "+221771342889";
+      
+      const $ = function(id){ return document.getElementById(id); };
+      let pollingInterval = null;
 
-  // ======== SAFE DOM HELPERS ========
-  const $ = (id)=>document.getElementById(id);
-  const on = (id, evt, fn)=>{
-    const el = $(id);
-    if(el) el.addEventListener(evt, fn);
-  };
+      function qs(name){
+        try{ return new URL(location.href).searchParams.get(name) || ""; }catch(e){ return ""; }
+      }
+      
+      function setQS(name, value){
+        const u = new URL(location.href);
+        if(value === null || value === undefined || value === "") u.searchParams.delete(name);
+        else u.searchParams.set(name, value);
+        history.replaceState({}, "", u.toString());
+      }
+      
+      function fmt(n){
+        n = Number(n||0);
+        if(!isFinite(n) || n<=0) return "—";
+        return n.toLocaleString("fr-FR");
+      }
 
-  // ======== CHECK REQUIRED IDS (sinon ça plante) ========
-  const MUST = [
-    "pillAccess","pillModule","pillPhone","pillSlug",
-    "sumAccess","sumModule","sumPhone","sumSlug","sumPlan","sumAmount",
-    "pillAmount","statusBig","statusText","tag","hint",
-    "btnPayNow","btnWaConfirm","btnRefresh","btnBack","btnHelp",
-    "qrModal","qrImage","qrAmount","qrModule","qrPlan"
-  ];
-  const missing = MUST.filter(id=>!$(id));
-  if(missing.length){
-    console.warn("❌ DIGIY PAY PAGE: IDs manquants =>", missing);
-    // On ne bloque pas, mais on te le dit clairement
-  }
+      function normPhone(p){
+        p = String(p||"").trim().replace(/\s+/g,"").replace(/[^\d+]/g,"");
+        if(p.startsWith("00221")) p = "+221" + p.slice(5);
+        if(!p.startsWith("+") && p.startsWith("221")) p = "+" + p;
+        if(!p.startsWith("+221") && /^\d{9}$/.test(p)) p = "+221" + p;
+        return p;
+      }
 
-  // ======== WAIT DOM READY (au cas où) ========
-  document.addEventListener("DOMContentLoaded", boot);
+      function wa(msg){
+        location.href = "https://wa.me/" + SUPPORT_WA.replace(/\+/g,"") + "?text=" + encodeURIComponent(msg);
+      }
 
-  async function boot(){
-    debugBar("🦅 DIGIY PAY: JS OK");
+      const from = (qs("from") || "").trim();
+      const slug = (qs("slug") || "").trim();
+      const phone = normPhone(qs("phone") || "");
+      const accessModule = String(qs("module") || "").trim().toUpperCase();
+      let status = (qs("status") || "").trim().toLowerCase();
+      let chosenModule = (qs("m") || "").trim().toUpperCase();
+      let chosenPlan = (qs("plan") || "").trim();
+      let chosenAmount = (qs("amount") || "").trim();
 
-    // ======== SUPABASE LOAD CHECK ========
-    if(!window.supabase || !window.supabase.createClient){
-      console.error("❌ Supabase JS non chargé. Vérifie le <script src> CDN.");
-      debugBar("❌ Supabase manquant");
-      return;
-    }
+      $("pillAccess").textContent = accessModule || "—";
+      $("pillModule").textContent = chosenModule || "—";
+      $("pillPhone").textContent = phone || "—";
+      $("pillSlug").textContent = slug || "—";
 
-    const SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
-    const SUPABASE_ANON_KEY =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc3Ftd2pqdHNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA";
-    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      function syncSummary(){
+        $("sumAccess").textContent = accessModule || "—";
+        $("sumModule").textContent = chosenModule || "—";
+        $("sumPhone").textContent = phone || "—";
+        $("sumSlug").textContent = slug || "—";
+        $("sumPlan").textContent = chosenPlan || "—";
+        $("sumAmount").textContent = chosenAmount ? (fmt(chosenAmount) + " F") : "—";
+        $("pillAmount").textContent = chosenAmount ? (fmt(chosenAmount) + " F") : "—";
+        $("pillModule").textContent = chosenModule || "—";
+      }
+      syncSummary();
 
-    const SUPPORT_WA = "+221771342889";
-    const RECIPIENT_WAVE = "+221771342889";
-
-    let pollingInterval = null;
-    let pollingTimeout = null;
-
-    function qs(name){
-      try{ return new URL(location.href).searchParams.get(name) || ""; }catch(e){ return ""; }
-    }
-    function setQS(name, value){
-      const u = new URL(location.href);
-      if(value === null || value === undefined || value === "") u.searchParams.delete(name);
-      else u.searchParams.set(name, value);
-      history.replaceState({}, "", u.toString());
-    }
-    function fmt(n){
-      n = Number(n||0);
-      if(!isFinite(n) || n<=0) return "—";
-      return n.toLocaleString("fr-FR");
-    }
-    function normPhone(p){
-      p = String(p||"").trim().replace(/\s+/g,"").replace(/[^\d+]/g,"");
-      if(p.startsWith("00221")) p = "+221" + p.slice(5);
-      if(!p.startsWith("+") && p.startsWith("221")) p = "+" + p;
-      if(!p.startsWith("+221") && /^\d{9}$/.test(p)) p = "+221" + p;
-      return p;
-    }
-    function wa(msg){
-      location.href = "https://wa.me/" + SUPPORT_WA.replace(/\+/g,"") + "?text=" + encodeURIComponent(msg);
-    }
-    function setHint(msg){ if($("hint")) $("hint").textContent = msg || ""; }
-    function setBig(text, tone, tagText){
-      const el = $("statusBig");
-      if(el) el.className = "statusBig " + (tone || "warn");
-      if($("statusText")) $("statusText").textContent = text;
-      const tag = $("tag");
-      if(tag){
+      function setHint(msg){ $("hint").textContent = msg || ""; }
+      
+      function setBig(text, tone, tagText){
+        const el = $("statusBig");
+        el.className = "statusBig " + (tone || "warn");
+        $("statusText").textContent = text;
+        const tag = $("tag");
         tag.className = "tag " + (tone || "warn");
         tag.textContent = tagText || "—";
       }
-    }
 
-    // ======== STATE ========
-    const from = (qs("from") || "").trim();
-    const slug = (qs("slug") || "").trim();
-    const phone = normPhone(qs("phone") || "");
-    const accessModule = String(qs("module") || "").trim().toUpperCase();
+      function safeBack(){
+        if(from){ location.replace(from); return; }
+        location.replace("https://beauville.github.io/digiy-loc-pro/login.html" + (slug ? "?slug="+encodeURIComponent(slug) : ""));
+      }
 
-    let status = (qs("status") || "").trim().toLowerCase();
-    let chosenModule = (qs("m") || "").trim().toUpperCase();
-    let chosenPlan = (qs("plan") || "").trim();
-    let chosenAmount = (qs("amount") || "").trim();
+      function ensureChoice(){
+        if(!phone){
+          setHint("Téléphone manquant.");
+          return false;
+        }
+        if(!chosenModule){
+          setHint("Choisis un module.");
+          return false;
+        }
+        if(!chosenAmount){
+          setHint("Choisis un tarif.");
+          return false;
+        }
+        return true;
+      }
 
-    // ======== INIT PILLS ========
-    if($("pillAccess")) $("pillAccess").textContent = accessModule || "—";
-    if($("pillModule")) $("pillModule").textContent = chosenModule || "—";
-    if($("pillPhone")) $("pillPhone").textContent = phone || "—";
-    if($("pillSlug")) $("pillSlug").textContent = slug || "—";
+      function pick(mod, plan, amount){
+        chosenModule = String(mod||"").trim().toUpperCase();
+        chosenPlan = String(plan||"").trim();
+        chosenAmount = String(amount||"").trim();
 
-    function syncSummary(){
-      if($("sumAccess")) $("sumAccess").textContent = accessModule || "—";
-      if($("sumModule")) $("sumModule").textContent = chosenModule || "—";
-      if($("sumPhone")) $("sumPhone").textContent = phone || "—";
-      if($("sumSlug")) $("sumSlug").textContent = slug || "—";
-      if($("sumPlan")) $("sumPlan").textContent = chosenPlan || "—";
-      if($("sumAmount")) $("sumAmount").textContent = chosenAmount ? (fmt(chosenAmount) + " F") : "—";
-      if($("pillAmount")) $("pillAmount").textContent = chosenAmount ? (fmt(chosenAmount) + " F") : "—";
-      if($("pillModule")) $("pillModule").textContent = chosenModule || "—";
-    }
-    syncSummary();
+        setQS("m", chosenModule);
+        setQS("plan", chosenPlan);
+        setQS("amount", chosenAmount);
 
-    function safeBack(){
-      if(from){ location.replace(from); return; }
-      location.replace("https://beauville.github.io/digiy-loc-pro/login.html" + (slug ? "?slug="+encodeURIComponent(slug) : ""));
-    }
-    function ensureChoice(){
-      if(!phone){ setHint("Téléphone manquant (?phone=...)."); return false; }
-      if(!accessModule){ setHint("Accès manquant (?module=LOC/DRIVER/...)."); return false; }
-      if(!chosenModule){ setHint("Choisis un module."); return false; }
-      if(!chosenAmount){ setHint("Choisis un tarif."); return false; }
-      return true;
-    }
-    function pick(mod, plan, amount){
-      chosenModule = String(mod||"").trim().toUpperCase();
-      chosenPlan = String(plan||"").trim();
-      chosenAmount = String(amount||"").trim();
-      setQS("m", chosenModule);
-      setQS("plan", chosenPlan);
-      setQS("amount", chosenAmount);
-      syncSummary();
-      setHint("Choix enregistré ✅");
-      debugBar("✅ Choix: "+chosenModule+" / "+fmt(chosenAmount));
-    }
+        syncSummary();
+        setHint("Choix enregistré.");
+      }
 
-    // ======== PLANS BUTTONS ========
-    document.querySelectorAll("[data-choose]").forEach((btn)=>{
-      btn.addEventListener("click", ()=>{
-        pick(btn.getAttribute("data-choose"), btn.getAttribute("data-plan"), btn.getAttribute("data-amount"));
+      document.querySelectorAll("[data-choose]").forEach(function(btn){
+        btn.addEventListener("click", function(){
+          pick(btn.getAttribute("data-choose"), btn.getAttribute("data-plan"), btn.getAttribute("data-amount"));
+        });
       });
-    });
 
-    // ======== QR ========
-    function showPaymentQR(params){
-      if(!$("qrModal")) return;
+      function showPaymentQR(params) {
+        const modal = $("qrModal");
+        const qrImage = $("qrImage");
+        const qrAmount = $("qrAmount");
+        const qrModule = $("qrModule");
+        const qrPlan = $("qrPlan");
 
-      const qrCode = params.qrCode || "";
-      if($("qrImage")){
-        $("qrImage").src = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + encodeURIComponent(qrCode);
-      }
-      if($("qrAmount")) $("qrAmount").textContent = fmt(params.amount) + " F CFA";
-      if($("qrModule")) $("qrModule").textContent = "Module: " + params.module;
-      if($("qrPlan")) $("qrPlan").textContent = "Plan: " + params.plan;
-
-      $("qrModal").style.display = "flex";
-      startPaymentPolling(params.paymentId);
-    }
-
-    window.closeQRModal = function(){
-      if($("qrModal")) $("qrModal").style.display = "none";
-      if(pollingInterval) clearInterval(pollingInterval);
-      pollingInterval = null;
-      if(pollingTimeout) clearTimeout(pollingTimeout);
-      pollingTimeout = null;
-      if($("btnPayNow")) $("btnPayNow").disabled = false;
-    };
-
-    async function startPaymentPolling(paymentId){
-      if(pollingInterval) clearInterval(pollingInterval);
-      if(pollingTimeout) clearTimeout(pollingTimeout);
-
-      pollingInterval = setInterval(async ()=>{
-        try{
-          const res = await sb.rpc("digiy_pay_check_status", { p_payment_id: paymentId });
-          if(res.error) throw res.error;
-          const data = res.data || {};
-
-          if(data.status === "completed"){
-            clearInterval(pollingInterval); pollingInterval = null;
-            if(pollingTimeout){ clearTimeout(pollingTimeout); pollingTimeout = null; }
-            window.closeQRModal();
-
-            setBig("✅ Paiement confirmé !", "ok", "PAYÉ");
-            try{
-              await sb.rpc("digiy_set_module_active", { p_phone: phone, p_module: accessModule });
-            }catch(e){ console.warn(e); }
-
-            setQS("status","active");
-            status="active";
-            setBig("Abonnement ACTIF.", "ok", "ACTIF");
-            setHint("Tu peux revenir au planning.");
-            if($("btnBack")) $("btnBack").disabled = false;
-          }
-
-          if(data.status === "failed"){
-            clearInterval(pollingInterval); pollingInterval = null;
-            if(pollingTimeout){ clearTimeout(pollingTimeout); pollingTimeout = null; }
-            window.closeQRModal();
-            setBig("❌ Paiement échoué.", "bad", "ÉCHEC");
-            setHint("Réessaie ou contacte le support.");
-          }
-
-        }catch(e){
-          console.error("Polling error:", e);
-        }
-      }, 3000);
-
-      pollingTimeout = setTimeout(()=>{
-        if(!pollingInterval) return;
-        clearInterval(pollingInterval);
-        pollingInterval = null;
-        window.closeQRModal();
-        setBig("⏳ Temps écoulé.", "warn", "TIMEOUT");
-        setHint("Paiement non détecté. Vérifie Wave.");
-      }, 600000);
-    }
-
-    // ======== STATUS CHECK ========
-    async function checkStatus(){
-      if($("btnRefresh")) $("btnRefresh").disabled = true;
-      setBig("⏳ Vérification du statut…", "warn", "EN COURS");
-      setHint("");
-
-      if(!phone || !accessModule){
-        setBig("Choisis ton module pour démarrer.", "warn", "INFO");
-        if($("btnBack")) $("btnBack").disabled = true;
-        if($("btnRefresh")) $("btnRefresh").disabled = false;
-        return;
-      }
-
-      try{
-        const res = await sb.rpc("is_module_active", { p_phone: phone, p_module: accessModule });
-        if(res.error) throw res.error;
-
-        const active = !!res.data;
-        if(active){
-          status="active";
-          setBig("Abonnement ACTIF.", "ok", "ACTIF");
-          setHint("Tu peux revenir au planning.");
-          if($("btnBack")) $("btnBack").disabled = false;
-        }else{
-          if(status==="pending"){
-            setBig("Paiement EN ATTENTE.", "warn", "EN ATTENTE");
-            setHint("Activation après validation.");
-          }else{
-            setBig("Abonnement INACTIF.", "bad", "INACTIF");
-            setHint("Choisis un produit puis paie.");
-          }
-          if($("btnBack")) $("btnBack").disabled = true;
+        const qrCode = params.qrCode;
+        if (qrCode.startsWith('data:image') || qrCode.startsWith('http')) {
+          qrImage.src = qrCode;
+        } else {
+          qrImage.src = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + encodeURIComponent(qrCode);
         }
 
-      }catch(e){
-        console.error(e);
-        setBig("Erreur vérification.", "bad", "ERREUR");
-        setHint("Supabase: " + String(e.message || e));
-        if($("btnBack")) $("btnBack").disabled = true;
-      }finally{
-        if($("btnRefresh")) $("btnRefresh").disabled = false;
-      }
-    }
+        qrAmount.textContent = fmt(params.amount) + ' F CFA';
+        qrModule.textContent = 'Module: ' + params.module;
+        qrPlan.textContent = 'Plan: ' + params.plan;
 
-    // ======== BUTTONS WIRING ========
-    on("btnBack","click", safeBack);
-    on("btnRefresh","click", checkStatus);
-
-    on("btnWaConfirm","click", ()=>{
-      if(!ensureChoice()) return;
-      let msg = "DIGIY PRO - Confirmation paiement Wave\n\n";
-      msg += "Accès: " + accessModule + "\n";
-      msg += "Produit: " + chosenModule + "\n";
-      msg += "Plan: " + (chosenPlan || "—") + "\n";
-      msg += "Montant: " + fmt(chosenAmount) + " F CFA\n";
-      msg += "Téléphone: " + phone + "\n";
-      msg += "Slug: " + (slug || "—") + "\n\n";
-      msg += "Je viens de payer via Wave.\nJe joins le reçu Wave.\n— DIGIY";
-      wa(msg);
-      status="pending"; setQS("status","pending");
-      setBig("Confirmation envoyée.", "warn", "EN ATTENTE");
-      setHint("Envoie le reçu Wave.");
-    });
-
-    on("btnHelp","click", ()=>{
-      let msg = "DIGIY PRO - Support\n\n";
-      msg += "Accès: " + (accessModule||"—") + "\n";
-      msg += "Produit: " + (chosenModule||"—") + "\n";
-      msg += "Plan: " + (chosenPlan||"—") + "\n";
-      msg += "Montant: " + (chosenAmount ? fmt(chosenAmount)+" F" : "—") + "\n";
-      msg += "Téléphone: " + (phone||"—") + "\n";
-      msg += "Slug: " + (slug||"—") + "\n";
-      msg += "Statut: " + (status||"—") + "\n\n";
-      msg += "Besoin d'aide. — DIGIY";
-      wa(msg);
-    });
-
-    on("btnPayNow","click", async ()=>{
-      if(!ensureChoice()) return;
-
-      const prenom = (localStorage.getItem("digiy_prenom")||"").trim();
-      const nom = (localStorage.getItem("digiy_nom")||"").trim();
-      if(!prenom || !nom){
-        if($("clientInfoBox")){
-          $("clientInfoBox").style.display = "block";
-          $("clientInfoBox").scrollIntoView({behavior:"smooth", block:"center"});
-        }
-        setHint("👆 Remplis tes infos d'abord.");
-        return;
+        modal.style.display = 'flex';
+        
+        startPaymentPolling(params.paymentId);
       }
 
-      const payload = {
-        p_phone: phone,
-        p_module: chosenModule,
-        p_plan: chosenPlan || "DEFAULT",
-        p_montant: parseInt(chosenAmount,10) || 0,
-        p_nom: nom,
-        p_prenom: prenom,
-        p_email: localStorage.getItem("digiy_email") || null,
-        p_access_module: accessModule,
-        p_slug: slug || "no-slug",
-        p_metadata: { source:"pay-page", ts:new Date().toISOString(), url:location.href }
+      window.closeQRModal = function() {
+        $("qrModal").style.display = 'none';
+        if (pollingInterval) clearInterval(pollingInterval);
+        $("btnPayNow").disabled = false;
       };
 
-      try{
-        if($("btnPayNow")) $("btnPayNow").disabled = true;
-        setBig("🏦 Enregistrement caisse…", "warn", "EN COURS");
+      async function startPaymentPolling(paymentId) {
+        if (pollingInterval) clearInterval(pollingInterval);
+        
+        pollingInterval = setInterval(async function(){
+          try {
+            const result = await sb.rpc("digiy_pay_check_status", {
+              p_payment_id: paymentId
+            });
 
-        const enc = await sb.rpc("digiy_caisse_enregistrer", payload);
-        if(enc.error) throw enc.error;
-        const encaissementId = enc.data?.id;
-        if(!encaissementId) throw new Error("encaissement_id_missing");
+            const data = result.data;
+            const error = result.error;
 
-        setBig("💳 Création paiement Wave…", "warn", "EN COURS");
+            if (error) throw error;
 
-        const pay = await sb.rpc("digiy_pay_create_request", {
-          p_module: "subscription",
-          p_module_ref_id: encaissementId,
-          p_amount_fcfa: payload.p_montant,
-          p_payer_phone: phone,
-          p_recipient_phone: RECIPIENT_WAVE,
-          p_provider: "wave",
-          p_description: "DIGIY PRO - " + chosenModule + " - " + (chosenPlan||"DEFAULT") + " - " + prenom + " " + nom,
-          p_metadata: JSON.stringify({ encaissement_id: encaissementId, slug, phone, accessModule, chosenModule, chosenPlan })
-        });
+            if (data.status === 'completed') {
+              clearInterval(pollingInterval);
+              closeQRModal();
+              
+              setBig("Paiement confirmé!", "ok", "PAYÉ");
+              setHint("Activation en cours...");
+              
+              setTimeout(function(){
+                checkStatus(true);
+              }, 2000);
+            }
 
-        if(pay.error) throw pay.error;
-        const data = pay.data || {};
-        if(!data.ok) throw new Error(data.reason || "payment_creation_failed");
+            if (data.status === 'failed') {
+              clearInterval(pollingInterval);
+              closeQRModal();
+              setBig("Paiement échoué", "bad", "ÉCHEC");
+              setHint("Réessaie ou contacte le support.");
+            }
 
-        setBig("✅ QR prêt. Scanne dans Wave.", "ok", "PRÊT");
-        showPaymentQR({
-          paymentId: data.id,
-          qrCode: data.qr_code || data.payment_link,
-          amount: payload.p_montant,
-          module: chosenModule,
-          plan: (chosenPlan||"DEFAULT")
-        });
+          } catch(e) {
+            console.error('Polling error:', e);
+          }
+        }, 3000);
 
-      }catch(e){
-        console.error(e);
-        setBig("❌ Erreur paiement.", "bad", "ERREUR");
-        setHint("Erreur: " + (e.message || e));
-        if($("btnPayNow")) $("btnPayNow").disabled = false;
+        setTimeout(function(){
+          if (pollingInterval) {
+            clearInterval(pollingInterval);
+            closeQRModal();
+            setBig("Temps écoulé", "warn", "TIMEOUT");
+            setHint("Paiement non détecté. Vérifie ton compte Wave.");
+          }
+        }, 600000);
       }
-    });
 
-    // init status
-    checkStatus();
-  }
-})();
-</script>
+      // BOUTON PAYER MAINTENANT - AVEC CAISSE CENTRALE
+      $("btnPayNow").onclick = async function(){
+        if(!ensureChoice()) return;
+
+        // Vérifier si les infos client sont remplies
+        const prenom = localStorage.getItem('digiy_prenom') || '';
+        const nom = localStorage.getItem('digiy_nom') || '';
+        
+        if(!prenom || !nom) {
+          $("clientInfoBox").style.display = 'block';
+          $("clientInfoBox").scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setHint("👆 Remplis tes infos d'abord frérot!");
+          return;
+        }
+
+        try {
+          setBig("🔄 Enregistrement caisse centrale...", "warn", "EN COURS");
+          $("btnPayNow").disabled = true;
+
+          // 1️⃣ ENREGISTRER dans la CAISSE CENTRALE
+          console.log("📝 Enregistrement encaissement...");
+          
+          const encaissement = await sb.rpc("digiy_caisse_enregistrer", {
+            p_phone: phone,
+            p_module: chosenModule,
+            p_plan: chosenPlan,
+            p_montant: parseInt(chosenAmount),
+            p_nom: nom,
+            p_prenom: prenom,
+            p_email: localStorage.getItem('digiy_email') || null,
+            p_access_module: accessModule,
+            p_slug: slug,
+            p_metadata: {
+              user_agent: navigator.userAgent,
+              timestamp: new Date().toISOString(),
+              page_url: location.href
+            }
+          });
+
+          if(encaissement.error) throw encaissement.error;
+          
+          const encaissementId = encaissement.data.id;
+          console.log("✅ Encaissement enregistré:", encaissementId);
+
+          // 2️⃣ CRÉER le paiement WAVE
+          setBig("💳 Création du paiement Wave...", "warn", "EN COURS");
+          
+          const metaObj = {
+            encaissement_id: encaissementId,
+            access_module: accessModule,
+            chosen_module: chosenModule,
+            chosen_plan: chosenPlan,
+            slug: slug,
+            phone: phone,
+            nom: nom,
+            prenom: prenom
+          };
+
+          const result = await sb.rpc("digiy_pay_create_request", {
+            p_module: "subscription",
+            p_module_ref_id: encaissementId,
+            p_amount_fcfa: parseInt(chosenAmount),
+            p_payer_phone: phone,
+            p_recipient_phone: RECIPIENT_WAVE,
+            p_provider: "wave",
+            p_description: "DIGIY PRO - " + chosenModule + " - " + chosenPlan + " - " + prenom + " " + nom,
+            p_metadata: JSON.stringify(metaObj)
+          });
+
+          const data = result.data;
+          const error = result.error;
+
+          if (error) throw error;
+          if (!data.ok) throw new Error(data.reason || "payment_creation_failed");
+
+          const paymentId = data.id;
+          console.log("✅ Paiement créé:", paymentId);
+
+          // 3️⃣ LIER payment_id à l'encaissement
+          await sb.from('encaissements_digiylyfe')
+            .update({ payment_id: paymentId })
+            .eq('id', encaissementId);
+
+          setBig("✅ QR généré!", "ok", "PRÊT");
+          
+          showPaymentQR({
+            paymentId: paymentId,
+            encaissementId: encaissementId,
+            qrCode: data.qr_code || data.payment_link,
+            amount: chosenAmount,
+            module: chosenModule,
+            plan: chosenPlan
+          });
+
+        } catch(e) {
+          console.error("❌ Erreur:", e);
+          setBig("❌ Erreur", "bad", "ERREUR");
+          setHint("Erreur: " + (e.message || e));
+          $("btnPayNow").disabled = false;
+        }
+      };
+
+      $("btnWaConfirm").onclick = function(){
+        if(!ensureChoice()) return;
+
+        var msg = "DIGIY PRO - Confirmation paiement Wave\n\n";
+        msg += "Bénéficiaire: JB BEAUVILLE\n";
+        msg += "Wave: " + SUPPORT_WA + "\n\n";
+        msg += "Accès: " + (accessModule || "LOC") + "\n";
+        msg += "Produit: " + chosenModule + "\n";
+        msg += "Plan: " + (chosenPlan || "—") + "\n";
+        msg += "Montant: " + fmt(chosenAmount) + " F CFA\n";
+        msg += "Téléphone: " + (phone || "—") + "\n";
+        msg += "Slug: " + (slug || "—") + "\n\n";
+        msg += "Je viens de payer via Wave.\n";
+        msg += "Je joins le reçu Wave ici.\n\n";
+        msg += "Merci d'activer mon accès. — DIGIY";
+        
+        wa(msg);
+        
+        status = "pending";
+        setQS("status", "pending");
+        setBig("Confirmation envoyée.", "warn", "EN ATTENTE");
+        setHint("Envoie le reçu Wave.");
+      };
+
+      $("btnHelp").onclick = function(){
+        var msg = "DIGIY PRO - Support\n\n";
+        msg += "Accès: " + (accessModule || "LOC") + "\n";
+        msg += "Produit: " + (chosenModule || "—") + "\n";
+        msg += "Plan: " + (chosenPlan || "—") + "\n";
+        msg += "Montant: " + (chosenAmount ? (fmt(chosenAmount)+" F") : "—") + "\n";
+        msg += "Téléphone: " + (phone || "—") + "\n";
+        msg += "Slug: " + (slug || "—") + "\n";
+        msg += "Statut: " + (status || "—") + "\n\n";
+        msg += "J'ai besoin d'aide. Merci. — DIGIY";
+        wa(msg);
+      };
+
+      $("btnBack").onclick = safeBack;
+      $("btnRefresh").onclick = function(){ checkStatus(true); };
+
+      // BOUTON SAUVEGARDER INFOS CLIENT
+      $("btnSaveInfo").onclick = function(){
+        const prenom = $("inputPrenom").value.trim();
+        const nom = $("inputNom").value.trim();
+        const email = $("inputEmail").value.trim();
+        
+        if(!prenom || !nom) {
+          alert("⚠️ Prénom et Nom sont obligatoires frérot!");
+          return;
+        }
+        
+        localStorage.setItem('digiy_prenom', prenom);
+        localStorage.setItem('digiy_nom', nom);
+        if(email) localStorage.setItem('digiy_email', email);
+        
+        $("clientInfoBox").style.display = 'none';
+        setHint("✅ Infos enregistrées! Clique sur 'Payer maintenant' 👇");
+        
+        // Scroll vers le bouton de paiement
+        $("btnPayNow").scrollIntoView({ behavior: 'smooth', block: 'center' });
+      };
+
+      // PRÉ-REMPLIR SI DÉJÀ ENREGISTRÉ
+      const savedPrenom = localStorage.getItem('digiy_prenom');
+      const savedNom = localStorage.getItem('digiy_nom');
+      const savedEmail = localStorage.getItem('digiy_email');
+
+      if(savedPrenom) $("inputPrenom").value = savedPrenom;
+      if(savedNom) $("inputNom").value = savedNom;
+      if(savedEmail) $("inputEmail").value = savedEmail;
+
+      async function checkStatus(manual){
+        $("btnRefresh").disabled = true;
+        setHint("");
+
+        if(status === "pending"){
+          setBig("Paiement en attente.", "warn", "EN ATTENTE");
+        }else{
+          setBig("Vérification...", "warn", "EN COURS");
+        }
+
+        if(!phone){
+          setBig("Téléphone manquant.", "bad", "INACTIF");
+          setHint("On attend ?phone=+221...");
+          $("btnBack").disabled = true;
+          $("btnRefresh").disabled = false;
+          return;
+        }
+
+        const m = (accessModule || "LOC").toUpperCase();
+
+        try{
+          const result = await sb.rpc("is_module_active", { p_phone: phone, p_module: m });
+          const data = result.data;
+          const error = result.error;
+          
+          if(error) throw error;
+
+          const active = !!data;
+
+          if(active){
+            setQS("status", "active");
+            status = "active";
+            setBig("Abonnement ACTIF.", "ok", "ACTIF");
+            setHint("Tu peux revenir au planning.");
+            $("btnBack").disabled = false;
+          }else{
+            if(status === "pending"){
+              setBig("Paiement EN ATTENTE.", "warn", "EN ATTENTE");
+              setHint("Activation après validation.");
+              $("btnBack").disabled = true;
+            }else{
+              setBig("Abonnement INACTIF.", "bad", "INACTIF");
+              setHint("Choisis un produit puis paie.");
+              $("btnBack").disabled = true;
+            }
+          }
+        }catch(e){
+          console.error(e);
+          setBig("Erreur vérification.", "bad", "ERREUR");
+          setHint("Supabase: " + String(e.message || e));
+          $("btnBack").disabled = true;
+        }finally{
+          $("btnRefresh").disabled = false;
+        }
+      }
+
+      checkStatus(false);
+    })();
+  </script>
 </body>
 </html>
