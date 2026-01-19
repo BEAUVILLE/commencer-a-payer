@@ -23,7 +23,7 @@
       color:var(--text);
       padding:16px;
     }
-    .wrap{ max-width:1400px; margin:0 auto; }
+    .wrap{ max-width:1600px; margin:0 auto; }
     .card{ 
       background:var(--card); 
       border:1px solid var(--line); 
@@ -103,17 +103,27 @@
       border:1px solid var(--line);
       background:transparent;
       color:var(--text);
-      padding:12px 20px;
-      border-radius:12px;
+      padding:8px 14px;
+      border-radius:10px;
       cursor:pointer;
-      font-weight:1000;
-      font-size:14px;
+      font-weight:900;
+      font-size:12px;
       display:inline-flex;
       align-items:center;
-      gap:8px;
+      gap:6px;
+      white-space:nowrap;
     }
     .btn:hover{ background:rgba(255,255,255,.1); }
-    .btn.ok{ border-color:rgba(34,197,94,.55); }
+    .btn:disabled{ opacity:.4; cursor:not-allowed; }
+    .btn.ok{ border-color:rgba(34,197,94,.55); color:var(--ok); }
+    .btn.gold{ border-color:rgba(250,204,21,.55); color:var(--gold); }
+    .btn.warn{ border-color:rgba(245,158,11,.55); color:var(--warn); }
+    
+    .btn-group{
+      display:flex;
+      gap:6px;
+      flex-wrap:wrap;
+    }
     
     .filters{
       display:flex;
@@ -148,7 +158,7 @@
       font-weight:500;
     }
     
-    .mono{ font-family: ui-monospace, Menlo, Monaco, monospace; }
+    .mono{ font-family: ui-monospace, Menlo, Monaco, monospace; font-size:13px; }
     
     #loading{
       display:none;
@@ -165,6 +175,23 @@
     }
     @media(max-width:768px){
       .grid-2{ grid-template-columns:1fr; }
+    }
+
+    .slug-display{
+      background:rgba(34,197,94,.1);
+      border:1px solid rgba(34,197,94,.3);
+      padding:8px 12px;
+      border-radius:8px;
+      font-family:monospace;
+      font-size:12px;
+      color:var(--ok);
+      margin-top:4px;
+    }
+
+    .url-display{
+      font-size:11px;
+      color:var(--muted);
+      word-break:break-all;
     }
   </style>
 </head>
@@ -292,11 +319,12 @@
                 <th>Plan</th>
                 <th>Montant</th>
                 <th>Statut</th>
+                <th>Slug/URL</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody id="tableBody">
-              <tr><td colspan="8" style="text-align:center; padding:40px;">Chargement...</td></tr>
+              <tr><td colspan="9" style="text-align:center; padding:40px;">Chargement...</td></tr>
             </tbody>
           </table>
         </div>
@@ -317,27 +345,50 @@
       const SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
       const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc3Ftd2pqdHNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA";
       const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-      const ADMIN_PHONE = "+221771342889";
-      const ADMIN_PIN = "2024"; // Change ça frérot!
       
       const $ = id => document.getElementById(id);
       let allData = [];
       let chartModules = null;
       let chartTimeline = null;
 
-      // AUTH
+      // AUTH VIA SUPABASE
       $("btnAuth").onclick = async function(){
         const phone = $("authPhone").value.trim();
         const pin = $("authPin").value.trim();
         
-        if(phone !== ADMIN_PHONE || pin !== ADMIN_PIN){
-          $("authError").textContent = "❌ Accès refusé!";
-          return;
-        }
+        $("authError").textContent = "⏳ Vérification...";
+        $("btnAuth").disabled = true;
         
-        localStorage.setItem("digiy_dashboard_auth", "ok");
-        showDashboard();
+        try {
+          const result = await sb.rpc("dashboard_auth", {
+            p_phone: phone,
+            p_pin: pin
+          });
+          
+          if(result.error) throw result.error;
+          
+          const data = result.data;
+          
+          if(!data.ok){
+            $("authError").textContent = "❌ " + (data.error || "Accès refusé");
+            $("btnAuth").disabled = false;
+            return;
+          }
+          
+          localStorage.setItem("digiy_dashboard_auth", JSON.stringify({
+            phone: data.user.phone,
+            nom: data.user.nom,
+            role: data.user.role,
+            timestamp: Date.now()
+          }));
+          
+          showDashboard(data.user);
+          
+        } catch(e) {
+          console.error(e);
+          $("authError").textContent = "❌ Erreur: " + e.message;
+          $("btnAuth").disabled = false;
+        }
       };
 
       $("btnLogout").onclick = function(){
@@ -346,13 +397,32 @@
       };
 
       // CHECK AUTH
-      if(localStorage.getItem("digiy_dashboard_auth") === "ok"){
-        showDashboard();
+      const savedAuth = localStorage.getItem("digiy_dashboard_auth");
+      if(savedAuth){
+        try {
+          const auth = JSON.parse(savedAuth);
+          if(Date.now() - auth.timestamp < 24 * 60 * 60 * 1000){
+            showDashboard(auth);
+          } else {
+            localStorage.removeItem("digiy_dashboard_auth");
+          }
+        } catch(e) {
+          localStorage.removeItem("digiy_dashboard_auth");
+        }
       }
 
-      function showDashboard(){
+      function showDashboard(user){
         $("authBox").style.display = "none";
         $("dashboard").style.display = "block";
+        
+        if(user){
+          const headerUser = document.createElement("div");
+          headerUser.className = "small";
+          headerUser.style.marginTop = "8px";
+          headerUser.textContent = "👤 Connecté: " + user.nom + " (" + user.role + ")";
+          document.querySelector("#dashboard .card h1").after(headerUser);
+        }
+        
         loadData();
       }
 
@@ -410,12 +480,125 @@
         $("kpiMRR").textContent = fmt(mrr) + " F";
       }
 
+      // CONFIRMER PAIEMENT
+      async function confirmerPaiement(id, phone, nom){
+        if(!confirm(`Confirmer le paiement de ${nom}?`)) return;
+        
+        try {
+          const result = await sb
+            .from("encaissements_digiylyfe")
+            .update({ statut: "CONFIRME", date_confirmation: new Date().toISOString() })
+            .eq("id", id);
+          
+          if(result.error) throw result.error;
+          
+          alert("✅ Paiement confirmé! L'activation va se faire automatiquement.");
+          loadData();
+          
+        } catch(e) {
+          alert("❌ Erreur: " + e.message);
+        }
+      }
+
+      // ACTIVER MODULE
+      async function activerModule(id, nom){
+        if(!confirm(`Activer le module pour ${nom}?`)) return;
+        
+        try {
+          const result = await sb.rpc("digiy_activate_subscription", {
+            p_encaissement_id: id
+          });
+          
+          if(result.error) throw result.error;
+          
+          const data = result.data;
+          
+          if(!data.ok){
+            alert("❌ Erreur: " + (data.error || "Activation échouée"));
+            return;
+          }
+          
+          alert(`✅ Module activé!\n\nSlug: ${data.slug}\nURL: ${data.url}`);
+          loadData();
+          
+        } catch(e) {
+          alert("❌ Erreur: " + e.message);
+        }
+      }
+
+      // ENVOYER WHATSAPP
+      async function envoyerWhatsApp(id){
+        try {
+          // Récupérer l'encaissement
+          const result = await sb
+            .from("encaissements_digiylyfe")
+            .select("*")
+            .eq("id", id)
+            .single();
+          
+          if(result.error) throw result.error;
+          
+          const row = result.data;
+          
+          if(!row.slug){
+            alert("⚠️ Ce module n'est pas encore activé!");
+            return;
+          }
+          
+          // Générer l'URL
+          const moduleUrls = {
+            "RESTO_PRO": "https://beauville.github.io/digiy-resto-pro/?slug=",
+            "RESTO_RESA": "https://beauville.github.io/digiy-resa/?slug=",
+            "POS_PRO": "https://beauville.github.io/digiy-pos-pro/?slug=",
+            "DRIVER": "https://beauville.github.io/digiy-driver/?slug=",
+            "LOC": "https://beauville.github.io/digiy-loc-pro/?slug=",
+            "MARKET": "https://beauville.github.io/digiy-market/?slug=",
+            "JOBS": "https://beauville.github.io/digiy-jobs/?slug=",
+            "BUILD": "https://beauville.github.io/digiy-build/?slug="
+          };
+          
+          const url = (moduleUrls[row.module] || "https://beauville.github.io/digiy/?slug=") + row.slug;
+          const nom = [row.prenom, row.nom].filter(Boolean).join(" ") || "Cher client";
+          
+          const expiresAt = new Date(row.date_activation);
+          expiresAt.setMonth(expiresAt.getMonth() + 1);
+          
+          const msg = `
+🎉 DIGIYLYFE - Activation confirmée!
+
+Bonjour ${nom},
+
+Ton abonnement ${row.module} (${row.plan}) est maintenant ACTIF! 🚀
+
+📱 Accède à ton cockpit:
+${url}
+
+🔐 Connexion:
+Téléphone: ${row.phone}
+
+📅 Valable jusqu'au: ${expiresAt.toLocaleDateString('fr-FR')}
+
+💪 Tu es maintenant 100% autonome avec 0% de commission!
+
+Support: wa.me/221771342889
+
+—
+DIGIYLYFE • Made in Sénégal 🇸🇳
+          `.trim();
+          
+          window.open(`https://wa.me/${row.phone.replace(/\+/g, '')}?text=${encodeURIComponent(msg)}`);
+          
+        } catch(e) {
+          alert("❌ Erreur: " + e.message);
+        }
+      }
+
       function renderTable(){
         const filtered = filterData();
         const tbody = $("tableBody");
         
         if(filtered.length === 0){
-          tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:40px;">Aucun encaissement</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding:40px;">Aucun encaissement</td></tr>';
           return;
         }
         
@@ -429,6 +612,54 @@
           else if(statut === "EN_ATTENTE") badgeClass += " warn";
           else if(statut === "ANNULE") badgeClass += " bad";
           
+          // Slug/URL display
+          let slugDisplay = "—";
+          if(row.slug){
+            const moduleUrls = {
+              "RESTO_PRO": "digiy-resto-pro",
+              "RESTO_RESA": "digiy-resa",
+              "POS_PRO": "digiy-pos-pro",
+              "DRIVER": "digiy-driver",
+              "LOC": "digiy-loc-pro",
+              "MARKET": "digiy-market",
+              "JOBS": "digiy-jobs",
+              "BUILD": "digiy-build"
+            };
+            const repo = moduleUrls[row.module] || "digiy";
+            slugDisplay = `
+              <div class="slug-display">${row.slug}</div>
+              <div class="url-display">/${repo}/?slug=${row.slug}</div>
+            `;
+          }
+          
+          // Actions buttons
+          let actions = "";
+          if(statut === "EN_ATTENTE"){
+            actions = `
+              <div class="btn-group">
+                <button class="btn ok" onclick="confirmerPaiement('${row.id}', '${row.phone}', '${nom}')">
+                  ✅ Confirmer
+                </button>
+              </div>
+            `;
+          } else if(statut === "CONFIRME" && !row.slug){
+            actions = `
+              <div class="btn-group">
+                <button class="btn gold" onclick="activerModule('${row.id}', '${nom}')">
+                  🚀 Activer
+                </button>
+              </div>
+            `;
+          } else if(statut === "ACTIF" && row.slug){
+            actions = `
+              <div class="btn-group">
+                <button class="btn warn" onclick="envoyerWhatsApp('${row.id}')">
+                  📱 WhatsApp
+                </button>
+              </div>
+            `;
+          }
+          
           return `
             <tr>
               <td>${date}</td>
@@ -438,11 +669,17 @@
               <td class="small">${row.plan||"—"}</td>
               <td><b>${fmt(row.montant)} F</b></td>
               <td><span class="${badgeClass}">${statut}</span></td>
-              <td class="small mono">${row.payment_id ? row.payment_id.slice(0,8)+"..." : "—"}</td>
+              <td>${slugDisplay}</td>
+              <td>${actions}</td>
             </tr>
           `;
         }).join("");
       }
+
+      // Expose functions globally
+      window.confirmerPaiement = confirmerPaiement;
+      window.activerModule = activerModule;
+      window.envoyerWhatsApp = envoyerWhatsApp;
 
       function renderCharts(){
         const filtered = filterData();
@@ -565,3 +802,4 @@
   </script>
 </body>
 </html>
+
