@@ -243,23 +243,35 @@
         if(!p.startsWith("+221") && /^\d{9}$/.test(p)) p = "+221" + p;
         return p;
       }
-     function cleanWord(s, maxLen){
-  s = String(s ?? "").trim();
-  if(!s) return "";
-  s = s.slice(0, maxLen || 64);
 
-  // Normalise accents (é, à, ñ...) => e, a, n
-  try { s = s.normalize("NFD").replace(/[\u0300-\u036f]/g, ""); } catch(e){}
+      // ✅ safe token for query values (letters/numbers/_/-) + remove accents
+      function cleanWord(s, maxLen){
+        s = String(s ?? "").trim();
+        if(!s) return "";
+        s = s.slice(0, maxLen || 64);
+        try { s = s.normalize("NFD").replace(/[\u0300-\u036f]/g, ""); } catch(e){}
+        return s.replace(/[^a-zA-Z0-9_-]/g, "_");
+      }
 
-  // Autorise lettres/chiffres/_/-
-  // (on évite les caractères chelous qui cassent les URLs / logs)
-  return s.replace(/[^a-zA-Z0-9_-]/g, "_");
-}
+      // ✅ slug strict: lowercase a-z0-9- + remove accents
+      function cleanSlug(s, maxLen){
+        s = String(s ?? "").trim();
+        if(!s) return "";
+        s = s.slice(0, maxLen || 120);
+        try { s = s.normalize("NFD").replace(/[\u0300-\u036f]/g, ""); } catch(e){}
+        s = s.toLowerCase()
+             .replace(/[^a-z0-9-]/g, "-")
+             .replace(/-+/g, "-")
+             .replace(/^-|-$/g, "");
+        return s;
+      }
+
       function cleanAmount(a){
         const n = parseInt(String(a||"").replace(/[^\d]/g,""), 10);
         if(!isFinite(n) || n<=0) return "";
         return String(n);
       }
+
       function wa(msg){
         location.href = "https://wa.me/" + SUPPORT_WA.replace(/\+/g,"") + "?text=" + encodeURIComponent(msg);
       }
@@ -327,7 +339,6 @@
 
       function safeBack(){
         if(from){ location.replace(from); return; }
-        // fallback terrain
         location.replace("https://beauville.github.io/digiy-loc-pro/login.html" + (slug ? "?slug="+encodeURIComponent(slug) : ""));
       }
 
