@@ -243,12 +243,18 @@
         if(!p.startsWith("+221") && /^\d{9}$/.test(p)) p = "+221" + p;
         return p;
       }
-      function cleanWord(s, maxLen){
-        s = String(s||"").trim();
-        if(!s) return "";
-        s = s.slice(0, maxLen||64);
-        return s.replace(/[^\w\-]/g, "_");
-      }
+     function cleanWord(s, maxLen){
+  s = String(s ?? "").trim();
+  if(!s) return "";
+  s = s.slice(0, maxLen || 64);
+
+  // Normalise accents (é, à, ñ...) => e, a, n
+  try { s = s.normalize("NFD").replace(/[\u0300-\u036f]/g, ""); } catch(e){}
+
+  // Autorise lettres/chiffres/_/-
+  // (on évite les caractères chelous qui cassent les URLs / logs)
+  return s.replace(/[^a-zA-Z0-9_-]/g, "_");
+}
       function cleanAmount(a){
         const n = parseInt(String(a||"").replace(/[^\d]/g,""), 10);
         if(!isFinite(n) || n<=0) return "";
@@ -269,7 +275,7 @@
 
       // === CONTEXTE URL ===
       const from = (qs("from") || "").trim();
-      const slug = cleanWord(qs("slug"), 120);
+      const slug = cleanSlug(qs("slug"), 120);
       const phone = normPhone(qs("phone") || "");
       const accessModule = cleanWord(qs("module"), 40).toUpperCase() || "LOC";
 
