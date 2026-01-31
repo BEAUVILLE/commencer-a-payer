@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-  <title>COMMENCER À PAYER — DIGIYLYFE (Manuel)</title>
+  <title>COMMENCER À PAYER — DIGIYLYFE</title>
   <meta name="theme-color" content="#16a34a"/>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -12,34 +12,24 @@
     :root{
       --bg:#061b14; --card:#0b2a1f; --line:rgba(255,255,255,.14);
       --text:#eafff1; --muted:rgba(234,255,241,.75);
-      --ok:#22c55e; --warn:#f59e0b; --bad:#ef4444;
+      --ok:#22c55e; --warn:#f59e0b; --bad:#ef4444; --gold:#facc15;
       --radius:18px; --shadow:0 18px 50px rgba(0,0,0,.35);
-      --gold:#facc15;
     }
     *{box-sizing:border-box}
     body{ margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial; background:var(--bg); color:var(--text); }
-    .wrap{ max-width:1050px; margin:0 auto; padding:16px; }
-    .card{ background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:14px; box-shadow:var(--shadow); }
-    .row{ display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
-    h1{ margin:0; font-size:20px; font-weight:1100; letter-spacing:.2px; }
-    h2{ margin:0; font-size:16px; font-weight:1100; }
-    p{ margin:8px 0 0; color:var(--muted); line-height:1.35; }
-    .pill{ display:inline-flex; gap:8px; align-items:center; padding:8px 10px; border:1px solid var(--line); border-radius:999px; }
-    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace; }
-    .small{ font-size:13px; color:var(--muted); line-height:1.35; }
-    .hr{ height:1px; background:var(--line); margin:12px 0; }
-    .grid{ display:grid; grid-template-columns:1fr; gap:12px; margin-top:12px; }
-    @media(min-width:980px){ .grid{ grid-template-columns:1.02fr .98fr; } }
+    .wrap{ max-width:720px; margin:0 auto; padding:16px; }
+    .card{ background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow); }
+    h1{ margin:0; font-size:20px; font-weight:1100; }
+    p{ margin:8px 0 0; color:var(--muted); line-height:1.4; }
+    .hr{ height:1px; background:var(--line); margin:14px 0; }
 
-    .statusBig{
-      margin-top:12px; padding:12px; border-radius:16px;
-      border:1px solid var(--line);
-      display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
-      font-weight:1100;
+    .status{
+      padding:12px; border-radius:16px; border:1px solid var(--line);
+      font-weight:1000; display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;
     }
-    .statusBig.ok{ border-color: rgba(34,197,94,.55); }
-    .statusBig.warn{ border-color: rgba(245,158,11,.55); }
-    .statusBig.bad{ border-color: rgba(239,68,68,.55); }
+    .status.ok{ border-color: rgba(34,197,94,.55); }
+    .status.warn{ border-color: rgba(245,158,11,.55); }
+    .status.bad{ border-color: rgba(239,68,68,.55); }
 
     .tag{ font-size:12px; padding:6px 10px; border-radius:999px; border:1px solid var(--line); color:var(--muted); }
     .tag.ok{ color: var(--ok); border-color: rgba(34,197,94,.45); }
@@ -47,9 +37,9 @@
     .tag.bad{ color: var(--bad); border-color: rgba(239,68,68,.45); }
 
     .btn{
+      width:100%; min-height:52px; border-radius:16px; cursor:pointer;
       border:1px solid var(--line); background:transparent; color:var(--text);
-      padding:12px 14px; border-radius:16px; cursor:pointer; font-weight:1100;
-      min-height:52px; width:100%;
+      padding:12px 14px; font-weight:1100;
     }
     .btn:disabled{ opacity:.55; cursor:not-allowed; }
     .btn.ok{ border-color: rgba(34,197,94,.55); }
@@ -57,409 +47,232 @@
     .btn.bad{ border-color: rgba(239,68,68,.55); }
     .btn.gold{ border-color: rgba(250,204,21,.65); }
 
-    .box{ border:1px solid var(--line); border-radius:16px; padding:12px; background:rgba(0,0,0,.12); }
-    .notice{
-      border:1px dashed rgba(250,204,21,.55);
-      background: rgba(250,204,21,.08);
-      border-radius:16px;
-      padding:12px;
-      color: var(--text);
-    }
-
-    input[type="text"], input[type="email"] {
-      padding: 14px;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      background: rgba(0,0,0,.12);
-      color: var(--text);
-      font-size: 15px;
-      font-weight: 500;
-      width: 100%;
-    }
-    input[type="text"]:focus, input[type="email"]:focus {
-      outline: none;
-      border-color: var(--ok);
-    }
+    .box{ border:1px solid var(--line); border-radius:16px; padding:14px; background:rgba(0,0,0,.12); }
+    .steps{ margin:0; padding-left:18px; color:var(--muted); }
+    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace; }
+    .row{ display:flex; gap:10px; flex-wrap:wrap; }
+    .row > *{ flex:1; min-width:220px; }
+    .small{ font-size:13px; color:var(--muted); line-height:1.35; }
+    .hide{ display:none; }
   </style>
 </head>
 
 <body>
   <div class="wrap">
     <div class="card">
-      <div class="row">
-        <div>
-          <h1>COMMENCER À PAYER — DIGIYLYFE</h1>
-          <p class="small"><b>100% manuel</b> · Transfert Wave + reçu WhatsApp · <b>0% commission</b></p>
-        </div>
-        <div class="row">
-          <span class="pill">📦 accès: <span class="mono" id="pillAccess">—</span></span>
-          <span class="pill">📦 choisi: <span class="mono" id="pillModule">—</span></span>
-          <span class="pill">📱 phone: <span class="mono" id="pillPhone">—</span></span>
-          <span class="pill">🏷️ slug: <span class="mono" id="pillSlug">—</span></span>
-        </div>
+      <h1>COMMENCER À PAYER — DIGIYLYFE</h1>
+      <p class="small">0% commission · Paiement Wave · Activation DIGIY</p>
+
+      <div class="hr"></div>
+
+      <div class="status warn" id="statusBox">
+        <div id="statusText">⏳ Préparation…</div>
+        <span class="tag warn" id="statusTag">EN COURS</span>
       </div>
 
       <div class="hr"></div>
 
-      <div>
-        <h2>ℹ️ Paiement & Activation (manuel)</h2>
-        <p class="small">
-          Ici on ne scanne rien. Tu fais le transfert Wave, tu envoies le reçu sur WhatsApp, puis activation.
-        </p>
-      </div>
-
-      <div class="statusBig warn" id="statusBig">
-        <div id="statusText">⏳ Vérification du statut…</div>
-        <span class="tag warn" id="tag">EN COURS</span>
-      </div>
-
-      <!-- INFOS CLIENT -->
-      <div class="card" id="clientInfoBox" style="margin-top:16px; display:none;">
-        <h2>👤 Tes informations</h2>
-        <p class="small">Pour bien noter ton paiement (activation manuelle)</p>
+      <!-- TOKEN MODE -->
+      <div class="box" id="tokenBox">
+        <h2 style="margin:0;font-size:16px;font-weight:1100;">🔐 Activation sécurisée</h2>
+        <p class="small">Si tu as reçu un lien DIGIY avec token, clique simplement.</p>
 
         <div class="hr"></div>
 
-        <div style="display:grid; gap:12px;">
-          <input type="text" id="inputPrenom" placeholder="Prénom *">
-          <input type="text" id="inputNom" placeholder="Nom *">
-          <input type="email" id="inputEmail" placeholder="Email (optionnel)">
+        <button class="btn ok" id="btnActivateToken">
+          ✅ Activer maintenant
+          <span id="spinnerToken" class="mono" style="display:none;margin-left:8px;">⏳</span>
+        </button>
+
+        <p class="small" id="tokenHint" style="margin-top:10px;"></p>
+      </div>
+
+      <div class="hr"></div>
+
+      <!-- MANUAL MODE -->
+      <div class="box" id="manualBox">
+        <h2 style="margin:0;font-size:16px;font-weight:1100;">💳 Paiement manuel (Wave)</h2>
+        <p class="small">Paye sur Wave, puis envoie le reçu sur WhatsApp. On active ensuite.</p>
+
+        <div class="hr"></div>
+
+        <div class="row">
+          <div>
+            <div style="font-weight:1100;">Bénéficiaire</div>
+            <div class="mono" style="font-weight:1000;">JB BEAUVILLE</div>
+          </div>
+          <div>
+            <div style="font-weight:1100;">Numéro Wave</div>
+            <div class="mono" style="font-weight:1000;" id="waveTo">+221 77 134 28 89</div>
+          </div>
         </div>
 
         <div class="hr"></div>
 
-        <button class="btn ok" id="btnSaveInfo">✅ Valider mes infos</button>
+        <ol class="steps">
+          <li>Fais le transfert Wave</li>
+          <li>Envoie le reçu sur WhatsApp</li>
+          <li>Retourne au module (activation après validation)</li>
+        </ol>
 
-        <p class="small" style="margin-top:8px; color:var(--muted);">
-          * Champs obligatoires · Ces infos servent à vérifier ton paiement
-        </p>
-      </div>
+        <div class="hr"></div>
 
-      <div class="grid">
-        <div class="box">
-          <h2>💳 Transfert Wave (manuel)</h2>
-          <p class="small">Fais un transfert Wave au numéro ci-dessous, puis confirme sur WhatsApp avec le reçu.</p>
-
-          <div class="hr"></div>
-
-          <div class="row" style="align-items:flex-start;">
-            <div>
-              <div style="font-weight:1200;">📱 JB BEAUVILLE</div>
-              <div class="mono" style="font-weight:1100;">+221 77 134 28 89</div>
-              <div class="small">Montant = prix du module/extra choisi</div>
-            </div>
-            <div class="pill">Montant: <span class="mono" id="pillAmount">—</span></div>
-          </div>
-
-          <div class="hr"></div>
-
-          <div class="notice">
-            ✅ <b>Étapes</b><br/>
-            1) Vérifie que “Produit/Plan/Montant” sont bons<br/>
-            2) Remplis Prénom/Nom (une fois)<br/>
-            3) Paye sur Wave (transfert normal)<br/>
-            4) Clique “Confirmer WhatsApp” et joins le reçu
-          </div>
-
-          <div class="hr"></div>
-
-          <div style="font-weight:1200;">📌 Résumé</div>
-          <div class="small">
-            📦 accès: <span class="mono" id="sumAccess">—</span><br/>
-            🧩 type: <span class="mono" id="sumKind">—</span><br/>
-            📦 produit: <span class="mono" id="sumModule">—</span><br/>
-            🧾 plan: <span class="mono" id="sumPlan">—</span><br/>
-            💰 montant: <span class="mono" id="sumAmount">—</span><br/>
-            📱 phone: <span class="mono" id="sumPhone">—</span><br/>
-            🏷️ slug: <span class="mono" id="sumSlug">—</span>
-          </div>
-
-          <div class="hr"></div>
-
-          <div class="row" style="gap:10px;">
-            <button class="btn gold" id="btnWaConfirm">💬 Confirmer WhatsApp (avec reçu)</button>
-            <button class="btn warn" id="btnRefresh">🔄 Rafraîchir statut</button>
-          </div>
-
-          <div style="height:10px;"></div>
-
-          <div class="row" style="gap:10px;">
-            <button class="btn ok" id="btnBack" disabled>✅ Retour</button>
-            <button class="btn bad" id="btnHelp">💬 Support WhatsApp</button>
-          </div>
-
-          <div class="small" id="hint" style="margin-top:10px;"></div>
+        <div class="row">
+          <button class="btn gold" id="btnWaConfirm">💬 Confirmer WhatsApp (avec reçu)</button>
+          <button class="btn bad" id="btnSupport">🛟 Support WhatsApp</button>
         </div>
 
-        <div class="box">
-          <h2>📦 Infos (automatiques)</h2>
-          <p class="small">Ces champs viennent de l’URL (depuis Tarifs / Extra / Module).</p>
-
-          <div class="hr"></div>
-
-          <div class="small">
-            <div>🧩 kind: <span class="mono" id="dbgKind">—</span></div>
-            <div>📦 m: <span class="mono" id="dbgM">—</span></div>
-            <div>🧾 plan: <span class="mono" id="dbgPlan">—</span></div>
-            <div>💰 amount: <span class="mono" id="dbgAmount">—</span></div>
-          </div>
-
-          <div class="hr"></div>
-
-          <div class="small">
-            ✅ Si tu viens d’un bouton Extra, tu verras <span class="mono">kind=addon</span> et <span class="mono">m=EXPLORE</span>.
-          </div>
-        </div>
+        <p class="small" id="manualHint" style="margin-top:10px;"></p>
       </div>
+
+      <!-- Debug caché (si tu veux garder) -->
+      <div class="hide" id="dbg"></div>
     </div>
   </div>
 
   <script>
-    (function(){
-      "use strict";
+  (function(){
+    "use strict";
 
-      // === CONFIG ===
-      const SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
-      const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc3Ftd2pqdHNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA";
-      const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    // === CONFIG SUPABASE (TES VALEURS) ===
+    const SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc3Ftd2pqdHNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA";
+    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-      const SUPPORT_WA = "+221771342889";
-      const RECIPIENT_WAVE = "+221771342889";
+    // WhatsApp
+    const SUPPORT_WA = "+221771342889";
+    const WAVE_TO = "+221771342889"; // affichage + message (mets 771342889 ou numéro que tu veux)
 
-      const $ = (id)=>document.getElementById(id);
+    const $ = (id)=>document.getElementById(id);
+    const qp = new URLSearchParams(location.search);
 
-      function qs(name){
-        try{ return new URL(location.href).searchParams.get(name) || ""; }catch(e){ return ""; }
+    function setStatus(text, tone, tag){
+      const box = $("statusBox");
+      box.className = "status " + (tone || "warn");
+      $("statusText").textContent = text || "";
+      const t = $("statusTag");
+      t.className = "tag " + (tone || "warn");
+      t.textContent = tag || "—";
+    }
+
+    function wa(msg){
+      const num = SUPPORT_WA.replace(/\+/g,"");
+      location.href = "https://wa.me/" + num + "?text=" + encodeURIComponent(msg);
+    }
+
+    function normPhone(p){
+      p = String(p||"").trim().replace(/\s+/g,"").replace(/[^\d+]/g,"");
+      if(p.startsWith("00221")) p = "+221" + p.slice(5);
+      if(!p.startsWith("+") && p.startsWith("221")) p = "+" + p;
+      if(!p.startsWith("+221") && /^\d{9}$/.test(p)) p = "+221" + p;
+      return p;
+    }
+
+    // === INPUTS URL (optionnels) ===
+    const token = (qp.get("token") || "").trim();
+    const ret = (qp.get("return") || "").trim();
+    const auto = (qp.get("auto") === "1");
+
+    const phone = normPhone(qp.get("phone") || "");      // utile pour WhatsApp message
+    const kind = (qp.get("kind") || "").trim().toLowerCase(); // module|addon
+    const m = (qp.get("m") || "").trim();                // ex: EXPLORE
+    const plan = (qp.get("plan") || "").trim();          // ex: boost_city
+    const amount = (qp.get("amount") || "").toString().replace(/[^\d]/g,""); // ex: 14900
+    const slug = (qp.get("slug") || "").trim();
+    const access = (qp.get("module") || "").trim().toUpperCase(); // ex: LOC
+    const from = (qp.get("from") || "").trim();
+
+    // UI
+    $("waveTo").textContent = "+221 77 134 28 89"; // affichage friendly (change si besoin)
+
+    // --- TOKEN MODE visibility ---
+    if(!token){
+      $("tokenBox").classList.add("hide");
+      setStatus("💳 Paiement Wave : confirme sur WhatsApp avec le reçu.", "warn", "MANUEL");
+      $("manualHint").textContent = "Astuce : après envoi du reçu, l’activation se fait rapidement.";
+    } else {
+      setStatus("🔐 Lien sécurisé détecté. Clique pour activer.", "ok", "TOKEN");
+      $("tokenHint").textContent = "Token détecté. Activation en 1 clic.";
+    }
+
+    // --- Activate token ---
+    async function activateToken(){
+      if(!token){
+        alert("Token manquant.");
+        return;
       }
-      function fmt(n){
-        n = Number(n||0);
-        if(!isFinite(n) || n<=0) return "—";
-        return n.toLocaleString("fr-FR");
-      }
-      function normPhone(p){
-        p = String(p||"").trim().replace(/\s+/g,"").replace(/[^\d+]/g,"");
-        if(p.startsWith("00221")) p = "+221" + p.slice(5);
-        if(!p.startsWith("+") && p.startsWith("221")) p = "+" + p;
-        if(!p.startsWith("+221") && /^\d{9}$/.test(p)) p = "+221" + p;
-        return p;
-      }
+      $("btnActivateToken").disabled = true;
+      $("spinnerToken").style.display = "inline-block";
+      setStatus("⏳ Activation sécurisée en cours…", "warn", "EN COURS");
 
-      // ✅ safe token for query values (letters/numbers/_/-) + remove accents
-      function cleanWord(s, maxLen){
-        s = String(s ?? "").trim();
-        if(!s) return "";
-        s = s.slice(0, maxLen || 64);
-        try { s = s.normalize("NFD").replace(/[\u0300-\u036f]/g, ""); } catch(e){}
-        return s.replace(/[^a-zA-Z0-9_-]/g, "_");
-      }
+      try{
+        const { data, error } = await sb.rpc("digiy_pay_activate_token", { p_token: token });
+        if(error) throw error;
+        if(!data?.ok) throw new Error(data?.reason || "activation_failed");
 
-      // ✅ slug strict: lowercase a-z0-9- + remove accents
-      function cleanSlug(s, maxLen){
-        s = String(s ?? "").trim();
-        if(!s) return "";
-        s = s.slice(0, maxLen || 120);
-        try { s = s.normalize("NFD").replace(/[\u0300-\u036f]/g, ""); } catch(e){}
-        s = s.toLowerCase()
-             .replace(/[^a-z0-9-]/g, "-")
-             .replace(/-+/g, "-")
-             .replace(/^-|-$/g, "");
-        return s;
-      }
+        setStatus("🟢 Activé ! Tu peux continuer.", "ok", "ACTIF");
 
-      function cleanAmount(a){
-        const n = parseInt(String(a||"").replace(/[^\d]/g,""), 10);
-        if(!isFinite(n) || n<=0) return "";
-        return String(n);
-      }
-
-      function wa(msg){
-        location.href = "https://wa.me/" + SUPPORT_WA.replace(/\+/g,"") + "?text=" + encodeURIComponent(msg);
-      }
-      function setHint(msg){ $("hint").textContent = msg || ""; }
-      function setBig(text, tone, tagText){
-        const el = $("statusBig");
-        el.className = "statusBig " + (tone || "warn");
-        $("statusText").textContent = text;
-        const tag = $("tag");
-        tag.className = "tag " + (tone || "warn");
-        tag.textContent = tagText || "—";
-      }
-
-      // === CONTEXTE URL ===
-      const from = (qs("from") || "").trim();
-      const slug = cleanSlug(qs("slug"), 120);
-      const phone = normPhone(qs("phone") || "");
-      const accessModule = cleanWord(qs("module"), 40).toUpperCase() || "LOC";
-
-      const kind = cleanWord(qs("kind"), 40).toLowerCase() || "module"; // module | addon
-      const chosenModule = cleanWord(qs("m"), 40).toUpperCase();
-      const chosenPlan   = cleanWord(qs("plan"), 80);
-      const chosenAmount = cleanAmount(qs("amount"));
-
-      $("pillAccess").textContent = accessModule || "—";
-      $("pillModule").textContent = chosenModule || "—";
-      $("pillPhone").textContent = phone || "—";
-      $("pillSlug").textContent = slug || "—";
-
-      $("dbgKind").textContent = kind || "—";
-      $("dbgM").textContent = chosenModule || "—";
-      $("dbgPlan").textContent = chosenPlan || "—";
-      $("dbgAmount").textContent = chosenAmount || "—";
-
-      function syncSummary(){
-        $("sumAccess").textContent = accessModule || "—";
-        $("sumKind").textContent = kind || "—";
-        $("sumModule").textContent = chosenModule || "—";
-        $("sumPlan").textContent = chosenPlan || "—";
-        $("sumAmount").textContent = chosenAmount ? (fmt(chosenAmount) + " F") : "—";
-        $("pillAmount").textContent = chosenAmount ? (fmt(chosenAmount) + " F") : "—";
-        $("sumPhone").textContent = phone || "—";
-        $("sumSlug").textContent = slug || "—";
-      }
-      syncSummary();
-
-      function ensureBasics(){
-        if(!phone){ setHint("Téléphone manquant (?phone=+221...)."); return false; }
-        if(!chosenModule){ setHint("Produit manquant (?m=...)."); return false; }
-        if(!chosenAmount){ setHint("Montant manquant (?amount=...)."); return false; }
-        return true;
-      }
-
-      function ensureIdentity(){
-        const prenom = (localStorage.getItem("digiy_prenom") || "").trim();
-        const nom    = (localStorage.getItem("digiy_nom") || "").trim();
-        if(!prenom || !nom){
-          $("clientInfoBox").style.display = "block";
-          $("clientInfoBox").scrollIntoView({ behavior: "smooth", block: "center" });
-          setHint("👆 Remplis Prénom/Nom (une fois) pour confirmer sur WhatsApp.");
-          return false;
+        // redirect
+        if(ret){
+          const u = new URL(ret, location.origin);
+          u.searchParams.set("from", "digiy-pay-token");
+          location.href = u.toString();
+        } else {
+          $("tokenHint").textContent = "Activation OK. Tu peux fermer cette page.";
         }
-        return true;
+      } catch(e){
+        console.error(e);
+        setStatus("🔴 Activation impossible. Contacte le support.", "bad", "ERREUR");
+        $("tokenHint").textContent = String(e.message || e);
+      } finally {
+        $("spinnerToken").style.display = "none";
+        $("btnActivateToken").disabled = false;
       }
+    }
 
-      function safeBack(){
-        if(from){ location.replace(from); return; }
-        location.replace("https://beauville.github.io/digiy-loc-pro/login.html" + (slug ? "?slug="+encodeURIComponent(slug) : ""));
-      }
+    $("btnActivateToken").addEventListener("click", activateToken);
 
-      $("btnBack").onclick = safeBack;
+    if(auto && token){
+      setTimeout(activateToken, 400);
+    }
 
-      $("btnHelp").onclick = function(){
-        let msg = "DIGIY — Support Paiement (MANUEL)\n\n";
-        msg += "Accès: " + (accessModule || "—") + "\n";
-        msg += "Type: " + (kind || "—") + "\n";
-        msg += "Produit: " + (chosenModule || "—") + "\n";
-        msg += "Plan: " + (chosenPlan || "—") + "\n";
-        msg += "Montant: " + (chosenAmount ? (fmt(chosenAmount)+" F") : "—") + "\n";
-        msg += "Téléphone: " + (phone || "—") + "\n";
-        msg += "Slug: " + (slug || "—") + "\n\n";
-        msg += "J'ai besoin d'aide. — DIGIY";
-        wa(msg);
-      };
+    // --- WhatsApp confirm (manual) ---
+    $("btnWaConfirm").addEventListener("click", function(){
+      let msg = "DIGIY — Confirmation paiement Wave\n\n";
+      msg += "Bénéficiaire: JB BEAUVILLE\n";
+      msg += "Wave: " + WAVE_TO + "\n\n";
+      if(phone) msg += "Téléphone: " + phone + "\n";
+      if(access) msg += "Accès: " + access + "\n";
+      if(kind) msg += "Type: " + kind + "\n";
+      if(m) msg += "Produit: " + m + "\n";
+      if(plan) msg += "Plan: " + plan + "\n";
+      if(amount) msg += "Montant: " + amount + " FCFA\n";
+      if(slug) msg += "Slug: " + slug + "\n";
+      if(token) msg += "Token: " + token + "\n";
+      msg += "\nJe joins le reçu Wave ici.\nMerci d'activer. — DIGIY";
 
-      $("btnSaveInfo").onclick = function(){
-        const prenom = $("inputPrenom").value.trim();
-        const nom = $("inputNom").value.trim();
-        const email = $("inputEmail").value.trim();
+      wa(msg);
+      setStatus("✅ Message WhatsApp prêt. Ajoute le reçu.", "warn", "EN ATTENTE");
+    });
 
-        if(!prenom || !nom) {
-          alert("⚠️ Prénom et Nom sont obligatoires frérot!");
-          return;
-        }
+    $("btnSupport").addEventListener("click", function(){
+      let msg = "DIGIY — Support Paiement\n\n";
+      if(phone) msg += "Téléphone: " + phone + "\n";
+      if(m) msg += "Produit: " + m + "\n";
+      if(plan) msg += "Plan: " + plan + "\n";
+      if(amount) msg += "Montant: " + amount + " FCFA\n";
+      if(slug) msg += "Slug: " + slug + "\n";
+      msg += "\nJ'ai besoin d'aide. — DIGIY";
+      wa(msg);
+      setStatus("💬 Support WhatsApp…", "warn", "INFO");
+    });
 
-        localStorage.setItem("digiy_prenom", prenom);
-        localStorage.setItem("digiy_nom", nom);
-        if(email) localStorage.setItem("digiy_email", email);
-
-        $("clientInfoBox").style.display = "none";
-        setHint("✅ Infos enregistrées. Maintenant paye sur Wave puis confirme sur WhatsApp 👇");
-        $("btnWaConfirm").scrollIntoView({ behavior: "smooth", block: "center" });
-      };
-
-      // Pré-remplir
-      const savedPrenom = (localStorage.getItem("digiy_prenom") || "").trim();
-      const savedNom = (localStorage.getItem("digiy_nom") || "").trim();
-      const savedEmail = (localStorage.getItem("digiy_email") || "").trim();
-      if(savedPrenom) $("inputPrenom").value = savedPrenom;
-      if(savedNom) $("inputNom").value = savedNom;
-      if(savedEmail) $("inputEmail").value = savedEmail;
-
-      $("btnWaConfirm").onclick = function(){
-        if(!ensureBasics()) return;
-        if(!ensureIdentity()) return;
-
-        const prenom = (localStorage.getItem("digiy_prenom") || "").trim();
-        const nom    = (localStorage.getItem("digiy_nom") || "").trim();
-        const email  = (localStorage.getItem("digiy_email") || "").trim();
-
-        let msg = "DIGIY — Confirmation paiement Wave (MANUEL)\n\n";
-        msg += "Bénéficiaire: JB BEAUVILLE\n";
-        msg += "Wave: " + RECIPIENT_WAVE + "\n\n";
-        msg += "Nom: " + prenom + " " + nom + "\n";
-        if(email) msg += "Email: " + email + "\n";
-        msg += "Accès: " + (accessModule || "—") + "\n";
-        msg += "Type: " + (kind || "—") + "\n";
-        msg += "Produit: " + chosenModule + "\n";
-        msg += "Plan: " + (chosenPlan || "—") + "\n";
-        msg += "Montant: " + fmt(chosenAmount) + " F CFA\n";
-        msg += "Téléphone: " + (phone || "—") + "\n";
-        msg += "Slug: " + (slug || "—") + "\n\n";
-        msg += "Je viens de payer via Wave (transfert normal).\n";
-        msg += "Je joins le reçu Wave ici.\n\n";
-        msg += "Merci d'activer. — DIGIY";
-
-        wa(msg);
-
-        setBig("Confirmation envoyée. (en attente validation)", "warn", "EN ATTENTE");
-        setHint("✅ Envoie le reçu Wave sur WhatsApp.");
-      };
-
-      async function checkStatus(){
-        $("btnRefresh").disabled = true;
-        setHint("");
-
-        if(!phone){
-          setBig("Téléphone manquant.", "bad", "INACTIF");
-          setHint("Ajoute ?phone=+221...");
-          $("btnBack").disabled = false;
-          $("btnRefresh").disabled = false;
-          return;
-        }
-
-        // Pour un addon EXPLORE: on vérifie l'accès principal (module=LOC/etc)
-        const checkMod = (kind === "addon") ? accessModule : (chosenModule || accessModule);
-
-        try{
-          setBig("Vérification statut...", "warn", "EN COURS");
-          const r = await sb.rpc("is_module_active", { p_phone: phone, p_module: String(checkMod||"LOC").toUpperCase() });
-          if(r.error) throw r.error;
-
-          const active = !!r.data;
-
-          if(active){
-            setBig("✅ Accès actif ("+String(checkMod).toUpperCase()+")", "ok", "ACTIF");
-            setHint("Tu peux revenir. Si tu viens d’un Extra: on l’active après validation du reçu.");
-            $("btnBack").disabled = false;
-          }else{
-            setBig("⏳ Pas encore actif ("+String(checkMod).toUpperCase()+")", "warn", "EN ATTENTE");
-            setHint("Paye sur Wave + envoie le reçu. Activation manuelle ensuite.");
-            $("btnBack").disabled = false;
-          }
-        }catch(e){
-          console.error(e);
-          setBig("Erreur vérification.", "bad", "ERREUR");
-          setHint("Supabase: " + String(e.message || e));
-          $("btnBack").disabled = false;
-        }finally{
-          $("btnRefresh").disabled = false;
-        }
-      }
-
-      $("btnRefresh").onclick = checkStatus;
-
-      // Boot
-      checkStatus();
-    })();
+    // Optional back
+    // si tu veux un bouton retour plus tard, on le remet (mais je l’ai retiré pour friction 0)
+    if(from){
+      $("manualHint").textContent = "Après activation, retourne sur ton module.";
+    }
+  })();
   </script>
 </body>
 </html>
