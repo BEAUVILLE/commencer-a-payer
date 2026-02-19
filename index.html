@@ -17,7 +17,7 @@
     }
     *{box-sizing:border-box}
     body{ margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial; background:var(--bg); color:var(--text); }
-    .wrap{ max-width:720px; margin:0 auto; padding:16px; }
+    .wrap{ max-width:760px; margin:0 auto; padding:16px; }
     .card{ background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow); }
     h1{ margin:0; font-size:20px; font-weight:1100; }
     p{ margin:8px 0 0; color:var(--muted); line-height:1.4; }
@@ -54,36 +54,190 @@
     .row > *{ flex:1; min-width:220px; }
     .small{ font-size:13px; color:var(--muted); line-height:1.35; }
     .hide{ display:none; }
+
+    /* Lang switch */
+    .topbar{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px; flex-wrap:wrap; margin-bottom:10px;
+    }
+    .lang-switch{
+      display:flex; gap:6px; padding:4px; border-radius:999px;
+      border:1px solid var(--line); background:rgba(0,0,0,.08);
+    }
+    .lang-switch button{
+      border:none; padding:7px 12px; border-radius:999px; cursor:pointer;
+      font-weight:1100; font-size:12px; background:transparent; color:var(--text);
+    }
+    .lang-switch button.active{ background:#0f172a; color:#fff; }
+
+    /* Pricing grid — MENU CODIFIÉ */
+    .section-sep{
+      margin:16px 0 8px;
+      font-size:11px; font-weight:1100; letter-spacing:.8px;
+      text-transform:uppercase; color:var(--gold);
+      display:flex; align-items:center; gap:8px;
+    }
+    .section-sep::after{
+      content:""; flex:1; height:1px; background:rgba(250,204,21,.18);
+    }
+
+    .priceGrid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill, minmax(220px,1fr));
+      gap:10px;
+    }
+    .priceBtn{
+      text-align:left;
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.10);
+      border-radius:16px;
+      padding:12px;
+      cursor:pointer;
+      color:var(--text);
+      transition:border-color .18s;
+    }
+    .priceBtn:hover{ border-color: rgba(250,204,21,.55); }
+    .priceBtn.active{
+      border-color: rgba(250,204,21,.85);
+      background:rgba(250,204,21,.06);
+      box-shadow: 0 10px 30px rgba(250,204,21,.08);
+    }
+    .priceTop{
+      display:flex; justify-content:space-between; gap:10px; align-items:center;
+    }
+    .priceCode{
+      display:inline-flex; align-items:center; justify-content:center;
+      min-width:34px; height:34px; border-radius:8px;
+      background:linear-gradient(135deg,#667eea,#764ba2);
+      font-size:13px; font-weight:1100; color:#fff; flex-shrink:0;
+    }
+    .priceCode.gold{ background:linear-gradient(135deg,#facc15,#f59e0b); color:#0f172a; }
+    .priceName{ font-size:13px; font-weight:1100; line-height:1.2; }
+    .priceAmt{ font-size:13px; font-weight:1100; color: var(--gold); white-space:nowrap; }
+    .priceDesc{ margin-top:6px; font-size:11px; color:var(--muted); line-height:1.35; }
+    .hintLine{ margin-top:10px; font-size:12px; color:var(--muted); }
   </style>
 </head>
 
 <body>
   <div class="wrap">
     <div class="card">
-      <h1>COMMENCER À PAYER — DIGIYLYFE</h1>
-      <p class="small">0% commission · Paiement Wave · Activation DIGIY</p>
+
+      <div class="topbar">
+        <div class="lang-switch" aria-label="Language switch">
+          <button id="lang-fr" class="active" type="button">FR</button>
+          <button id="lang-wo" type="button">WO</button>
+        </div>
+        <span class="tag" data-i18n="tag_digiy">DIGIY PAY</span>
+      </div>
+
+      <h1 data-i18n="page_title">COMMENCER À PAYER — DIGIYLYFE</h1>
+      <p class="small" data-i18n="subtitle">0% commission · Paiement Wave · Activation DIGIY</p>
 
       <div class="hr"></div>
 
       <div class="status warn" id="statusBox">
-        <div id="statusText">⏳ Préparation…</div>
-        <span class="tag warn" id="statusTag">EN COURS</span>
+        <div id="statusText" data-i18n="status_preparing">⏳ Préparation…</div>
+        <span class="tag warn" id="statusTag" data-i18n="tag_in_progress">EN COURS</span>
+      </div>
+
+      <div class="hr"></div>
+
+      <!-- RECAP -->
+      <div class="box" id="orderBox">
+        <h2 style="margin:0;font-size:16px;font-weight:1100;" data-i18n="order_title">🧾 Récap paiement</h2>
+        <p class="small" data-i18n="order_sub">Vérifie ce que tu payes avant de confirmer.</p>
+        <div class="hr"></div>
+        <div class="row">
+          <div>
+            <div style="font-weight:1100;" data-i18n="order_product">Produit / Module</div>
+            <div class="mono" style="font-weight:1000;" id="orderProduct">—</div>
+          </div>
+          <div>
+            <div style="font-weight:1100;" data-i18n="order_plan">Plan</div>
+            <div class="mono" style="font-weight:1000;" id="orderPlan">—</div>
+          </div>
+        </div>
+        <div class="hr"></div>
+        <div class="row">
+          <div>
+            <div style="font-weight:1100;" data-i18n="order_amount">Montant</div>
+            <div class="mono" style="font-weight:1000;" id="orderAmount">—</div>
+          </div>
+          <div>
+            <div style="font-weight:1100;" data-i18n="order_ref">Référence</div>
+            <div class="mono" style="font-weight:1000;" id="orderRef">—</div>
+          </div>
+        </div>
+        <p class="small" id="orderHint" style="margin-top:10px;"></p>
+      </div>
+
+      <div class="hr"></div>
+
+      <!-- GRILLE TARIFS MENU CODIFIÉ -->
+      <div class="box" id="pricingBox">
+        <h2 style="margin:0;font-size:16px;font-weight:1100;">💰 Menu Codifié — Dis le CODE, choisis ton pack</h2>
+        <p class="small">Clique sur un tarif → montant + code remplis automatiquement.</p>
+        <div class="hr"></div>
+
+        <!-- 1 · DRIVER -->
+        <div class="section-sep">🚗 CODE 1 · DIGIY DRIVER</div>
+        <div class="priceGrid" id="grid_driver"></div>
+
+        <!-- 2 · LOC -->
+        <div class="section-sep">🏠 CODE 2 · DIGIY LOC — Location</div>
+        <div class="priceGrid" id="grid_loc"></div>
+
+        <!-- 3 · RESTO -->
+        <div class="section-sep">🍽️ CODE 3 · DIGIY RESTO PRO</div>
+        <div class="priceGrid" id="grid_resto"></div>
+
+        <!-- 4 · RÉSA -->
+        <div class="section-sep">📅 CODE 4 · DIGIY RÉSA</div>
+        <div class="priceGrid" id="grid_resa"></div>
+
+        <!-- 5 · POS -->
+        <div class="section-sep">🧾 CODE 5 · DIGIY POS PRO</div>
+        <div class="priceGrid" id="grid_pos"></div>
+
+        <!-- 6 · MARKET -->
+        <div class="section-sep">🛒 CODE 6 · DIGIY MARKET</div>
+        <div class="priceGrid" id="grid_market"></div>
+
+        <!-- 7 · BUILD -->
+        <div class="section-sep">🏗️ CODE 7 · DIGIY BUILD</div>
+        <div class="priceGrid" id="grid_build"></div>
+
+        <!-- 8 · EXPLORE AGENCE -->
+        <div class="section-sep">🧭 CODE 8 · DIGIY EXPLORE — Agence</div>
+        <div class="priceGrid" id="grid_explore"></div>
+
+        <!-- 9 · FRET CHAUFFEUR -->
+        <div class="section-sep">🚚 CODE 9 · DIGIY FRET CHAUFFEUR</div>
+        <div class="priceGrid" id="grid_fret_chauf"></div>
+
+        <!-- 10 · FRET CLIENT -->
+        <div class="section-sep">📦 CODE 10 · DIGIY FRET CLIENT</div>
+        <div class="priceGrid" id="grid_fret_client"></div>
+
+        <!-- E · EXPLORE BOOST -->
+        <div class="section-sep">✨ CODE E · BOOST EXPLORE (supplément)</div>
+        <div class="priceGrid" id="grid_boost"></div>
+
+        <div class="hintLine" id="pricingHint">📞 Tu peux aussi commander par téléphone en disant juste le code : <strong>+221 77 134 28 89</strong></div>
       </div>
 
       <div class="hr"></div>
 
       <!-- TOKEN MODE -->
       <div class="box" id="tokenBox">
-        <h2 style="margin:0;font-size:16px;font-weight:1100;">🔐 Activation sécurisée</h2>
-        <p class="small">Si tu as reçu un lien DIGIY avec token, clique simplement.</p>
-
+        <h2 style="margin:0;font-size:16px;font-weight:1100;" data-i18n="token_title">🔐 Activation sécurisée</h2>
+        <p class="small" data-i18n="token_desc">Si tu as reçu un lien DIGIY avec token, clique simplement.</p>
         <div class="hr"></div>
-
         <button class="btn ok" id="btnActivateToken">
-          ✅ Activer maintenant
+          <span data-i18n="btn_activate_now">✅ Activer maintenant</span>
           <span id="spinnerToken" class="mono" style="display:none;margin-left:8px;">⏳</span>
         </button>
-
         <p class="small" id="tokenHint" style="margin-top:10px;"></p>
       </div>
 
@@ -91,11 +245,9 @@
 
       <!-- MANUAL MODE -->
       <div class="box" id="manualBox">
-        <h2 style="margin:0;font-size:16px;font-weight:1100;">💳 Paiement manuel (Wave)</h2>
-        <p class="small">Paye sur Wave, puis envoie le reçu sur WhatsApp. On active ensuite.</p>
-
+        <h2 style="margin:0;font-size:16px;font-weight:1100;" data-i18n="manual_title">💳 Paiement manuel (Wave)</h2>
+        <p class="small" data-i18n="manual_desc">Paye sur Wave, puis envoie le reçu sur WhatsApp. On active ensuite.</p>
         <div class="hr"></div>
-
         <div class="row">
           <div>
             <div style="font-weight:1100;">Bénéficiaire</div>
@@ -106,26 +258,20 @@
             <div class="mono" style="font-weight:1000;" id="waveTo">+221 77 134 28 89</div>
           </div>
         </div>
-
         <div class="hr"></div>
-
         <ol class="steps">
           <li>Fais le transfert Wave</li>
-          <li>Envoie le reçu sur WhatsApp</li>
-          <li>Retourne au module (activation après validation)</li>
+          <li>Envoie le reçu sur WhatsApp (avec le code choisi)</li>
+          <li>Retourne au module — activation après validation</li>
         </ol>
-
         <div class="hr"></div>
-
         <div class="row">
           <button class="btn gold" id="btnWaConfirm">💬 Confirmer WhatsApp (avec reçu)</button>
           <button class="btn bad" id="btnSupport">🛟 Support WhatsApp</button>
         </div>
-
         <p class="small" id="manualHint" style="margin-top:10px;"></p>
       </div>
 
-      <!-- Debug caché (si tu veux garder) -->
       <div class="hide" id="dbg"></div>
     </div>
   </div>
@@ -134,25 +280,86 @@
   (function(){
     "use strict";
 
-    // === CONFIG SUPABASE (TES VALEURS) ===
+    /* =====================================================
+       GRILLE COMPLÈTE — MENU CODIFIÉ V2
+       Alignée 1:1 avec les tarifs officiels DIGIYLYFE
+    ===================================================== */
+    const PRICE_GROUPS = {
+      driver: [
+        { code:"1", plan:"DRIVER",        amount:12900,  label:"🚗 DRIVER",         desc:"GPS temps réel · Courses · Wave & OM" }
+      ],
+      loc: [
+        { code:"2A", plan:"LOC_2A",       amount:12900,  label:"🥉 LOC 1-5 logements",  desc:"Pack essentiel propriétaire" },
+        { code:"2B", plan:"LOC_2B",       amount:25000,  label:"🥈 LOC 6-9 logements",  desc:"Gestionnaire intermédiaire" },
+        { code:"2C", plan:"LOC_2C",       amount:45000,  label:"🥇 LOC 10-20 logements", desc:"Gestionnaire confirmé" },
+        { code:"2D", plan:"LOC_2D",       amount:60000,  label:"💎 LOC 21-30 logements", desc:"Grand propriétaire" },
+        { code:"2E", plan:"LOC_2E",       amount:90000,  label:"👑 LOC 30+ logements",   desc:"Parc immobilier premium" }
+      ],
+      resto: [
+        { code:"3A", plan:"RESTO_3A",     amount:19900,  label:"🥉 RESTO ESSENTIEL",  desc:"2 licences · 15 tables" },
+        { code:"3B", plan:"RESTO_3B",     amount:39900,  label:"🥈 RESTO STANDARD",   desc:"4 licences · 30 tables" },
+        { code:"3C", plan:"RESTO_3C",     amount:59900,  label:"🥇 RESTO PRO",        desc:"6 licences · 45 tables" }
+      ],
+      resa: [
+        { code:"4A", plan:"RESA_4A",      amount:12900,  label:"🥉 RÉSA 1-5 tables",  desc:"Petite salle" },
+        { code:"4B", plan:"RESA_4B",      amount:25000,  label:"🥈 RÉSA 6-9 tables",  desc:"Moyenne salle" },
+        { code:"4C", plan:"RESA_4C",      amount:45000,  label:"🥇 RÉSA 10-20 tables", desc:"Grande salle" },
+        { code:"4D", plan:"RESA_4D",      amount:60000,  label:"💎 RÉSA 21-30 tables", desc:"Salle événementielle" },
+        { code:"4E", plan:"RESA_4E",      amount:90000,  label:"👑 RÉSA 30+ tables",  desc:"Site multi-salles" }
+      ],
+      pos: [
+        { code:"5",  plan:"POS_PRO",      amount:19900,  label:"🧾 POS PRO",          desc:"Caisse tactile · Stock · Multi-users" }
+      ],
+      market: [
+        { code:"6",  plan:"MARKET",       amount:19900,  label:"🛒 MARKET",           desc:"Boutique en ligne · Catalogue illimité" }
+      ],
+      build: [
+        { code:"7",  plan:"BUILD",        amount:12900,  label:"🏗️ BUILD",            desc:"Artisans · Devis · Portfolio" }
+      ],
+      explore: [
+        { code:"8A", plan:"EXPLORE_8A",   amount:30000,  label:"🟢 EXPLORE ESSENTIEL", desc:"Visibilité locale agence" },
+        { code:"8B", plan:"EXPLORE_8B",   amount:60000,  label:"🔵 EXPLORE PRO",       desc:"Visibilité régionale agence" },
+        { code:"8C", plan:"EXPLORE_8C",   amount:120000, label:"🟣 EXPLORE PREMIUM",   desc:"Visibilité internationale" },
+        { code:"8D", plan:"EXPLORE_8D",   amount:150000, label:"🎫 EXPLORE SETUP",     desc:"Droit d'entrée one-shot · Onboarding", isOneShot:true }
+      ],
+      fret_chauf: [
+        { code:"9A", plan:"FRET_CHAUF_9A", amount:25000,  label:"🥉 FRET LOCAL <50km",    desc:"Zone locale chauffeur" },
+        { code:"9B", plan:"FRET_CHAUF_9B", amount:60000,  label:"🥈 FRET RÉGIONAL 50-200km", desc:"Région chauffeur" },
+        { code:"9C", plan:"FRET_CHAUF_9C", amount:120000, label:"🥇 FRET NATIONAL 200km+", desc:"National chauffeur" },
+        { code:"9D", plan:"FRET_CHAUF_9D", amount:200000, label:"👑 FRET INTERNATIONAL CEDEAO", desc:"CEDEAO chauffeur" }
+      ],
+      fret_client: [
+        { code:"10A", plan:"FRET_CLI_10A", amount:9900,   label:"🥉 FRET CLIENT LOCAL",      desc:"Expéditeur zone locale" },
+        { code:"10B", plan:"FRET_CLI_10B", amount:25000,  label:"🥈 FRET CLIENT RÉGIONAL",   desc:"Expéditeur régional" },
+        { code:"10C", plan:"FRET_CLI_10C", amount:60000,  label:"🥇 FRET CLIENT NATIONAL",   desc:"Expéditeur national" },
+        { code:"10D", plan:"FRET_CLI_10D", amount:120000, label:"👑 FRET CLIENT INTERNATIONAL", desc:"Expéditeur CEDEAO" }
+      ],
+      boost: [
+        { code:"E1", plan:"BOOST_E1",     amount:5000,   label:"E1 · BOOST LOCAL",    desc:"Badge + vitrine locale + WhatsApp", isGold:true },
+        { code:"E2", plan:"BOOST_E2",     amount:10000,  label:"E2 · BOOST STANDARD", desc:"Mise en avant + SEO + leads",       isGold:true },
+        { code:"E3", plan:"BOOST_E3",     amount:20000,  label:"E3 · BOOST PREMIUM",  desc:"Priorité + support média + max visibilité", isGold:true }
+      ]
+    };
+
+    /* ==================== CONFIG SUPABASE ==================== */
     const SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc3Ftd2pqdHNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA";
     const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // WhatsApp
     const SUPPORT_WA = "+221771342889";
-    const WAVE_TO = "+221771342889"; // affichage + message (mets 771342889 ou numéro que tu veux)
+    const WAVE_TO    = "+221771342889";
 
-    const $ = (id)=>document.getElementById(id);
+    const $ = (id) => document.getElementById(id);
     const qp = new URLSearchParams(location.search);
 
+    /* ==================== UTILS ==================== */
     function setStatus(text, tone, tag){
       const box = $("statusBox");
       box.className = "status " + (tone || "warn");
       $("statusText").textContent = text || "";
-      const t = $("statusTag");
-      t.className = "tag " + (tone || "warn");
-      t.textContent = tag || "—";
+      const tg = $("statusTag");
+      tg.className = "tag " + (tone || "warn");
+      tg.textContent = tag || "—";
     }
 
     function wa(msg){
@@ -168,51 +375,156 @@
       return p;
     }
 
-    // === INPUTS URL (optionnels) ===
-    const token = (qp.get("token") || "").trim();
-    const ret = (qp.get("return") || "").trim();
-    const auto = (qp.get("auto") === "1");
+    function prettyFCFA(n){
+      const x = String(n||"").replace(/[^\d]/g,"");
+      if(!x || x === "0") return "";
+      return Number(x).toLocaleString("fr-FR") + " FCFA";
+    }
 
-    const phone = normPhone(qp.get("phone") || "");      // utile pour WhatsApp message
-    const kind = (qp.get("kind") || "").trim().toLowerCase(); // module|addon
-    const m = (qp.get("m") || "").trim();                // ex: EXPLORE
-    const plan = (qp.get("plan") || "").trim();          // ex: boost_city
-    const amount = (qp.get("amount") || "").toString().replace(/[^\d]/g,""); // ex: 14900
-    const slug = (qp.get("slug") || "").trim();
-    const access = (qp.get("module") || "").trim().toUpperCase(); // ex: LOC
-    const from = (qp.get("from") || "").trim();
+    /* ==================== URL PARAMS ==================== */
+    const token  = (qp.get("token")  || "").trim();
+    const ret    = (qp.get("return") || "").trim();
+    const auto   = (qp.get("auto")   === "1");
+    const phone  = normPhone(qp.get("phone") || "");
+    const kind   = (qp.get("kind")   || "").trim().toLowerCase();
+    const m      = (qp.get("m")      || "").trim();
+    const slug   = (qp.get("slug")   || "").trim();
+    const access = (qp.get("module") || "").trim().toUpperCase();
+    const from_  = (qp.get("from")   || "").trim();
 
-    // UI
-    $("waveTo").textContent = "+221 77 134 28 89"; // affichage friendly (change si besoin)
+    let plan   = (qp.get("plan")   || "").trim();
+    let amount = (qp.get("amount") || "").toString().replace(/[^\d]/g,"");
+    let selectedCode = "";
 
-    // --- TOKEN MODE visibility ---
+    /* ==================== LANG (FR seulement ici, minimal) ==================== */
+    let CURRENT_LANG = localStorage.getItem("digiy_lang") || "fr";
+
+    document.getElementById("lang-fr").addEventListener("click", ()=>{
+      CURRENT_LANG = "fr";
+      localStorage.setItem("digiy_lang","fr");
+      document.getElementById("lang-fr").classList.add("active");
+      document.getElementById("lang-wo").classList.remove("active");
+    });
+    document.getElementById("lang-wo").addEventListener("click", ()=>{
+      CURRENT_LANG = "wo";
+      localStorage.setItem("digiy_lang","wo");
+      document.getElementById("lang-wo").classList.add("active");
+      document.getElementById("lang-fr").classList.remove("active");
+    });
+
+    /* ==================== RENDER PRICE GRIDS ==================== */
+    function renderGrids(){
+      const groups = {
+        driver:      "grid_driver",
+        loc:         "grid_loc",
+        resto:       "grid_resto",
+        resa:        "grid_resa",
+        pos:         "grid_pos",
+        market:      "grid_market",
+        build:       "grid_build",
+        explore:     "grid_explore",
+        fret_chauf:  "grid_fret_chauf",
+        fret_client: "grid_fret_client",
+        boost:       "grid_boost"
+      };
+
+      for(const [groupKey, gridId] of Object.entries(groups)){
+        const grid = $(gridId);
+        if(!grid) continue;
+        const items = PRICE_GROUPS[groupKey] || [];
+
+        grid.innerHTML = items.map(p => {
+          const isActive = (plan && plan === p.plan) || (amount && amount === String(p.amount) && p.amount > 0);
+          const amtText = p.amount > 0 ? prettyFCFA(p.amount) : "Sur devis";
+          const codeClass = p.isGold ? "priceCode gold" : "priceCode";
+          const oneShotBadge = p.isOneShot ? '<span style="font-size:10px;color:var(--warn);margin-left:4px;">ONE-SHOT</span>' : "";
+          return `
+            <button class="priceBtn ${isActive ? "active" : ""}" type="button"
+              data-plan="${p.plan}" data-amount="${p.amount}" data-code="${p.code}">
+              <div class="priceTop">
+                <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0;">
+                  <div class="${codeClass}">${p.code}</div>
+                  <div class="priceName">${p.label}${oneShotBadge}</div>
+                </div>
+                <div class="priceAmt">${amtText}</div>
+              </div>
+              <div class="priceDesc">${p.desc}</div>
+            </button>
+          `;
+        }).join("");
+
+        grid.querySelectorAll(".priceBtn").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const pPlan   = (btn.getAttribute("data-plan")   || "").trim();
+            const pAmt    = (btn.getAttribute("data-amount") || "").trim();
+            const pCode   = (btn.getAttribute("data-code")   || "").trim();
+
+            if(pAmt && pAmt !== "0") amount = pAmt;
+            if(pPlan) plan = pPlan;
+            selectedCode = pCode;
+
+            // Update URL (shareable)
+            const u = new URL(location.href);
+            if(plan)  u.searchParams.set("plan", plan);
+            if(amount) u.searchParams.set("amount", amount);
+            history.replaceState(null, "", u.toString());
+
+            renderGrids();
+            renderOrder();
+            setStatus("💳 Code " + pCode + " sélectionné — paye sur Wave & envoie le reçu.", "warn", "CODE " + pCode);
+          });
+        });
+      }
+    }
+
+    /* ==================== RENDER ORDER RECAP ==================== */
+    function getProductLabel(){
+      // Try to derive a nice label from plan code
+      if(selectedCode) return "DIGIY · Code " + selectedCode;
+      return (access || m || "DIGIY");
+    }
+
+    function renderOrder(){
+      const product = getProductLabel();
+      const planTxt = plan || "—";
+      const amt = prettyFCFA(amount) || "—";
+      const ref = slug || selectedCode || (token ? ("token:" + token.slice(0,8) + "…") : "—");
+
+      $("orderProduct").textContent = product;
+      $("orderPlan").textContent = planTxt;
+      $("orderAmount").textContent = amt;
+      $("orderRef").textContent = ref;
+
+      const missing = (!amount || !plan);
+      $("orderHint").textContent = missing
+        ? "⚠️ Choisis un tarif dans la grille ci-dessous."
+        : "✅ Tout est bon. Tu peux payer et envoyer le reçu sur WhatsApp.";
+    }
+
+    // Initial render
+    renderGrids();
+    renderOrder();
+
+    /* ==================== TOKEN MODE ==================== */
     if(!token){
       $("tokenBox").classList.add("hide");
-      setStatus("💳 Paiement Wave : confirme sur WhatsApp avec le reçu.", "warn", "MANUEL");
-      $("manualHint").textContent = "Astuce : après envoi du reçu, l’activation se fait rapidement.";
+      setStatus("💳 Paiement Wave · Choisis ton code", "warn", "MANUEL");
+      $("manualHint").textContent = "Sélectionne un code dans la grille → le montant apparaît ici.";
     } else {
       setStatus("🔐 Lien sécurisé détecté. Clique pour activer.", "ok", "TOKEN");
       $("tokenHint").textContent = "Token détecté. Activation en 1 clic.";
     }
 
-    // --- Activate token ---
     async function activateToken(){
-      if(!token){
-        alert("Token manquant.");
-        return;
-      }
+      if(!token){ alert("Token manquant."); return; }
       $("btnActivateToken").disabled = true;
       $("spinnerToken").style.display = "inline-block";
-      setStatus("⏳ Activation sécurisée en cours…", "warn", "EN COURS");
-
+      setStatus("⏳ Activation en cours…", "warn", "EN COURS");
       try{
         const { data, error } = await sb.rpc("digiy_pay_activate_token", { p_token: token });
         if(error) throw error;
         if(!data?.ok) throw new Error(data?.reason || "activation_failed");
-
         setStatus("🟢 Activé ! Tu peux continuer.", "ok", "ACTIF");
-
-        // redirect
         if(ret){
           const u = new URL(ret, location.origin);
           u.searchParams.set("from", "digiy-pay-token");
@@ -221,7 +533,6 @@
           $("tokenHint").textContent = "Activation OK. Tu peux fermer cette page.";
         }
       } catch(e){
-        console.error(e);
         setStatus("🔴 Activation impossible. Contacte le support.", "bad", "ERREUR");
         $("tokenHint").textContent = String(e.message || e);
       } finally {
@@ -231,47 +542,46 @@
     }
 
     $("btnActivateToken").addEventListener("click", activateToken);
+    if(auto && token) setTimeout(activateToken, 400);
 
-    if(auto && token){
-      setTimeout(activateToken, 400);
-    }
-
-    // --- WhatsApp confirm (manual) ---
+    /* ==================== WHATSAPP CONFIRM ==================== */
     $("btnWaConfirm").addEventListener("click", function(){
+      if(!amount){
+        setStatus("⚠️ Choisis un tarif dans la grille d'abord.", "warn", "TARIF");
+        return;
+      }
       let msg = "DIGIY — Confirmation paiement Wave\n\n";
       msg += "Bénéficiaire: JB BEAUVILLE\n";
       msg += "Wave: " + WAVE_TO + "\n\n";
-      if(phone) msg += "Téléphone: " + phone + "\n";
-      if(access) msg += "Accès: " + access + "\n";
-      if(kind) msg += "Type: " + kind + "\n";
-      if(m) msg += "Produit: " + m + "\n";
-      if(plan) msg += "Plan: " + plan + "\n";
-      if(amount) msg += "Montant: " + amount + " FCFA\n";
-      if(slug) msg += "Slug: " + slug + "\n";
-      if(token) msg += "Token: " + token + "\n";
+      if(phone)        msg += "Téléphone: " + phone + "\n";
+      if(selectedCode) msg += "Code menu: " + selectedCode + "\n";
+      if(access)       msg += "Accès: " + access + "\n";
+      if(kind)         msg += "Type: " + kind + "\n";
+      msg += "Produit: " + getProductLabel() + "\n";
+      if(plan)         msg += "Plan: " + plan + "\n";
+      msg += "Montant: " + amount + " FCFA\n";
+      if(slug)         msg += "Slug: " + slug + "\n";
+      if(token)        msg += "Token: " + token + "\n";
       msg += "\nJe joins le reçu Wave ici.\nMerci d'activer. — DIGIY";
-
       wa(msg);
       setStatus("✅ Message WhatsApp prêt. Ajoute le reçu.", "warn", "EN ATTENTE");
     });
 
     $("btnSupport").addEventListener("click", function(){
       let msg = "DIGIY — Support Paiement\n\n";
-      if(phone) msg += "Téléphone: " + phone + "\n";
-      if(m) msg += "Produit: " + m + "\n";
-      if(plan) msg += "Plan: " + plan + "\n";
+      if(phone)        msg += "Téléphone: " + phone + "\n";
+      if(selectedCode) msg += "Code menu: " + selectedCode + "\n";
+      msg += "Produit: " + getProductLabel() + "\n";
+      if(plan)   msg += "Plan: " + plan + "\n";
       if(amount) msg += "Montant: " + amount + " FCFA\n";
-      if(slug) msg += "Slug: " + slug + "\n";
+      if(slug)   msg += "Slug: " + slug + "\n";
       msg += "\nJ'ai besoin d'aide. — DIGIY";
       wa(msg);
       setStatus("💬 Support WhatsApp…", "warn", "INFO");
     });
 
-    // Optional back
-    // si tu veux un bouton retour plus tard, on le remet (mais je l’ai retiré pour friction 0)
-    if(from){
-      $("manualHint").textContent = "Après activation, retourne sur ton module.";
-    }
+    if(from_) $("manualHint").textContent = "Après activation, retourne sur ton module.";
+
   })();
   </script>
 </body>
