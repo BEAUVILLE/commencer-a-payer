@@ -57,35 +57,49 @@
 
     /* Lang switch (top) */
     .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-bottom:10px;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px; flex-wrap:wrap; margin-bottom:10px;
     }
     .lang-switch{
-      display:flex;
-      gap:6px;
-      padding:4px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      background:rgba(0,0,0,.08);
+      display:flex; gap:6px; padding:4px; border-radius:999px;
+      border:1px solid var(--line); background:rgba(0,0,0,.08);
     }
     .lang-switch button{
-      border:none;
-      padding:7px 12px;
-      border-radius:999px;
+      border:none; padding:7px 12px; border-radius:999px; cursor:pointer;
+      font-weight:1100; font-size:12px; background:transparent; color:var(--text);
+    }
+    .lang-switch button.active{ background:#0f172a; color:#fff; }
+
+    /* Pricing grid */
+    .priceGrid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+    @media(max-width:640px){
+      .priceGrid{ grid-template-columns:1fr; }
+    }
+    .priceBtn{
+      text-align:left;
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.10);
+      border-radius:16px;
+      padding:12px 12px;
       cursor:pointer;
+    }
+    .priceBtn:hover{ border-color: rgba(250,204,21,.55); }
+    .priceBtn.active{
+      border-color: rgba(250,204,21,.85);
+      box-shadow: 0 10px 30px rgba(250,204,21,.08);
+    }
+    .priceTop{
+      display:flex; justify-content:space-between; gap:10px; align-items:center;
       font-weight:1100;
-      font-size:12px;
-      background:transparent;
-      color:var(--text);
     }
-    .lang-switch button.active{
-      background:#0f172a;
-      color:#fff;
-    }
+    .priceName{ font-size:14px; }
+    .priceAmt{ font-size:14px; color: var(--gold); white-space:nowrap; }
+    .priceDesc{ margin-top:6px; font-size:12px; color:var(--muted); line-height:1.35; }
+    .hintLine{ margin-top:10px; font-size:12px; color:var(--muted); }
   </style>
 </head>
 
@@ -109,6 +123,56 @@
       <div class="status warn" id="statusBox">
         <div id="statusText" data-i18n="status_preparing">⏳ Préparation…</div>
         <span class="tag warn" id="statusTag" data-i18n="tag_in_progress">EN COURS</span>
+      </div>
+
+      <div class="hr"></div>
+
+      <!-- RESUME PAIEMENT -->
+      <div class="box" id="orderBox">
+        <h2 style="margin:0;font-size:16px;font-weight:1100;" data-i18n="order_title">🧾 Récap paiement</h2>
+        <p class="small" data-i18n="order_sub">Vérifie ce que tu payes avant de confirmer.</p>
+
+        <div class="hr"></div>
+
+        <div class="row">
+          <div>
+            <div style="font-weight:1100;" data-i18n="order_product">Produit / Module</div>
+            <div class="mono" style="font-weight:1000;" id="orderProduct">—</div>
+          </div>
+          <div>
+            <div style="font-weight:1100;" data-i18n="order_plan">Plan</div>
+            <div class="mono" style="font-weight:1000;" id="orderPlan">—</div>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="row">
+          <div>
+            <div style="font-weight:1100;" data-i18n="order_amount">Montant</div>
+            <div class="mono" style="font-weight:1000;" id="orderAmount">—</div>
+          </div>
+          <div>
+            <div style="font-weight:1100;" data-i18n="order_ref">Référence</div>
+            <div class="mono" style="font-weight:1000;" id="orderRef">—</div>
+          </div>
+        </div>
+
+        <p class="small" id="orderHint" style="margin-top:10px;"></p>
+      </div>
+
+      <div class="hr"></div>
+
+      <!-- TARIFS -->
+      <div class="box" id="pricingBox">
+        <h2 style="margin:0;font-size:16px;font-weight:1100;" data-i18n="pricing_title">💰 Tarifs (choisis ton pack)</h2>
+        <p class="small" data-i18n="pricing_sub">Clique sur un tarif : le montant se remplit automatiquement.</p>
+
+        <div class="hr"></div>
+
+        <div class="priceGrid" id="priceGrid"></div>
+
+        <div class="hintLine" id="pricingHint"></div>
       </div>
 
       <div class="hr"></div>
@@ -176,7 +240,41 @@
     "use strict";
 
     /* =========================
-       i18n — FR / WO (Wolof)
+       CONFIG TARIFS (À EDITER)
+       - id: unique
+       - plan: ce qui part dans ?plan=
+       - amount: FCFA (chiffres)
+       - label_fr/wo + desc_fr/wo: affichage
+       ========================= */
+    const PRICES = [
+      { id:"starter", plan:"starter", amount: 4900,
+        label_fr:"Pack Starter", desc_fr:"Entrée simple — activation + base.",
+        label_wo:"Pack Starter", desc_wo:"Dugg-dëkk — activation + base."
+      },
+      { id:"pro", plan:"pro", amount: 9900,
+        label_fr:"Pack Pro", desc_fr:"Visibilité + options pro (terrain).",
+        label_wo:"Pack Pro", desc_wo:"Gëna am seen — options pro."
+      },
+      { id:"premium", plan:"premium", amount: 14900,
+        label_fr:"Pack Premium", desc_fr:"Boost max + priorité + pro.",
+        label_wo:"Pack Premium", desc_wo:"Boost bu mag + priorité."
+      },
+      { id:"boost_city", plan:"boost_city", amount: 5900,
+        label_fr:"Boost Ville", desc_fr:"Remontée visibilité sur ta zone.",
+        label_wo:"Boost Ville", desc_wo:"Gëna wér ci sa zone."
+      },
+      { id:"boost_featured", plan:"boost_featured", amount: 7900,
+        label_fr:"Mis en avant", desc_fr:"Badge + placement avant.",
+        label_wo:"Mis en avant", desc_wo:"Badge + jëkk ci list bi."
+      },
+      { id:"addon_custom", plan:"addon", amount: 0,
+        label_fr:"Autre montant", desc_fr:"Si on t’a donné un montant précis, garde celui du lien.",
+        label_wo:"Yeneen montant", desc_wo:"Su fekkee am na montant bu ñu la wax, jàpp ko."
+      }
+    ];
+
+    /* =========================
+       i18n — FR / WO
        ========================= */
     const DIGIY_LANG = {
       fr: {
@@ -186,6 +284,19 @@
 
         status_preparing: "⏳ Préparation…",
         tag_in_progress: "EN COURS",
+
+        order_title: "🧾 Récap paiement",
+        order_sub: "Vérifie ce que tu payes avant de confirmer.",
+        order_product: "Produit / Module",
+        order_plan: "Plan",
+        order_amount: "Montant",
+        order_ref: "Référence",
+        order_missing: "Infos incomplètes : choisis un tarif ou vérifie le lien (module/plan/montant).",
+        order_ok: "Tout est bon. Tu peux payer et envoyer le reçu.",
+
+        pricing_title: "💰 Tarifs (choisis ton pack)",
+        pricing_sub: "Clique sur un tarif : le montant se remplit automatiquement.",
+        pricing_hint: "Si ton lien contient déjà un montant, tu peux le garder ou choisir un pack.",
 
         token_title: "🔐 Activation sécurisée",
         token_desc: "Si tu as reçu un lien DIGIY avec token, clique simplement.",
@@ -206,7 +317,6 @@
         hint_manual_no_token: "Astuce : après envoi du reçu, l’activation se fait rapidement.",
         hint_after_send: "Après activation, retourne sur ton module.",
 
-        // status dynamic
         s_manual: "💳 Paiement Wave : confirme sur WhatsApp avec le reçu.",
         t_manual: "MANUEL",
 
@@ -242,6 +352,19 @@
         status_preparing: "⏳ Di waajal…",
         tag_in_progress: "CI DIGGANTE",
 
+        order_title: "🧾 Récap fey",
+        order_sub: "Seetal li ngay fey laata nga dëggal.",
+        order_product: "Produit / Module",
+        order_plan: "Plan",
+        order_amount: "Montant",
+        order_ref: "Référence",
+        order_missing: "Infos bi amul yépp : tànn tarif bi walla seetal link bi (module/plan/montant).",
+        order_ok: "Baax na. Mën nga fey te yónnee reçu bi.",
+
+        pricing_title: "💰 Tarifi yi (tànn sa pack)",
+        pricing_sub: "Klik ci tarif : montant bi dina am boppam.",
+        pricing_hint: "Su fekkee sa link am na montant, mën nga ko jàpp walla tànn pack.",
+
         token_title: "🔐 Activation bu am kaarange",
         token_desc: "Su fekkee nga jot na link DIGIY ak token, klik rekk.",
         btn_activate_now: "✅ Tambali activation",
@@ -261,7 +384,6 @@
         hint_manual_no_token: "Xelal : gannaaw nga yónnee reçu bi, activation bi dina gaaw.",
         hint_after_send: "Gannaaw activation, dellu ci sa module.",
 
-        // status dynamic
         s_manual: "💳 Fey Wave : dëggal ci WhatsApp ak reçu bi.",
         t_manual: "MANUAL",
 
@@ -275,7 +397,7 @@
         t_active: "AKTIF",
 
         s_token_fail: "🔴 Activation bi mënu. Jokkoo ak support.",
-        t_error: "NJ UUMTE",
+        t_error: "NJUUMTE",
 
         s_wa_ready: "✅ WhatsApp message bi diyaar na. Yokk reçu bi.",
         t_wait: "DI XAAR",
@@ -292,10 +414,9 @@
 
     let CURRENT_LANG = localStorage.getItem("digiy_lang") || "fr";
 
-    function t(key, ...args){
+    function t(key){
       const pack = DIGIY_LANG[CURRENT_LANG] || DIGIY_LANG.fr;
       const val = pack[key];
-      if (typeof val === "function") return val(...args);
       return (val != null) ? String(val) : String((DIGIY_LANG.fr[key] ?? key));
     }
 
@@ -312,10 +433,14 @@
 
       document.getElementById("lang-fr")?.classList.toggle("active", CURRENT_LANG==="fr");
       document.getElementById("lang-wo")?.classList.toggle("active", CURRENT_LANG==="wo");
+
+      // refresh prices labels
+      renderPrices();
+      renderOrder();
     }
 
-    document.getElementById("lang-fr").addEventListener("click", ()=>{ applyLanguage("fr"); });
-    document.getElementById("lang-wo").addEventListener("click", ()=>{ applyLanguage("wo"); });
+    document.getElementById("lang-fr").addEventListener("click", ()=> applyLanguage("fr"));
+    document.getElementById("lang-wo").addEventListener("click", ()=> applyLanguage("wo"));
 
     // === CONFIG SUPABASE (TES VALEURS) ===
     const SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
@@ -324,7 +449,7 @@
 
     // WhatsApp
     const SUPPORT_WA = "+221771342889";
-    const WAVE_TO = "+221771342889"; // affichage + message (mets 771342889 ou numéro que tu veux)
+    const WAVE_TO = "+221771342889"; // affichage + message
 
     const $ = (id)=>document.getElementById(id);
     const qp = new URLSearchParams(location.search);
@@ -351,6 +476,12 @@
       return p;
     }
 
+    function prettyFCFA(n){
+      const x = String(n||"").replace(/[^\d]/g,"");
+      if(!x) return "";
+      return x.replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " FCFA";
+    }
+
     // === INPUTS URL (optionnels) ===
     const token = (qp.get("token") || "").trim();
     const ret = (qp.get("return") || "").trim();
@@ -359,17 +490,108 @@
     const phone = normPhone(qp.get("phone") || "");
     const kind = (qp.get("kind") || "").trim().toLowerCase();
     const m = (qp.get("m") || "").trim();
-    const plan = (qp.get("plan") || "").trim();
-    const amount = (qp.get("amount") || "").toString().replace(/[^\d]/g,"");
     const slug = (qp.get("slug") || "").trim();
-    const access = (qp.get("module") || "").trim().toUpperCase();
+    const access = (qp.get("module") || "").trim().toUpperCase(); // ex: LOC
     const from = (qp.get("from") || "").trim();
 
-    // UI
+    // These will be editable (from url OR from price click)
+    let plan = (qp.get("plan") || "").trim();
+    let amount = (qp.get("amount") || "").toString().replace(/[^\d]/g,"");
+
+    // UI static
     $("waveTo").textContent = "+221 77 134 28 89";
 
-    // init language ASAP
+    // init language
     applyLanguage(CURRENT_LANG);
+
+    // --- PRICES ---
+    function getProductLabel(){
+      return (access || m || "DIGIY");
+    }
+
+    function renderPrices(){
+      const grid = $("priceGrid");
+      if(!grid) return;
+
+      $("pricingHint").textContent = t("pricing_hint");
+
+      const langIsWo = (CURRENT_LANG === "wo");
+      const selectedPlan = (plan || "").toLowerCase();
+      const selectedAmt = String(amount || "");
+
+      grid.innerHTML = PRICES.map(p=>{
+        const label = langIsWo ? p.label_wo : p.label_fr;
+        const desc  = langIsWo ? p.desc_wo  : p.desc_fr;
+
+        // active if matches plan OR matches amount (best effort)
+        const isActive = (selectedPlan && selectedPlan === String(p.plan||"").toLowerCase())
+                      || (selectedAmt && String(p.amount||"") === selectedAmt && p.amount > 0);
+
+        const amtText = (p.amount > 0) ? prettyFCFA(p.amount) : "—";
+        return `
+          <button class="priceBtn ${isActive ? "active" : ""}" type="button"
+            data-plan="${String(p.plan||"")}" data-amount="${String(p.amount||"")}" data-id="${p.id}">
+            <div class="priceTop">
+              <div class="priceName">${label}</div>
+              <div class="priceAmt">${amtText}</div>
+            </div>
+            <div class="priceDesc">${desc}</div>
+          </button>
+        `;
+      }).join("");
+
+      grid.querySelectorAll(".priceBtn").forEach(btn=>{
+        btn.addEventListener("click", ()=>{
+          const pPlan = (btn.getAttribute("data-plan")||"").trim();
+          const pAmt  = (btn.getAttribute("data-amount")||"").trim();
+
+          // If "other amount", do not overwrite amount if URL already has it
+          if(pAmt && pAmt !== "0"){
+            amount = pAmt;
+          }
+          if(pPlan){
+            plan = pPlan;
+          }
+
+          // Update URL without reload (clarity + shareable)
+          const u = new URL(location.href);
+          if(plan) u.searchParams.set("plan", plan);
+          if(amount) u.searchParams.set("amount", amount);
+          history.replaceState(null, "", u.toString());
+
+          renderPrices();
+          renderOrder();
+
+          // status nudges
+          setStatus(t("s_manual"), "warn", t("t_manual"));
+        });
+      });
+    }
+
+    // --- ORDER RECAP ---
+    function renderOrder(){
+      const product = getProductLabel();
+      const planTxt = (plan || "—");
+      const amt = prettyFCFA(amount) || "—";
+      const ref = slug || (token ? ("token:" + token.slice(0,8) + "…") : "—");
+
+      $("orderProduct").textContent = product;
+      $("orderPlan").textContent = planTxt;
+      $("orderAmount").textContent = amt;
+      $("orderRef").textContent = ref;
+
+      const missing = (!amount || (!access && !m));
+      $("orderHint").textContent = missing ? t("order_missing") : t("order_ok");
+
+      // Title browser (clair)
+      const baseTitle = (CURRENT_LANG === "wo") ? "FEY" : "PAYER";
+      const amtTitle = prettyFCFA(amount) || "";
+      document.title = `${baseTitle} ${product}${amtTitle ? " — " + amtTitle : ""} — DIGIYLYFE`;
+    }
+
+    // first render
+    renderPrices();
+    renderOrder();
 
     // --- TOKEN MODE visibility ---
     if(!token){
@@ -398,7 +620,6 @@
 
         setStatus(t("s_token_ok"), "ok", t("t_active"));
 
-        // redirect
         if(ret){
           const u = new URL(ret, location.origin);
           u.searchParams.set("from", "digiy-pay-token");
@@ -417,25 +638,32 @@
     }
 
     $("btnActivateToken").addEventListener("click", activateToken);
-
-    if(auto && token){
-      setTimeout(activateToken, 400);
-    }
+    if(auto && token) setTimeout(activateToken, 400);
 
     // --- WhatsApp confirm (manual) ---
     $("btnWaConfirm").addEventListener("click", function(){
+      // If amount missing, push user to choose price before WhatsApp
+      if(!amount){
+        setStatus("⚠️ Choisis un tarif avant de confirmer.", "warn", "TARIF");
+        $("manualHint").textContent = (CURRENT_LANG === "wo")
+          ? "Tànn tarif bi ngir am montant bi."
+          : "Choisis un tarif pour avoir le montant.";
+        return;
+      }
+
       let msg = (CURRENT_LANG === "wo")
         ? "DIGIY — Dëggal fey Wave\n\n"
         : "DIGIY — Confirmation paiement Wave\n\n";
 
       msg += (CURRENT_LANG === "wo") ? "Boroom jot: JB BEAUVILLE\n" : "Bénéficiaire: JB BEAUVILLE\n";
       msg += "Wave: " + WAVE_TO + "\n\n";
-      if(phone) msg += (CURRENT_LANG === "wo" ? "Téléphone: " : "Téléphone: ") + phone + "\n";
-      if(access) msg += (CURRENT_LANG === "wo" ? "Accès: " : "Accès: ") + access + "\n";
-      if(kind) msg += (CURRENT_LANG === "wo" ? "Type: " : "Type: ") + kind + "\n";
-      if(m) msg += (CURRENT_LANG === "wo" ? "Produit: " : "Produit: ") + m + "\n";
-      if(plan) msg += (CURRENT_LANG === "wo" ? "Plan: " : "Plan: ") + plan + "\n";
-      if(amount) msg += (CURRENT_LANG === "wo" ? "Montant: " : "Montant: ") + amount + " FCFA\n";
+
+      if(phone) msg += "Téléphone: " + phone + "\n";
+      if(access) msg += "Accès: " + access + "\n";
+      if(kind) msg += "Type: " + kind + "\n";
+      msg += "Produit: " + getProductLabel() + "\n";
+      if(plan) msg += "Plan: " + plan + "\n";
+      msg += "Montant: " + String(amount) + " FCFA\n";
       if(slug) msg += "Slug: " + slug + "\n";
       if(token) msg += "Token: " + token + "\n";
 
@@ -453,7 +681,7 @@
         : "DIGIY — Support Paiement\n\n";
 
       if(phone) msg += "Téléphone: " + phone + "\n";
-      if(m) msg += "Produit: " + m + "\n";
+      msg += "Produit: " + getProductLabel() + "\n";
       if(plan) msg += "Plan: " + plan + "\n";
       if(amount) msg += "Montant: " + amount + " FCFA\n";
       if(slug) msg += "Slug: " + slug + "\n";
