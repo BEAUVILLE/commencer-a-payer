@@ -54,33 +54,74 @@
     .row > *{ flex:1; min-width:220px; }
     .small{ font-size:13px; color:var(--muted); line-height:1.35; }
     .hide{ display:none; }
+
+    /* Lang switch (top) */
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:10px;
+    }
+    .lang-switch{
+      display:flex;
+      gap:6px;
+      padding:4px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.08);
+    }
+    .lang-switch button{
+      border:none;
+      padding:7px 12px;
+      border-radius:999px;
+      cursor:pointer;
+      font-weight:1100;
+      font-size:12px;
+      background:transparent;
+      color:var(--text);
+    }
+    .lang-switch button.active{
+      background:#0f172a;
+      color:#fff;
+    }
   </style>
 </head>
 
 <body>
   <div class="wrap">
     <div class="card">
-      <h1>COMMENCER À PAYER — DIGIYLYFE</h1>
-      <p class="small">0% commission · Paiement Wave · Activation DIGIY</p>
+
+      <div class="topbar">
+        <div class="lang-switch" aria-label="Language switch">
+          <button id="lang-fr" class="active" type="button">FR</button>
+          <button id="lang-wo" type="button">WO</button>
+        </div>
+        <span class="tag" data-i18n="tag_digiy">DIGIY PAY</span>
+      </div>
+
+      <h1 data-i18n="page_title">COMMENCER À PAYER — DIGIYLYFE</h1>
+      <p class="small" data-i18n="subtitle">0% commission · Paiement Wave · Activation DIGIY</p>
 
       <div class="hr"></div>
 
       <div class="status warn" id="statusBox">
-        <div id="statusText">⏳ Préparation…</div>
-        <span class="tag warn" id="statusTag">EN COURS</span>
+        <div id="statusText" data-i18n="status_preparing">⏳ Préparation…</div>
+        <span class="tag warn" id="statusTag" data-i18n="tag_in_progress">EN COURS</span>
       </div>
 
       <div class="hr"></div>
 
       <!-- TOKEN MODE -->
       <div class="box" id="tokenBox">
-        <h2 style="margin:0;font-size:16px;font-weight:1100;">🔐 Activation sécurisée</h2>
-        <p class="small">Si tu as reçu un lien DIGIY avec token, clique simplement.</p>
+        <h2 style="margin:0;font-size:16px;font-weight:1100;" data-i18n="token_title">🔐 Activation sécurisée</h2>
+        <p class="small" data-i18n="token_desc">Si tu as reçu un lien DIGIY avec token, clique simplement.</p>
 
         <div class="hr"></div>
 
         <button class="btn ok" id="btnActivateToken">
-          ✅ Activer maintenant
+          <span data-i18n="btn_activate_now">✅ Activer maintenant</span>
           <span id="spinnerToken" class="mono" style="display:none;margin-left:8px;">⏳</span>
         </button>
 
@@ -91,35 +132,35 @@
 
       <!-- MANUAL MODE -->
       <div class="box" id="manualBox">
-        <h2 style="margin:0;font-size:16px;font-weight:1100;">💳 Paiement manuel (Wave)</h2>
-        <p class="small">Paye sur Wave, puis envoie le reçu sur WhatsApp. On active ensuite.</p>
+        <h2 style="margin:0;font-size:16px;font-weight:1100;" data-i18n="manual_title">💳 Paiement manuel (Wave)</h2>
+        <p class="small" data-i18n="manual_desc">Paye sur Wave, puis envoie le reçu sur WhatsApp. On active ensuite.</p>
 
         <div class="hr"></div>
 
         <div class="row">
           <div>
-            <div style="font-weight:1100;">Bénéficiaire</div>
+            <div style="font-weight:1100;" data-i18n="beneficiary">Bénéficiaire</div>
             <div class="mono" style="font-weight:1000;">JB BEAUVILLE</div>
           </div>
           <div>
-            <div style="font-weight:1100;">Numéro Wave</div>
+            <div style="font-weight:1100;" data-i18n="wave_number">Numéro Wave</div>
             <div class="mono" style="font-weight:1000;" id="waveTo">+221 77 134 28 89</div>
           </div>
         </div>
 
         <div class="hr"></div>
 
-        <ol class="steps">
-          <li>Fais le transfert Wave</li>
-          <li>Envoie le reçu sur WhatsApp</li>
-          <li>Retourne au module (activation après validation)</li>
+        <ol class="steps" id="stepsList">
+          <li data-i18n="step_1">Fais le transfert Wave</li>
+          <li data-i18n="step_2">Envoie le reçu sur WhatsApp</li>
+          <li data-i18n="step_3">Retourne au module (activation après validation)</li>
         </ol>
 
         <div class="hr"></div>
 
         <div class="row">
-          <button class="btn gold" id="btnWaConfirm">💬 Confirmer WhatsApp (avec reçu)</button>
-          <button class="btn bad" id="btnSupport">🛟 Support WhatsApp</button>
+          <button class="btn gold" id="btnWaConfirm" data-i18n="btn_wa_confirm">💬 Confirmer WhatsApp (avec reçu)</button>
+          <button class="btn bad" id="btnSupport" data-i18n="btn_support">🛟 Support WhatsApp</button>
         </div>
 
         <p class="small" id="manualHint" style="margin-top:10px;"></p>
@@ -133,6 +174,148 @@
   <script>
   (function(){
     "use strict";
+
+    /* =========================
+       i18n — FR / WO (Wolof)
+       ========================= */
+    const DIGIY_LANG = {
+      fr: {
+        tag_digiy: "DIGIY PAY",
+        page_title: "COMMENCER À PAYER — DIGIYLYFE",
+        subtitle: "0% commission · Paiement Wave · Activation DIGIY",
+
+        status_preparing: "⏳ Préparation…",
+        tag_in_progress: "EN COURS",
+
+        token_title: "🔐 Activation sécurisée",
+        token_desc: "Si tu as reçu un lien DIGIY avec token, clique simplement.",
+        btn_activate_now: "✅ Activer maintenant",
+
+        manual_title: "💳 Paiement manuel (Wave)",
+        manual_desc: "Paye sur Wave, puis envoie le reçu sur WhatsApp. On active ensuite.",
+        beneficiary: "Bénéficiaire",
+        wave_number: "Numéro Wave",
+
+        step_1: "Fais le transfert Wave",
+        step_2: "Envoie le reçu sur WhatsApp",
+        step_3: "Retourne au module (activation après validation)",
+
+        btn_wa_confirm: "💬 Confirmer WhatsApp (avec reçu)",
+        btn_support: "🛟 Support WhatsApp",
+
+        hint_manual_no_token: "Astuce : après envoi du reçu, l’activation se fait rapidement.",
+        hint_after_send: "Après activation, retourne sur ton module.",
+
+        // status dynamic
+        s_manual: "💳 Paiement Wave : confirme sur WhatsApp avec le reçu.",
+        t_manual: "MANUEL",
+
+        s_token_detected: "🔐 Lien sécurisé détecté. Clique pour activer.",
+        t_token: "TOKEN",
+
+        s_token_running: "⏳ Activation sécurisée en cours…",
+        t_running: "EN COURS",
+
+        s_token_ok: "🟢 Activé ! Tu peux continuer.",
+        t_active: "ACTIF",
+
+        s_token_fail: "🔴 Activation impossible. Contacte le support.",
+        t_error: "ERREUR",
+
+        s_wa_ready: "✅ Message WhatsApp prêt. Ajoute le reçu.",
+        t_wait: "EN ATTENTE",
+
+        s_support: "💬 Support WhatsApp…",
+        t_info: "INFO",
+
+        token_hint_detected: "Token détecté. Activation en 1 clic.",
+        token_hint_ok_close: "Activation OK. Tu peux fermer cette page.",
+
+        alert_missing_token: "Token manquant."
+      },
+
+      wo: {
+        tag_digiy: "DIGIY PAY",
+        page_title: "TAMBALI FEY — DIGIYLYFE",
+        subtitle: "0% commission · Fey Wave · Activation DIGIY",
+
+        status_preparing: "⏳ Di waajal…",
+        tag_in_progress: "CI DIGGANTE",
+
+        token_title: "🔐 Activation bu am kaarange",
+        token_desc: "Su fekkee nga jot na link DIGIY ak token, klik rekk.",
+        btn_activate_now: "✅ Tambali activation",
+
+        manual_title: "💳 Fey bu manual (Wave)",
+        manual_desc: "Fey ci Wave, te yónnee reçu bi ci WhatsApp. Nu aktivé gannaaw.",
+        beneficiary: "Boroom jot",
+        wave_number: "Nimero Wave",
+
+        step_1: "Def transfert Wave",
+        step_2: "Yónnee reçu bi ci WhatsApp",
+        step_3: "Dellu ci module bi (activation gannaaw nangu)",
+
+        btn_wa_confirm: "💬 Dëggal WhatsApp (ak reçu)",
+        btn_support: "🛟 Support WhatsApp",
+
+        hint_manual_no_token: "Xelal : gannaaw nga yónnee reçu bi, activation bi dina gaaw.",
+        hint_after_send: "Gannaaw activation, dellu ci sa module.",
+
+        // status dynamic
+        s_manual: "💳 Fey Wave : dëggal ci WhatsApp ak reçu bi.",
+        t_manual: "MANUAL",
+
+        s_token_detected: "🔐 Link bu kaarange am na. Klik ngir aktivé.",
+        t_token: "TOKEN",
+
+        s_token_running: "⏳ Activation bi ci yoon la…",
+        t_running: "CI DIGGANTE",
+
+        s_token_ok: "🟢 Aktivé na ! Mën nga kontinye.",
+        t_active: "AKTIF",
+
+        s_token_fail: "🔴 Activation bi mënu. Jokkoo ak support.",
+        t_error: "NJ UUMTE",
+
+        s_wa_ready: "✅ WhatsApp message bi diyaar na. Yokk reçu bi.",
+        t_wait: "DI XAAR",
+
+        s_support: "💬 Support WhatsApp…",
+        t_info: "INFO",
+
+        token_hint_detected: "Token bi am na. Activation 1 klik.",
+        token_hint_ok_close: "Activation OK. Mën nga tëj page bi.",
+
+        alert_missing_token: "Token bi amul."
+      }
+    };
+
+    let CURRENT_LANG = localStorage.getItem("digiy_lang") || "fr";
+
+    function t(key, ...args){
+      const pack = DIGIY_LANG[CURRENT_LANG] || DIGIY_LANG.fr;
+      const val = pack[key];
+      if (typeof val === "function") return val(...args);
+      return (val != null) ? String(val) : String((DIGIY_LANG.fr[key] ?? key));
+    }
+
+    function applyLanguage(lang){
+      CURRENT_LANG = (lang === "wo") ? "wo" : "fr";
+      localStorage.setItem("digiy_lang", CURRENT_LANG);
+      document.documentElement.setAttribute("lang", CURRENT_LANG === "wo" ? "wo" : "fr");
+
+      document.querySelectorAll("[data-i18n]").forEach(el=>{
+        const key = el.dataset.i18n;
+        const val = t(key);
+        if (val) el.textContent = val;
+      });
+
+      document.getElementById("lang-fr")?.classList.toggle("active", CURRENT_LANG==="fr");
+      document.getElementById("lang-wo")?.classList.toggle("active", CURRENT_LANG==="wo");
+    }
+
+    document.getElementById("lang-fr").addEventListener("click", ()=>{ applyLanguage("fr"); });
+    document.getElementById("lang-wo").addEventListener("click", ()=>{ applyLanguage("wo"); });
 
     // === CONFIG SUPABASE (TES VALEURS) ===
     const SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
@@ -150,9 +333,9 @@
       const box = $("statusBox");
       box.className = "status " + (tone || "warn");
       $("statusText").textContent = text || "";
-      const t = $("statusTag");
-      t.className = "tag " + (tone || "warn");
-      t.textContent = tag || "—";
+      const tg = $("statusTag");
+      tg.className = "tag " + (tone || "warn");
+      tg.textContent = tag || "—";
     }
 
     function wa(msg){
@@ -173,44 +356,47 @@
     const ret = (qp.get("return") || "").trim();
     const auto = (qp.get("auto") === "1");
 
-    const phone = normPhone(qp.get("phone") || "");      // utile pour WhatsApp message
-    const kind = (qp.get("kind") || "").trim().toLowerCase(); // module|addon
-    const m = (qp.get("m") || "").trim();                // ex: EXPLORE
-    const plan = (qp.get("plan") || "").trim();          // ex: boost_city
-    const amount = (qp.get("amount") || "").toString().replace(/[^\d]/g,""); // ex: 14900
+    const phone = normPhone(qp.get("phone") || "");
+    const kind = (qp.get("kind") || "").trim().toLowerCase();
+    const m = (qp.get("m") || "").trim();
+    const plan = (qp.get("plan") || "").trim();
+    const amount = (qp.get("amount") || "").toString().replace(/[^\d]/g,"");
     const slug = (qp.get("slug") || "").trim();
-    const access = (qp.get("module") || "").trim().toUpperCase(); // ex: LOC
+    const access = (qp.get("module") || "").trim().toUpperCase();
     const from = (qp.get("from") || "").trim();
 
     // UI
-    $("waveTo").textContent = "+221 77 134 28 89"; // affichage friendly (change si besoin)
+    $("waveTo").textContent = "+221 77 134 28 89";
+
+    // init language ASAP
+    applyLanguage(CURRENT_LANG);
 
     // --- TOKEN MODE visibility ---
     if(!token){
       $("tokenBox").classList.add("hide");
-      setStatus("💳 Paiement Wave : confirme sur WhatsApp avec le reçu.", "warn", "MANUEL");
-      $("manualHint").textContent = "Astuce : après envoi du reçu, l’activation se fait rapidement.";
+      setStatus(t("s_manual"), "warn", t("t_manual"));
+      $("manualHint").textContent = t("hint_manual_no_token");
     } else {
-      setStatus("🔐 Lien sécurisé détecté. Clique pour activer.", "ok", "TOKEN");
-      $("tokenHint").textContent = "Token détecté. Activation en 1 clic.";
+      setStatus(t("s_token_detected"), "ok", t("t_token"));
+      $("tokenHint").textContent = t("token_hint_detected");
     }
 
     // --- Activate token ---
     async function activateToken(){
       if(!token){
-        alert("Token manquant.");
+        alert(t("alert_missing_token"));
         return;
       }
       $("btnActivateToken").disabled = true;
       $("spinnerToken").style.display = "inline-block";
-      setStatus("⏳ Activation sécurisée en cours…", "warn", "EN COURS");
+      setStatus(t("s_token_running"), "warn", t("t_running"));
 
       try{
         const { data, error } = await sb.rpc("digiy_pay_activate_token", { p_token: token });
         if(error) throw error;
         if(!data?.ok) throw new Error(data?.reason || "activation_failed");
 
-        setStatus("🟢 Activé ! Tu peux continuer.", "ok", "ACTIF");
+        setStatus(t("s_token_ok"), "ok", t("t_active"));
 
         // redirect
         if(ret){
@@ -218,11 +404,11 @@
           u.searchParams.set("from", "digiy-pay-token");
           location.href = u.toString();
         } else {
-          $("tokenHint").textContent = "Activation OK. Tu peux fermer cette page.";
+          $("tokenHint").textContent = t("token_hint_ok_close");
         }
       } catch(e){
         console.error(e);
-        setStatus("🔴 Activation impossible. Contacte le support.", "bad", "ERREUR");
+        setStatus(t("s_token_fail"), "bad", t("t_error"));
         $("tokenHint").textContent = String(e.message || e);
       } finally {
         $("spinnerToken").style.display = "none";
@@ -238,39 +424,50 @@
 
     // --- WhatsApp confirm (manual) ---
     $("btnWaConfirm").addEventListener("click", function(){
-      let msg = "DIGIY — Confirmation paiement Wave\n\n";
-      msg += "Bénéficiaire: JB BEAUVILLE\n";
+      let msg = (CURRENT_LANG === "wo")
+        ? "DIGIY — Dëggal fey Wave\n\n"
+        : "DIGIY — Confirmation paiement Wave\n\n";
+
+      msg += (CURRENT_LANG === "wo") ? "Boroom jot: JB BEAUVILLE\n" : "Bénéficiaire: JB BEAUVILLE\n";
       msg += "Wave: " + WAVE_TO + "\n\n";
-      if(phone) msg += "Téléphone: " + phone + "\n";
-      if(access) msg += "Accès: " + access + "\n";
-      if(kind) msg += "Type: " + kind + "\n";
-      if(m) msg += "Produit: " + m + "\n";
-      if(plan) msg += "Plan: " + plan + "\n";
-      if(amount) msg += "Montant: " + amount + " FCFA\n";
+      if(phone) msg += (CURRENT_LANG === "wo" ? "Téléphone: " : "Téléphone: ") + phone + "\n";
+      if(access) msg += (CURRENT_LANG === "wo" ? "Accès: " : "Accès: ") + access + "\n";
+      if(kind) msg += (CURRENT_LANG === "wo" ? "Type: " : "Type: ") + kind + "\n";
+      if(m) msg += (CURRENT_LANG === "wo" ? "Produit: " : "Produit: ") + m + "\n";
+      if(plan) msg += (CURRENT_LANG === "wo" ? "Plan: " : "Plan: ") + plan + "\n";
+      if(amount) msg += (CURRENT_LANG === "wo" ? "Montant: " : "Montant: ") + amount + " FCFA\n";
       if(slug) msg += "Slug: " + slug + "\n";
       if(token) msg += "Token: " + token + "\n";
-      msg += "\nJe joins le reçu Wave ici.\nMerci d'activer. — DIGIY";
+
+      msg += (CURRENT_LANG === "wo")
+        ? "\nDinaa yónnee reçu Wave bi fii.\nJërëjëf, aktivé leen. — DIGIY"
+        : "\nJe joins le reçu Wave ici.\nMerci d'activer. — DIGIY";
 
       wa(msg);
-      setStatus("✅ Message WhatsApp prêt. Ajoute le reçu.", "warn", "EN ATTENTE");
+      setStatus(t("s_wa_ready"), "warn", t("t_wait"));
     });
 
     $("btnSupport").addEventListener("click", function(){
-      let msg = "DIGIY — Support Paiement\n\n";
+      let msg = (CURRENT_LANG === "wo")
+        ? "DIGIY — Support Fey\n\n"
+        : "DIGIY — Support Paiement\n\n";
+
       if(phone) msg += "Téléphone: " + phone + "\n";
       if(m) msg += "Produit: " + m + "\n";
       if(plan) msg += "Plan: " + plan + "\n";
       if(amount) msg += "Montant: " + amount + " FCFA\n";
       if(slug) msg += "Slug: " + slug + "\n";
-      msg += "\nJ'ai besoin d'aide. — DIGIY";
+
+      msg += (CURRENT_LANG === "wo")
+        ? "\nDama soxla ndimbal. — DIGIY"
+        : "\nJ'ai besoin d'aide. — DIGIY";
+
       wa(msg);
-      setStatus("💬 Support WhatsApp…", "warn", "INFO");
+      setStatus(t("s_support"), "warn", t("t_info"));
     });
 
-    // Optional back
-    // si tu veux un bouton retour plus tard, on le remet (mais je l’ai retiré pour friction 0)
     if(from){
-      $("manualHint").textContent = "Après activation, retourne sur ton module.";
+      $("manualHint").textContent = t("hint_after_send");
     }
   })();
   </script>
