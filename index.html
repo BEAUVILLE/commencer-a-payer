@@ -116,6 +116,23 @@
     .priceAmt{ font-size:13px; font-weight:1100; color: var(--gold); white-space:nowrap; }
     .priceDesc{ margin-top:6px; font-size:11px; color:var(--muted); line-height:1.35; }
     .hintLine{ margin-top:10px; font-size:12px; color:var(--muted); }
+
+    /* Upload proof */
+    .uploadBox{
+      border:1px dashed rgba(255,255,255,.20);
+      border-radius:16px;
+      padding:12px;
+      background:rgba(0,0,0,.10);
+      margin:12px 0;
+    }
+    .uploadBox input[type="file"]{
+      width:100%;
+      padding:10px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.12);
+      color:var(--text);
+    }
   </style>
 </head>
 
@@ -180,47 +197,36 @@
         <p class="small">Clique sur un tarif → montant + code remplis automatiquement.</p>
         <div class="hr"></div>
 
-        <!-- 1 · DRIVER -->
         <div class="section-sep">🚗 CODE 1 · DIGIY DRIVER</div>
         <div class="priceGrid" id="grid_driver"></div>
 
-        <!-- 2 · LOC -->
         <div class="section-sep">🏠 CODE 2 · DIGIY LOC — Location</div>
         <div class="priceGrid" id="grid_loc"></div>
 
-        <!-- 3 · RESTO -->
         <div class="section-sep">🍽️ CODE 3 · DIGIY RESTO PRO</div>
         <div class="priceGrid" id="grid_resto"></div>
 
-        <!-- 4 · RÉSA -->
         <div class="section-sep">📅 CODE 4 · DIGIY RÉSA</div>
         <div class="priceGrid" id="grid_resa"></div>
 
-        <!-- 5 · POS -->
         <div class="section-sep">🧾 CODE 5 · DIGIY POS PRO</div>
         <div class="priceGrid" id="grid_pos"></div>
 
-        <!-- 6 · MARKET -->
         <div class="section-sep">🛒 CODE 6 · DIGIY MARKET</div>
         <div class="priceGrid" id="grid_market"></div>
 
-        <!-- 7 · BUILD -->
         <div class="section-sep">🏗️ CODE 7 · DIGIY BUILD</div>
         <div class="priceGrid" id="grid_build"></div>
 
-        <!-- 8 · EXPLORE AGENCE -->
         <div class="section-sep">🧭 CODE 8 · DIGIY EXPLORE — Agence</div>
         <div class="priceGrid" id="grid_explore"></div>
 
-        <!-- 9 · FRET CHAUFFEUR -->
         <div class="section-sep">🚚 CODE 9 · DIGIY FRET CHAUFFEUR</div>
         <div class="priceGrid" id="grid_fret_chauf"></div>
 
-        <!-- 10 · FRET CLIENT -->
         <div class="section-sep">📦 CODE 10 · DIGIY FRET CLIENT</div>
         <div class="priceGrid" id="grid_fret_client"></div>
 
-        <!-- E · EXPLORE BOOST -->
         <div class="section-sep">✨ CODE E · BOOST EXPLORE (supplément)</div>
         <div class="priceGrid" id="grid_boost"></div>
 
@@ -246,8 +252,10 @@
       <!-- MANUAL MODE -->
       <div class="box" id="manualBox">
         <h2 style="margin:0;font-size:16px;font-weight:1100;" data-i18n="manual_title">💳 Paiement manuel (Wave)</h2>
-        <p class="small" data-i18n="manual_desc">Paye sur Wave, puis envoie le reçu sur WhatsApp. On active ensuite.</p>
+        <p class="small" data-i18n="manual_desc">Paye sur Wave, puis envoie le reçu (upload) ou WhatsApp. On active ensuite.</p>
+
         <div class="hr"></div>
+
         <div class="row">
           <div>
             <div style="font-weight:1100;">Bénéficiaire</div>
@@ -258,13 +266,31 @@
             <div class="mono" style="font-weight:1000;" id="waveTo">+221 77 134 28 89</div>
           </div>
         </div>
+
         <div class="hr"></div>
+
+        <!-- ✅ UPLOAD PREUVE (Supabase Storage) -->
+        <div class="uploadBox">
+          <div style="font-weight:1100;margin-bottom:6px;">📸 Envoyer la preuve Wave (upload)</div>
+          <p class="small" style="margin-top:0;">
+            Sélectionne la capture (reçu Wave) → envoyer. (Pour l’instant: activé sur DRIVER)
+          </p>
+          <input type="file" id="proofFile" accept="image/*" />
+          <div class="hr"></div>
+          <button class="btn ok" id="btnSendProof" type="button">📤 Envoyer preuve Wave</button>
+          <p class="small" id="payMsg" style="margin-top:10px;"></p>
+        </div>
+
+        <div class="hr"></div>
+
         <ol class="steps">
           <li>Fais le transfert Wave</li>
-          <li>Envoie le reçu sur WhatsApp (avec le code choisi)</li>
+          <li>Envoie le reçu (upload ci-dessus) ou WhatsApp</li>
           <li>Retourne au module — activation après validation</li>
         </ol>
+
         <div class="hr"></div>
+
         <div class="row">
           <button class="btn gold" id="btnWaConfirm">💬 Confirmer WhatsApp (avec reçu)</button>
           <button class="btn bad" id="btnSupport">🛟 Support WhatsApp</button>
@@ -282,7 +308,6 @@
 
     /* =====================================================
        GRILLE COMPLÈTE — MENU CODIFIÉ V2
-       Alignée 1:1 avec les tarifs officiels DIGIYLYFE
     ===================================================== */
     const PRICE_GROUPS = {
       driver: [
@@ -344,7 +369,9 @@
     /* ==================== CONFIG SUPABASE ==================== */
     const SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc3Ftd2pqdHNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA";
-    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // ✅ exposé global pour pay-proof.js
+    window.sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     const SUPPORT_WA = "+221771342889";
     const WAVE_TO    = "+221771342889";
@@ -396,7 +423,7 @@
     let amount = (qp.get("amount") || "").toString().replace(/[^\d]/g,"");
     let selectedCode = "";
 
-    /* ==================== LANG (FR seulement ici, minimal) ==================== */
+    /* ==================== LANG (minimal) ==================== */
     let CURRENT_LANG = localStorage.getItem("digiy_lang") || "fr";
 
     document.getElementById("lang-fr").addEventListener("click", ()=>{
@@ -463,7 +490,6 @@
             if(pPlan) plan = pPlan;
             selectedCode = pCode;
 
-            // Update URL (shareable)
             const u = new URL(location.href);
             if(plan)  u.searchParams.set("plan", plan);
             if(amount) u.searchParams.set("amount", amount);
@@ -479,7 +505,6 @@
 
     /* ==================== RENDER ORDER RECAP ==================== */
     function getProductLabel(){
-      // Try to derive a nice label from plan code
       if(selectedCode) return "DIGIY · Code " + selectedCode;
       return (access || m || "DIGIY");
     }
@@ -498,10 +523,20 @@
       const missing = (!amount || !plan);
       $("orderHint").textContent = missing
         ? "⚠️ Choisis un tarif dans la grille ci-dessous."
-        : "✅ Tout est bon. Tu peux payer et envoyer le reçu sur WhatsApp.";
+        : "✅ Tout est bon. Tu peux payer et envoyer le reçu (upload ou WhatsApp).";
+
+      // ✅ State global pour pay-proof.js
+      window.DIGIY_PAY_STATE = {
+        getOrder: () => ({
+          plan: plan || "",
+          amount: Number(amount || 0),
+          code: selectedCode || "",
+          phone: phone || null,
+          slug: slug || null
+        })
+      };
     }
 
-    // Initial render
     renderGrids();
     renderOrder();
 
@@ -521,7 +556,7 @@
       $("spinnerToken").style.display = "inline-block";
       setStatus("⏳ Activation en cours…", "warn", "EN COURS");
       try{
-        const { data, error } = await sb.rpc("digiy_pay_activate_token", { p_token: token });
+        const { data, error } = await window.sb.rpc("digiy_pay_activate_token", { p_token: token });
         if(error) throw error;
         if(!data?.ok) throw new Error(data?.reason || "activation_failed");
         setStatus("🟢 Activé ! Tu peux continuer.", "ok", "ACTIF");
@@ -584,5 +619,9 @@
 
   })();
   </script>
+
+  <!-- ✅ Upload proof -->
+  <script src="./pay-proof.js?v=1"></script>
+
 </body>
 </html>
