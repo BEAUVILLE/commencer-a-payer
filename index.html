@@ -366,15 +366,18 @@
       ]
     };
 
-    /* ==================== CONFIG SUPABASE ==================== */
-    const SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc3Ftd2pqdHNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA";
 
-    // ✅ exposé global pour pay-proof.js
-    window.sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    window.sb = sb;
-    const SUPPORT_WA = "+221771342889";
-    const WAVE_TO    = "+221771342889";
+    /* ==================== CONFIG SUPABASE ==================== */
+const SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9....";
+
+if(!window.supabase) throw new Error("Supabase lib non chargée");
+
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+window.sb = sb;
+
+const SUPPORT_WA = "+221771342889";
+const WAVE_TO    = "+221771342889";
 
     const $ = (id) => document.getElementById(id);
     const qp = new URLSearchParams(location.search);
