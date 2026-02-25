@@ -162,6 +162,42 @@
       <h1 data-i18n="page_title">COMMENCER À PAYER — DIGIYLYFE</h1>
       <p class="small" data-i18n="subtitle">0% commission · Paiement Wave · Activation DIGIY</p>
 
+      <!-- ✅ ∞ DIGIY KNOWLEDGE (badge + langues + bouton question) -->
+      <div class="box" id="digiyKnowledgeBadge" style="margin-top:12px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+          <div>
+            <div style="font-weight:1100; font-size:14px;">∞ DIGIY KNOWLEDGE</div>
+            <div class="small" style="margin-top:4px;">Assistant IA • DRIVER • LOC • RESTO • PAY • JOBS…</div>
+          </div>
+          <span class="tag ok" style="display:inline-flex;align-items:center;gap:6px;">
+            <span style="width:8px;height:8px;border-radius:50%;background:var(--ok);display:inline-block;"></span>
+            En ligne
+          </span>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="row">
+          <div class="box" style="background:rgba(0,0,0,.10);">
+            <div style="font-weight:1100;">🇫🇷 Français</div>
+            <div class="small">Réponses claires, direct.</div>
+          </div>
+          <div class="box" style="background:rgba(0,0,0,.10);">
+            <div style="font-weight:1100;">🇸🇳 Wolof</div>
+            <div class="small">Waxal rek. Ñu neexal.</div>
+          </div>
+          <div class="box" style="background:rgba(0,0,0,.10);">
+            <div style="font-weight:1100;">🇬🇧 English</div>
+            <div class="small">Fast help, no stress.</div>
+          </div>
+        </div>
+
+        <div style="margin-top:12px;">
+          <button class="btn gold" id="btnAskDigiy" type="button">💬 Poser une question</button>
+          <p class="small" id="digiyAskHint" style="margin-top:10px;"></p>
+        </div>
+      </div>
+
       <div class="hr"></div>
 
       <div class="status warn" id="statusBox">
@@ -280,7 +316,7 @@
 
         <div class="hr"></div>
 
-        <!-- ✅ INFOS OBLIGATOIRES (PHONE + SLUG) -->
+        <!-- ✅ INFOS OBLIGATOIRES (PHONE + SLUG) + ✅ GENERATE SLUG -->
         <div class="box" style="margin:12px 0;">
           <h2 style="margin:0;font-size:16px;font-weight:1100;">📱 Infos obligatoires</h2>
           <p class="small" style="margin-top:6px;">Sans téléphone + slug, l’activation automatique ne peut pas te diriger vers ton cockpit.</p>
@@ -308,6 +344,17 @@
                 placeholder="Ex: chez-astou-saly"
               />
               <div class="small muted" style="margin-top:6px;">Le slug sert à ouvrir ton cockpit : <span class="mono">?slug=...</span></div>
+
+              <!-- ✅ Buttons: generate + copy -->
+              <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;">
+                <button class="btn warn" id="btnGenSlug" type="button" style="flex:1;min-width:220px;">
+                  ✨ Je n’ai pas de slug → générer
+                </button>
+                <button class="btn gold" id="btnCopySlug" type="button" style="flex:1;min-width:220px;">
+                  📋 Copier le slug
+                </button>
+              </div>
+              <p class="small" id="slugGenHint" style="margin-top:10px;"></p>
             </div>
           </div>
         </div>
@@ -610,7 +657,7 @@
       const missing = (!amount || !plan);
       $("orderHint").textContent = missing
         ? "⚠️ Choisis un tarif dans la grille ci-dessous."
-        : "✅ Tout est bon. Renseigne téléphone + slug puis envoie le reçu (upload ou WhatsApp).";
+        : "✅ Tout est bon. Renseigne téléphone + slug (ou génère) puis envoie le reçu (upload ou WhatsApp).";
 
       // ✅ State global pour pay-proof.js
       window.DIGIY_PAY_STATE = {
@@ -635,7 +682,6 @@
       userPhoneDigits = normPhone(payPhoneEl?.value || userPhoneDigits || "");
       userSlug        = normSlug(paySlugEl?.value  || userSlug        || "");
 
-      // update URL (pratique)
       const u = new URL(location.href);
       if(userPhoneDigits) u.searchParams.set("phone", userPhoneDigits);
       else u.searchParams.delete("phone");
@@ -661,6 +707,71 @@
       });
     }
 
+    /* ==================== SLUG GENERATOR + COPY ==================== */
+    const btnGenSlug  = $("btnGenSlug");
+    const btnCopySlug = $("btnCopySlug");
+    const slugGenHint = $("slugGenHint");
+
+    function showSlugHint(text, ok){
+      if(!slugGenHint) return;
+      slugGenHint.textContent = text || "";
+      slugGenHint.style.color = ok ? "var(--ok)" : "var(--warn)";
+    }
+
+    function genSlug(prefix){
+      const rnd = Math.random().toString(16).slice(2, 10);
+      return (String(prefix||"digiy") + "-" + rnd).toLowerCase();
+    }
+
+    function getPrefixFromPlan(){
+      const p = String(plan || "").toUpperCase();
+      if(p.startsWith("DRIVER")) return "driver";
+      if(p.startsWith("LOC"))    return "loc";
+      if(p.startsWith("RESTO"))  return "resto";
+      if(p.startsWith("RESA"))   return "resa";
+      if(p.startsWith("POS"))    return "pos";
+      if(p.startsWith("MARKET")) return "market";
+      if(p.startsWith("BUILD"))  return "build";
+      if(p.startsWith("EXPLORE"))return "explore";
+      if(p.startsWith("FRET"))   return "fret";
+      if(p.startsWith("PAY"))    return "pay";
+      if(p.startsWith("JOBS"))   return "jobs";
+      return "digiy";
+    }
+
+    if(btnGenSlug && paySlugEl){
+      btnGenSlug.addEventListener("click", ()=>{
+        const prefix = getPrefixFromPlan();
+        const s = genSlug(prefix);
+        paySlugEl.value = s;
+        userSlug = s;
+        syncInputsToUrlAndState();
+        showSlugHint("✅ Slug généré : " + s, true);
+        setStatus("✅ Slug généré — tu peux envoyer le reçu.", "warn", "SLUG OK");
+      });
+    }
+
+    if(btnCopySlug){
+      btnCopySlug.addEventListener("click", async ()=>{
+        const s = (paySlugEl?.value || userSlug || "").trim();
+        if(!s){
+          showSlugHint("⚠️ Aucun slug à copier. Clique d’abord sur “générer”.", false);
+          return;
+        }
+        try{
+          await navigator.clipboard.writeText(s);
+          showSlugHint("📋 Slug copié : " + s, true);
+        }catch(_){
+          const ta = document.createElement("textarea");
+          ta.value = s; document.body.appendChild(ta);
+          ta.select(); document.execCommand("copy");
+          ta.remove();
+          showSlugHint("📋 Slug copié : " + s, true);
+        }
+      });
+    }
+
+    // init sync at startup
     syncInputsToUrlAndState();
 
     /* ==================== TOKEN MODE ==================== */
@@ -702,6 +813,25 @@
     $("btnActivateToken").addEventListener("click", activateToken);
     if(auto && token) setTimeout(activateToken, 400);
 
+    /* ==================== DIGIY KNOWLEDGE (WhatsApp Q) ==================== */
+    const btnAsk = $("btnAskDigiy");
+    const askHint = $("digiyAskHint");
+    if(btnAsk){
+      btnAsk.addEventListener("click", ()=>{
+        const p = normPhone(payPhoneEl?.value || userPhoneDigits || "");
+        const s = normSlug(paySlugEl?.value || userSlug || "");
+        let msg = "DIGIY KNOWLEDGE — Question\n\n";
+        if(p) msg += "Téléphone: " + displayPhoneDigitsAsPlus(p) + "\n";
+        if(s) msg += "Slug: " + s + "\n";
+        if(selectedCode) msg += "Code menu: " + selectedCode + "\n";
+        if(plan) msg += "Plan: " + plan + "\n";
+        if(amount) msg += "Montant: " + amount + " FCFA\n";
+        msg += "\nMa question: ";
+        wa(msg);
+        if(askHint) askHint.textContent = "✅ WhatsApp prêt. Pose ta question.";
+      });
+    }
+
     /* ==================== WHATSAPP CONFIRM ==================== */
     $("btnWaConfirm").addEventListener("click", function(){
       if(!amount){
@@ -713,7 +843,7 @@
         return;
       }
       if(!userSlug || userSlug.length < 3){
-        setStatus("⚠️ Slug obligatoire (ex: chez-astou-saly).", "warn", "SLUG");
+        setStatus("⚠️ Slug obligatoire (ex: chez-astou-saly) — ou clique “générer”.", "warn", "SLUG");
         return;
       }
 
@@ -752,7 +882,7 @@
   </script>
 
   <!-- ✅ Upload proof (version qui exige phone+slug et redirige vers wait.html) -->
-  <script src="./pay-proof.js?v=2"></script>
+  <script src="./pay-proof.js?v=3"></script>
 
 </body>
 </html>
