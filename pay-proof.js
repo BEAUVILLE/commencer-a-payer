@@ -1,6 +1,8 @@
 // pay-proof.js (REST upload direct -> Supabase Storage)
 // + Enregistrement Cockpit (digiy_pay_orders)
-// + Phone + Slug obligatoires
+// + Phone obligatoire
+// + Slug optionnel -> auto-généré si vide (driver-xxxxxxxx)
+// + Focus + blocage avant upload
 // + Redirect vers wait.html après upload
 
 (function(){
@@ -11,8 +13,7 @@
   const PUBLIC_FOLDER = "public";
   const MAX_MB = 8;
 
-  // ✅ Où se trouve la page d'attente (ajuste selon ton arborescence)
-  // Exemple si tu poses wait.html dans /abos/
+  // ✅ Où se trouve la page d'attente
   const WAIT_PAGE = "/abos/wait.html";
 
   const $ = (id) => document.getElementById(id);
@@ -22,6 +23,17 @@
     if(!el) return;
     el.textContent = text;
     el.style.color = ok ? "#22c55e" : "#ef4444";
+  }
+
+  function focusField(el){
+    try{
+      if(!el) return;
+      el.scrollIntoView({ behavior:"smooth", block:"center" });
+      el.focus({ preventScroll:true });
+      // petit flash si tu veux (sans CSS externe)
+      el.style.outline = "2px solid rgba(239,68,68,.8)";
+      setTimeout(()=>{ el.style.outline = ""; }, 900);
+    }catch(_){}
   }
 
   function wa(msg){
@@ -38,9 +50,8 @@
 
   function normalizePhone(raw){
     const v = String(raw || "").trim();
-    // garde chiffres seulement
     const digits = v.replace(/[^\d]/g, "");
-    // accepte 9 à 15 digits (SN = 12 souvent: 221 + 9 digits)
+    // 9 à 15 digits
     if(digits.length < 9) return "";
     return digits;
   }
@@ -53,6 +64,12 @@
       .replace(/[^a-z0-9-]/g, "")
       .replace(/-+/g, "-")
       .replace(/^-|-$/g, "");
+  }
+
+  function genSlug(prefix){
+    const p = normalizeSlug(prefix || "driver") || "driver";
+    const rand = Math.random().toString(16).slice(2, 10);
+    return `${p}-${rand}`;
   }
 
   function getOrder(){
@@ -135,7 +152,6 @@
       status: "pending"
     };
 
-    // ✅ On veut récupérer l'id -> return=representation
     const res = await fetch(url + "/rest/v1/digiy_pay_orders?select=id", {
       method: "POST",
       headers: {
@@ -157,7 +173,6 @@
       throw new Error(`Cockpit: insert refusé (${res.status}) : ${msg}`);
     }
 
-    // Response = array de lignes
     try{
       const arr = JSON.parse(text);
       return arr?.[0]?.id || null;
@@ -172,16 +187,29 @@
     let slug = normalizeSlug(order.slug);
 
     // 2) fallback inputs UI si présents
+    const phoneEl = $("payPhone") || $("phone");
+    const slugEl  = $("paySlug")  || $("slug");
+
     if(!phone){
-      const v = $("payPhone")?.value || $("phone")?.value || "";
-      phone = normalizePhone(v);
+      phone = normalizePhone(phoneEl?.value || "");
     }
     if(!slug){
-      const v = $("paySlug")?.value || $("slug")?.value || "";
-      slug = normalizeSlug(v);
+      slug = normalizeSlug(slugEl?.value || "");
     }
 
-    return { phone, slug };
+    return { phone, slug, phoneEl, slugEl };
+  }
+
+  function setSlugToUI(slug, slugEl){
+    try{
+      if(slugEl){
+        slugEl.value = slug;
+      }
+      const out = $("slugAuto") || $("paySlugAuto");
+      if(out){
+        out.textContent = slug;
+      }
+    }catch(_){}
   }
 
   function redirectToWait({ phone, module, slug, orderId }){
@@ -190,7 +218,6 @@
     q.set("module", module);
     q.set("slug", slug);
     if(orderId) q.set("order_id", orderId);
-
     location.href = WAIT_PAGE + "?" + q.toString();
   }
 
@@ -212,14 +239,26 @@
         throw new Error("Choisis un code dans la grille avant l’upload.");
       }
 
-      // ✅ Phone + slug obligatoires (pour routing & abo auto)
-      const { phone, slug } = getPhoneAndSlugFallback(order);
-      if(!phone) throw new Error("Téléphone obligatoire (ex: 221771234567).");
-      if(!slug || slug.length < 3) throw new Error("Slug obligatoire (au moins 3 caractères).");
+      // ✅ phone obligatoire + slug auto si vide
+      const { phone, slug, phoneEl, slugEl } = getPhoneAndSlugFallback(order);
+
+      if(!phone){
+        setMsg("❌ Téléphone obligatoire (ex: 221771234567).", false);
+        focusField(phoneEl);
+        throw new Error("Téléphone obligatoire (ex: 221771234567).");
+      }
+
+      let finalSlug = slug;
+      if(!finalSlug || finalSlug.length < 3){
+        // auto slug : driver-xxxxxxxx (ou basé sur le module)
+        const base = String(order.plan || "driver").toLowerCase();
+        finalSlug = genSlug(base);
+        setSlugToUI(finalSlug, slugEl);
+      }
 
       // injecte dans order pour enregistrement
       order.phone = phone;
-      order.slug = slug;
+      order.slug = finalSlug;
 
       const ext = safeName(file.name).split(".").pop() || "jpg";
       const proofPath = `${PUBLIC_FOLDER}/${Date.now()}-${Math.random().toString(16).slice(2)}.${ext}`;
@@ -251,15 +290,21 @@
 
       if(fileInput) fileInput.value = "";
 
-      // 4) Redirect vers attente validation (auto)
-      // Petit délai pour laisser WhatsApp s’ouvrir si besoin
+      // 4) Redirect attente validation (auto)
       setTimeout(()=>{
-        redirectToWait({ phone, module: String(order.plan).toUpperCase(), slug, orderId });
+        redirectToWait({
+          phone,
+          module: String(order.plan || "").toUpperCase(),
+          slug: finalSlug,
+          orderId
+        });
       }, 900);
 
     }catch(e){
       console.error(e);
-      setMsg("❌ " + (e?.message || "Erreur"), false);
+      if(!String(e?.message||"").startsWith("Téléphone obligatoire")){
+        setMsg("❌ " + (e?.message || "Erreur"), false);
+      }
     }
   }
 
