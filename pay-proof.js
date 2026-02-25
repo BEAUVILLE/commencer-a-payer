@@ -7,7 +7,7 @@
   "use strict";
 
   const SUPPORT_WA = "+221771342889";
- const BUCKET = "pay-proofs";
+  const BUCKET = "pay-proofs";
   const PUBLIC_FOLDER = "public";
   const MAX_MB = 8;
 
@@ -75,7 +75,6 @@
   }
 
   async function uploadStorageREST({ url, key, bucket, path, file }){
-    // Endpoint Supabase Storage
     const endpoint = `${url}/storage/v1/object/${encodeURIComponent(bucket)}/${path}`;
 
     const res = await fetch(endpoint, {
@@ -91,7 +90,6 @@
 
     const text = await res.text();
     if(!res.ok){
-      // Supabase renvoie souvent du JSON, mais parfois non
       let msg = text;
       try{
         const j = JSON.parse(text);
@@ -100,8 +98,42 @@
       throw new Error(`Upload refusé (${res.status}) : ${msg}`);
     }
 
-    // succès : souvent JSON avec {Key: "..."} selon versions
     try{ return JSON.parse(text); } catch(_){ return { ok:true, raw:text }; }
+  }
+
+  // ✅ AJOUT: envoi de la commande dans le cockpit (PostgREST)
+  async function createCockpitOrder({ url, key, order, proofPath }){
+    // IMPORTANT: ta table doit exister: public.digiy_pay_orders
+    const payload = {
+      phone: order.phone || null,
+      code: order.code || null,
+      plan: order.plan || null,
+      amount: order.amount || null,
+      slug: order.slug || null,
+      proof_path: proofPath,
+      status: "pending"
+    };
+
+    const res = await fetch(url + "/rest/v1/digiy_pay_orders", {
+      method: "POST",
+      headers: {
+        "apikey": key,
+        "Authorization": `Bearer ${key}`,
+        "Content-Type": "application/json",
+        "Prefer": "return=minimal"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if(!res.ok){
+      const text = await res.text();
+      let msg = text;
+      try{
+        const j = JSON.parse(text);
+        msg = j?.message || j?.hint || j?.details || j?.error || text;
+      }catch(_){}
+      throw new Error(`Cockpit: insert refusé (${res.status}) : ${msg}`);
+    }
   }
 
   async function uploadAndPrepare(){
@@ -125,6 +157,7 @@
 
       setMsg("⏳ Upload en cours…", false);
 
+      // 1) Upload Storage
       await uploadStorageREST({
         url,
         key,
@@ -133,6 +166,9 @@
         file
       });
 
+      // 2) ✅ AJOUT: créer la ligne Cockpit
+      await createCockpitOrder({ url, key, order, proofPath });
+
       window.DIGIY_LAST_PROOF_PATH = proofPath;
 
       const hint = $("manualHint");
@@ -140,7 +176,7 @@
 
       setMsg("✅ Upload OK. Clique WhatsApp pour valider.", true);
 
-      // Auto WhatsApp (par défaut: oui)
+      // 3) WhatsApp
       const msg = buildWaMessage(order, proofPath);
       wa(msg);
 
