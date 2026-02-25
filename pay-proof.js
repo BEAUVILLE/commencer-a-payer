@@ -7,7 +7,7 @@
   "use strict";
 
   const SUPPORT_WA = "+221771342889";
-  const BUCKET = "digiy-proofs";
+ const BUCKET = "pay-proofs";
   const PUBLIC_FOLDER = "public";
   const MAX_MB = 8;
 
