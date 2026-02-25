@@ -408,10 +408,12 @@
 
         <div class="hr"></div>
 
-        <!-- ✅ INFOS OBLIGATOIRES (PHONE + SLUG) -->
+        <!-- ✅ INFOS (PHONE obligatoire, SLUG conseillé/auto) -->
         <div class="box" style="margin:12px 0;">
-          <h2 style="margin:0;font-size:16px;font-weight:1100;">📱 Infos obligatoires</h2>
-          <p class="small" style="margin-top:6px;">Sans téléphone + slug, l’activation automatique ne peut pas te diriger vers ton cockpit.</p>
+          <h2 style="margin:0;font-size:16px;font-weight:1100;">📱 Infos</h2>
+          <p class="small" style="margin-top:6px;">
+            Téléphone obligatoire. Slug conseillé (si vide, DIGIY le génère automatiquement).
+          </p>
           <div class="hr"></div>
 
           <div class="row">
@@ -433,9 +435,13 @@
                 type="text"
                 id="paySlug"
                 class="digiy-input"
-                placeholder="Ex: chez-astou-saly"
+                placeholder="Ex: chez-astou-saly (ou laisse vide)"
               />
-              <div class="small muted" style="margin-top:6px;">Le slug sert à ouvrir ton cockpit : <span class="mono">?slug=...</span></div>
+              <div class="small muted" style="margin-top:6px;">
+                Le slug sert à ouvrir ton cockpit : <span class="mono">?slug=...</span>
+              </div>
+              <!-- ✅ affichage si slug auto -->
+              <div id="slugAuto" class="small" style="margin-top:6px; color:rgba(234,255,241,.85);"></div>
             </div>
           </div>
         </div>
@@ -606,6 +612,12 @@
         .replace(/^-|-$/g,"");
     }
 
+    function genSlug(prefix){
+      const p = normSlug(prefix || "driver") || "driver";
+      const rand = Math.random().toString(16).slice(2, 10);
+      return `${p}-${rand}`;
+    }
+
     function displayPhoneDigitsAsPlus(phoneDigits){
       const d = String(phoneDigits||"").replace(/[^\d]/g,"");
       if(!d) return "";
@@ -653,11 +665,10 @@
     });
 
     /* =========================================================
-       ✅ DIGIY KNOWLEDGE — Accueil PUBLIC (via 3090)
+       ✅ DIGIY KNOWLEDGE — Accueil PUBLIC (via ai.digiylyfe.com)
     ========================================================= */
     const KB_ENDPOINTS = [
-      "https://ai.digiylyfe.com/chat",
-      "http://127.0.0.1:3090/chat"
+      "https://ai.digiylyfe.com/chat"
     ];
 
     async function kbAsk(question){
@@ -803,7 +814,7 @@
       const missing = (!amount || !plan);
       $("orderHint").textContent = missing
         ? "⚠️ Choisis un tarif dans la grille ci-dessous."
-        : "✅ Tout est bon. Renseigne téléphone + slug puis envoie le reçu (upload ou WhatsApp).";
+        : "✅ Tout est bon. Renseigne ton téléphone puis envoie le reçu (upload ou WhatsApp).";
 
       // ✅ State global pour pay-proof.js
       window.DIGIY_PAY_STATE = {
@@ -823,6 +834,7 @@
     /* ==================== PHONE + SLUG SYNC ==================== */
     const payPhoneEl = $("payPhone");
     const paySlugEl  = $("paySlug");
+    const slugAutoEl = $("slugAuto");
 
     function syncInputsToUrlAndState(){
       userPhoneDigits = normPhone(payPhoneEl?.value || userPhoneDigits || "");
@@ -848,6 +860,7 @@
       if(userSlug) paySlugEl.value = userSlug;
       paySlugEl.addEventListener("input", ()=>{
         paySlugEl.value = normSlug(paySlugEl.value);
+        if(slugAutoEl && paySlugEl.value) slugAutoEl.textContent = "";
         syncInputsToUrlAndState();
       });
     }
@@ -903,9 +916,13 @@
         setStatus("⚠️ Téléphone obligatoire (digits uniquement).", "warn", "PHONE");
         return;
       }
+
+      // ✅ slug optionnel -> auto si vide
       if(!userSlug || userSlug.length < 3){
-        setStatus("⚠️ Slug obligatoire (ex: chez-astou-saly).", "warn", "SLUG");
-        return;
+        userSlug = genSlug(plan || "driver");
+        if(paySlugEl) paySlugEl.value = userSlug;
+        if(slugAutoEl) slugAutoEl.textContent = "Slug auto : " + userSlug;
+        syncInputsToUrlAndState();
       }
 
       let msg = "DIGIY — Confirmation paiement Wave\n\n";
@@ -916,7 +933,7 @@
       msg += "Produit: " + getProductLabel() + "\n";
       if(plan) msg += "Plan: " + plan + "\n";
       msg += "Montant: " + amount + " FCFA\n";
-      msg += "Slug: " + userSlug + "\n";
+      if(userSlug) msg += "Slug: " + userSlug + "\n";
       if(token) msg += "Token: " + token + "\n";
       msg += "\nJe joins le reçu Wave ici.\nMerci d'activer. — DIGIY";
 
@@ -942,8 +959,8 @@
   })();
   </script>
 
-  <!-- ✅ Upload proof (version qui exige phone+slug et redirige vers wait.html) -->
-  <script src="./pay-proof.js?v=2"></script>
+  <!-- ✅ Upload proof (phone requis, slug auto si vide, redirect wait.html) -->
+  <script src="./pay-proof.js?v=3"></script>
 
 </body>
 </html>
