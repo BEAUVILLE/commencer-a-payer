@@ -25,7 +25,7 @@
 
     .status{
       padding:12px; border-radius:16px; border:1px solid var(--line);
-      font-weight:1000; display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;
+      font-weight:1100; display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;
     }
     .status.ok{ border-color: rgba(34,197,94,.55); }
     .status.warn{ border-color: rgba(245,158,11,.55); }
@@ -70,7 +70,7 @@
     }
     .lang-switch button.active{ background:#0f172a; color:#fff; }
 
-    /* Pricing grid — MENU CODIFIÉ */
+    /* Pricing grid */
     .section-sep{
       margin:16px 0 8px;
       font-size:11px; font-weight:1100; letter-spacing:.8px;
@@ -133,6 +133,17 @@
       background:rgba(0,0,0,.12);
       color:var(--text);
     }
+
+    /* Inputs */
+    .digiy-input{
+      width:100%;
+      padding:12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.12);
+      color:var(--text);
+      font-size:15px;
+    }
   </style>
 </head>
 
@@ -191,7 +202,7 @@
 
       <div class="hr"></div>
 
-      <!-- GRILLE TARIFS MENU CODIFIÉ -->
+      <!-- GRILLE TARIFS -->
       <div class="box" id="pricingBox">
         <h2 style="margin:0;font-size:16px;font-weight:1100;">💰 Menu Codifié — Dis le CODE, choisis ton pack</h2>
         <p class="small">Clique sur un tarif → montant + code remplis automatiquement.</p>
@@ -269,11 +280,45 @@
 
         <div class="hr"></div>
 
+        <!-- ✅ INFOS OBLIGATOIRES (PHONE + SLUG) -->
+        <div class="box" style="margin:12px 0;">
+          <h2 style="margin:0;font-size:16px;font-weight:1100;">📱 Infos obligatoires</h2>
+          <p class="small" style="margin-top:6px;">Sans téléphone + slug, l’activation automatique ne peut pas te diriger vers ton cockpit.</p>
+          <div class="hr"></div>
+
+          <div class="row">
+            <div>
+              <div style="font-weight:1100;">Téléphone (digits uniquement)</div>
+              <input
+                type="tel"
+                id="payPhone"
+                class="digiy-input"
+                placeholder="Ex: 221771234567"
+                inputmode="numeric"
+              />
+              <div class="small muted" style="margin-top:6px;">Conseil : mets 221 + ton numéro (sans espaces, sans +).</div>
+            </div>
+
+            <div>
+              <div style="font-weight:1100;">Slug (nom public)</div>
+              <input
+                type="text"
+                id="paySlug"
+                class="digiy-input"
+                placeholder="Ex: chez-astou-saly"
+              />
+              <div class="small muted" style="margin-top:6px;">Le slug sert à ouvrir ton cockpit : <span class="mono">?slug=...</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+
         <!-- ✅ UPLOAD PREUVE (Supabase Storage) -->
         <div class="uploadBox">
           <div style="font-weight:1100;margin-bottom:6px;">📸 Envoyer la preuve Wave (upload)</div>
           <p class="small" style="margin-top:0;">
-            Sélectionne la capture (reçu Wave) → envoyer. (Pour l’instant: activé sur DRIVER)
+            Sélectionne la capture (reçu Wave) → envoyer.
           </p>
           <input type="file" id="proofFile" accept="image/*" />
           <div class="hr"></div>
@@ -366,40 +411,40 @@
       ]
     };
 
-
     /* ==================== CONFIG SUPABASE ==================== */
-  const SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
-const SUPABASE_ANON_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc3Ftd2pqdHNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA";
+    const SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
+    const SUPABASE_ANON_KEY =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc3Ftd2pqdHNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA";
+
     window.DIGIY_SUPABASE_URL = SUPABASE_URL;
-window.DIGIY_SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;if(!window.supabase) throw new Error("Supabase lib non chargée");
+    window.DIGIY_SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
 
-const sb = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY,
-  {
-    auth: {
-      persistSession: false,
-      autoRefreshToken: false,
-      detectSessionInUrl: false,
-      storage: {
-        getItem: () => null,
-        setItem: () => {},
-        removeItem: () => {}
+    if(!window.supabase) throw new Error("Supabase lib non chargée");
+
+    const sb = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_ANON_KEY,
+      {
+        auth: {
+          persistSession: false,
+          autoRefreshToken: false,
+          detectSessionInUrl: false,
+          storage: {
+            getItem: () => null,
+            setItem: () => {},
+            removeItem: () => {}
+          }
+        },
+        global: {
+          headers: { Authorization: `Bearer ${SUPABASE_ANON_KEY}` }
+        }
       }
-    },
-    global: {
-      headers: {
-        Authorization: `Bearer ${SUPABASE_ANON_KEY}`
-      }
-    }
-  }
-);
+    );
 
-window.sb = sb;
+    window.sb = sb;
 
-const SUPPORT_WA = "+221771342889";
-const WAVE_TO    = "+221771342889";
+    const SUPPORT_WA = "+221771342889";
+    const WAVE_TO    = "+221771342889";
 
     const $ = (id) => document.getElementById(id);
     const qp = new URLSearchParams(location.search);
@@ -419,12 +464,27 @@ const WAVE_TO    = "+221771342889";
       location.href = "https://wa.me/" + num + "?text=" + encodeURIComponent(msg);
     }
 
+    // ✅ NORMALISATION PHONE -> digits only (ex: 221771234567)
     function normPhone(p){
-      p = String(p||"").trim().replace(/\s+/g,"").replace(/[^\d+]/g,"");
-      if(p.startsWith("00221")) p = "+221" + p.slice(5);
-      if(!p.startsWith("+") && p.startsWith("221")) p = "+" + p;
-      if(!p.startsWith("+221") && /^\d{9}$/.test(p)) p = "+221" + p;
-      return p;
+      return String(p||"").trim().replace(/[^\d]/g,"");
+    }
+
+    // ✅ NORMALISATION SLUG
+    function normSlug(s){
+      return String(s||"")
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g,"-")
+        .replace(/[^a-z0-9-]/g,"")
+        .replace(/-+/g,"-")
+        .replace(/^-|-$/g,"");
+    }
+
+    function displayPhoneDigitsAsPlus(phoneDigits){
+      const d = String(phoneDigits||"").replace(/[^\d]/g,"");
+      if(!d) return "";
+      if(d.startsWith("221")) return "+" + d;
+      return d;
     }
 
     function prettyFCFA(n){
@@ -437,12 +497,14 @@ const WAVE_TO    = "+221771342889";
     const token  = (qp.get("token")  || "").trim();
     const ret    = (qp.get("return") || "").trim();
     const auto   = (qp.get("auto")   === "1");
-    const phone  = normPhone(qp.get("phone") || "");
     const kind   = (qp.get("kind")   || "").trim().toLowerCase();
     const m      = (qp.get("m")      || "").trim();
-    const slug   = (qp.get("slug")   || "").trim();
     const access = (qp.get("module") || "").trim().toUpperCase();
     const from_  = (qp.get("from")   || "").trim();
+
+    // ✅ init depuis URL mais normalisé
+    let userPhoneDigits = normPhone(qp.get("phone") || "");
+    let userSlug        = normSlug(qp.get("slug") || "");
 
     let plan   = (qp.get("plan")   || "").trim();
     let amount = (qp.get("amount") || "").toString().replace(/[^\d]/g,"");
@@ -538,7 +600,7 @@ const WAVE_TO    = "+221771342889";
       const product = getProductLabel();
       const planTxt = plan || "—";
       const amt = prettyFCFA(amount) || "—";
-      const ref = slug || selectedCode || (token ? ("token:" + token.slice(0,8) + "…") : "—");
+      const ref = userSlug || selectedCode || (token ? ("token:" + token.slice(0,8) + "…") : "—");
 
       $("orderProduct").textContent = product;
       $("orderPlan").textContent = planTxt;
@@ -548,7 +610,7 @@ const WAVE_TO    = "+221771342889";
       const missing = (!amount || !plan);
       $("orderHint").textContent = missing
         ? "⚠️ Choisis un tarif dans la grille ci-dessous."
-        : "✅ Tout est bon. Tu peux payer et envoyer le reçu (upload ou WhatsApp).";
+        : "✅ Tout est bon. Renseigne téléphone + slug puis envoie le reçu (upload ou WhatsApp).";
 
       // ✅ State global pour pay-proof.js
       window.DIGIY_PAY_STATE = {
@@ -556,14 +618,50 @@ const WAVE_TO    = "+221771342889";
           plan: plan || "",
           amount: Number(amount || 0),
           code: selectedCode || "",
-          phone: phone || null,
-          slug: slug || null
+          phone: userPhoneDigits || null,   // digits only
+          slug: userSlug || null            // clean
         })
       };
     }
 
     renderGrids();
     renderOrder();
+
+    /* ==================== PHONE + SLUG SYNC ==================== */
+    const payPhoneEl = $("payPhone");
+    const paySlugEl  = $("paySlug");
+
+    function syncInputsToUrlAndState(){
+      userPhoneDigits = normPhone(payPhoneEl?.value || userPhoneDigits || "");
+      userSlug        = normSlug(paySlugEl?.value  || userSlug        || "");
+
+      // update URL (pratique)
+      const u = new URL(location.href);
+      if(userPhoneDigits) u.searchParams.set("phone", userPhoneDigits);
+      else u.searchParams.delete("phone");
+
+      if(userSlug) u.searchParams.set("slug", userSlug);
+      else u.searchParams.delete("slug");
+
+      history.replaceState(null, "", u.toString());
+
+      renderOrder();
+    }
+
+    if(payPhoneEl){
+      if(userPhoneDigits) payPhoneEl.value = userPhoneDigits;
+      payPhoneEl.addEventListener("input", syncInputsToUrlAndState);
+    }
+
+    if(paySlugEl){
+      if(userSlug) paySlugEl.value = userSlug;
+      paySlugEl.addEventListener("input", ()=>{
+        paySlugEl.value = normSlug(paySlugEl.value);
+        syncInputsToUrlAndState();
+      });
+    }
+
+    syncInputsToUrlAndState();
 
     /* ==================== TOKEN MODE ==================== */
     if(!token){
@@ -581,7 +679,7 @@ const WAVE_TO    = "+221771342889";
       $("spinnerToken").style.display = "inline-block";
       setStatus("⏳ Activation en cours…", "warn", "EN COURS");
       try{
-        const { data, error } = await window.sb.rpc("digiy_pay_activate_token", { p_token: token });
+        const { data, error } = window.sb ? await window.sb.rpc("digiy_pay_activate_token", { p_token: token }) : { data:null, error:{message:"sb missing"} };
         if(error) throw error;
         if(!data?.ok) throw new Error(data?.reason || "activation_failed");
         setStatus("🟢 Activé ! Tu peux continuer.", "ok", "ACTIF");
@@ -610,31 +708,39 @@ const WAVE_TO    = "+221771342889";
         setStatus("⚠️ Choisis un tarif dans la grille d'abord.", "warn", "TARIF");
         return;
       }
+      if(!userPhoneDigits || userPhoneDigits.length < 9){
+        setStatus("⚠️ Téléphone obligatoire (digits uniquement).", "warn", "PHONE");
+        return;
+      }
+      if(!userSlug || userSlug.length < 3){
+        setStatus("⚠️ Slug obligatoire (ex: chez-astou-saly).", "warn", "SLUG");
+        return;
+      }
+
       let msg = "DIGIY — Confirmation paiement Wave\n\n";
       msg += "Bénéficiaire: JB BEAUVILLE\n";
       msg += "Wave: " + WAVE_TO + "\n\n";
-      if(phone)        msg += "Téléphone: " + phone + "\n";
+      msg += "Téléphone: " + displayPhoneDigitsAsPlus(userPhoneDigits) + "\n";
       if(selectedCode) msg += "Code menu: " + selectedCode + "\n";
-      if(access)       msg += "Accès: " + access + "\n";
-      if(kind)         msg += "Type: " + kind + "\n";
       msg += "Produit: " + getProductLabel() + "\n";
-      if(plan)         msg += "Plan: " + plan + "\n";
+      if(plan) msg += "Plan: " + plan + "\n";
       msg += "Montant: " + amount + " FCFA\n";
-      if(slug)         msg += "Slug: " + slug + "\n";
-      if(token)        msg += "Token: " + token + "\n";
+      msg += "Slug: " + userSlug + "\n";
+      if(token) msg += "Token: " + token + "\n";
       msg += "\nJe joins le reçu Wave ici.\nMerci d'activer. — DIGIY";
+
       wa(msg);
       setStatus("✅ Message WhatsApp prêt. Ajoute le reçu.", "warn", "EN ATTENTE");
     });
 
     $("btnSupport").addEventListener("click", function(){
       let msg = "DIGIY — Support Paiement\n\n";
-      if(phone)        msg += "Téléphone: " + phone + "\n";
+      if(userPhoneDigits) msg += "Téléphone: " + displayPhoneDigitsAsPlus(userPhoneDigits) + "\n";
       if(selectedCode) msg += "Code menu: " + selectedCode + "\n";
       msg += "Produit: " + getProductLabel() + "\n";
       if(plan)   msg += "Plan: " + plan + "\n";
       if(amount) msg += "Montant: " + amount + " FCFA\n";
-      if(slug)   msg += "Slug: " + slug + "\n";
+      if(userSlug) msg += "Slug: " + userSlug + "\n";
       msg += "\nJ'ai besoin d'aide. — DIGIY";
       wa(msg);
       setStatus("💬 Support WhatsApp…", "warn", "INFO");
@@ -645,8 +751,8 @@ const WAVE_TO    = "+221771342889";
   })();
   </script>
 
-  <!-- ✅ Upload proof -->
-  <script src="./pay-proof.js?v=1"></script>
+  <!-- ✅ Upload proof (version qui exige phone+slug et redirige vers wait.html) -->
+  <script src="./pay-proof.js?v=2"></script>
 
 </body>
 </html>
