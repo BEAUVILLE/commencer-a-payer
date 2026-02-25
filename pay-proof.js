@@ -3,10 +3,11 @@
   "use strict";
 
   function getSupabaseClient(){
+    // ✅ IMPORTANT: window.supabase = librairie, PAS le client
     return (
-      window.DIGIY_GUARD?.supabase ||
+      window.sb ||                       // ✅ client global créé dans index.html : window.sb = createClient(...)
+      window.DIGIY_GUARD?.supabase ||     // si un jour tu passes par guard.js ici
       window.DIGIY_GUARD?.sb ||
-      window.supabase ||
       null
     );
   }
@@ -28,12 +29,15 @@
   async function uploadAndSubmit(){
     try{
       const sb = getSupabaseClient();
-      if(!sb) throw new Error("Supabase non disponible");
+      if(!sb) throw new Error("Supabase client introuvable (window.sb)");
 
-      const { data: u } = await sb.auth.getUser();
+      // Auth
+      const { data: u, error: ue } = await sb.auth.getUser();
+      if(ue) throw ue;
       const user = u?.user;
-      if(!user) throw new Error("Non connecté");
+      if(!user) throw new Error("Non connecté (session absente)");
 
+      // File
       const fileInput = document.getElementById("proofFile");
       const file = fileInput?.files?.[0];
       if(!file) throw new Error("Sélectionne une capture Wave");
@@ -44,9 +48,14 @@
       if(file.size > 8 * 1024 * 1024)
         throw new Error("Fichier trop lourd (max 8MB)");
 
+      // Amount (C1: DRIVER PRO fixe pour l’instant)
       const amount = 12900;
-      const session = window.DIGIY_GUARD?.getSession?.() || {};
 
+      // Phone (si dispo via guard, sinon vide)
+      const session = window.DIGIY_GUARD?.getSession?.() || {};
+      const payerPhone = session.phone || null;
+
+      // Path storage privé: <user.id>/timestamp-rand.ext
       const ext = safeName(file.name).split(".").pop() || "jpg";
       const path = `${user.id}/${Date.now()}-${Math.random().toString(16).slice(2)}.${ext}`;
 
@@ -59,20 +68,19 @@
 
       if(up.error) throw up.error;
 
-      // Appel RPC
+      // RPC submit proof
       const { data, error } = await sb.rpc("digiy_driver_submit_payment_proof", {
         p_amount_fcfa: amount,
-        p_payer_phone: session.phone || null,
+        p_payer_phone: payerPhone,
         p_tx_ref: null,
-        p_proof_url: path,
+        p_proof_url: path,               // ✅ on stocke le PATH (bucket privé)
         p_note: "Abonnement DRIVER PRO"
       });
 
       if(error) throw error;
 
-      setMsg("✅ Paiement reçu. Validation en cours frérot.", true);
-
-      fileInput.value = "";
+      setMsg("✅ Preuve reçue. Validation en cours frérot.", true);
+      if(fileInput) fileInput.value = "";
 
     }catch(e){
       console.error(e);
