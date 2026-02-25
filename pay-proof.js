@@ -1,15 +1,19 @@
-// pay-proof.js
+// pay-proof.js (ANON upload -> Storage privé, folder public/ + WhatsApp)
+// Requis dans index.html : window.sb = supabase client
+// Optionnel : window.DIGIY_PAY_STATE.getOrder() pour lire plan/montant/code/phone/slug
+
 (function(){
   "use strict";
 
+  const SUPPORT_WA = "+221771342889";
+  const BUCKET = "digiy-proofs";
+  const PUBLIC_FOLDER = "public";
+  const MAX_MB = 8;
+
+  const $ = (id) => document.getElementById(id);
+
   function getSupabaseClient(){
-    // ✅ IMPORTANT: window.supabase = librairie, PAS le client
-    return (
-      window.sb ||                       // ✅ client global créé dans index.html : window.sb = createClient(...)
-      window.DIGIY_GUARD?.supabase ||     // si un jour tu passes par guard.js ici
-      window.DIGIY_GUARD?.sb ||
-      null
-    );
+    return window.sb || null; // ✅ ton client global créé dans index.html
   }
 
   function safeName(name){
@@ -20,77 +24,125 @@
   }
 
   function setMsg(text, ok){
-    const el = document.getElementById("payMsg");
+    const el = $("payMsg");
     if(!el) return;
     el.textContent = text;
-    el.style.color = ok ? "#16a34a" : "#f87171";
+    el.style.color = ok ? "#22c55e" : "#ef4444";
   }
 
-  async function uploadAndSubmit(){
+  function wa(msg){
+    const num = SUPPORT_WA.replace(/\+/g,"");
+    location.href = "https://wa.me/" + num + "?text=" + encodeURIComponent(msg);
+  }
+
+  function getOrder(){
+    try{
+      const fn = window.DIGIY_PAY_STATE?.getOrder;
+      if(typeof fn === "function") return fn() || {};
+    }catch(_){}
+    return {};
+  }
+
+  function buildWaMessage(order, proofPath){
+    const code = order.code || "";
+    const plan = order.plan || "";
+    const amount = order.amount || 0;
+    const phone = order.phone || "";
+    const slug = order.slug || "";
+
+    let msg = "DIGIY — Preuve paiement Wave (UPLOAD)\n\n";
+    msg += "Bénéficiaire: JB BEAUVILLE\n";
+    msg += "Support: " + SUPPORT_WA + "\n\n";
+    if(phone) msg += "Téléphone client: " + phone + "\n";
+    if(code)  msg += "Code menu: " + code + "\n";
+    if(plan)  msg += "Plan: " + plan + "\n";
+    if(amount) msg += "Montant: " + amount + " FCFA\n";
+    if(slug)  msg += "Slug: " + slug + "\n";
+    msg += "\nPreuve (Storage path):\n" + proofPath + "\n\n";
+    msg += "Merci de valider & activer. — DIGIY";
+    return msg;
+  }
+
+  async function uploadAndPrepare(){
     try{
       const sb = getSupabaseClient();
       if(!sb) throw new Error("Supabase client introuvable (window.sb)");
 
-      // Auth
-      const { data: u, error: ue } = await sb.auth.getUser();
-      if(ue) throw ue;
-      const user = u?.user;
-      if(!user) throw new Error("Non connecté (session absente)");
-
-      // File
-      const fileInput = document.getElementById("proofFile");
+      // file
+      const fileInput = $("proofFile");
       const file = fileInput?.files?.[0];
-      if(!file) throw new Error("Sélectionne une capture Wave");
+      if(!file) throw new Error("Sélectionne la capture Wave");
 
       if(!/^image\//.test(file.type))
         throw new Error("Image uniquement (jpg/png)");
 
-      if(file.size > 8 * 1024 * 1024)
-        throw new Error("Fichier trop lourd (max 8MB)");
+      if(file.size > MAX_MB * 1024 * 1024)
+        throw new Error(`Fichier trop lourd (max ${MAX_MB}MB)`);
 
-      // Amount (C1: DRIVER PRO fixe pour l’instant)
-      const amount = 12900;
+      const order = getOrder();
+      if(!order.amount || !order.plan){
+        throw new Error("Choisis un code dans la grille avant l’upload.");
+      }
 
-      // Phone (si dispo via guard, sinon vide)
-      const session = window.DIGIY_GUARD?.getSession?.() || {};
-      const payerPhone = session.phone || null;
-
-      // Path storage privé: <user.id>/timestamp-rand.ext
+      // path ANON: public/<ts>-<rand>.<ext>
       const ext = safeName(file.name).split(".").pop() || "jpg";
-      const path = `${user.id}/${Date.now()}-${Math.random().toString(16).slice(2)}.${ext}`;
+      const proofPath = `${PUBLIC_FOLDER}/${Date.now()}-${Math.random().toString(16).slice(2)}.${ext}`;
 
-      setMsg("⏳ Upload en cours...", false);
+      setMsg("⏳ Upload en cours…", false);
 
-      // Upload bucket privé
       const up = await sb.storage
-        .from("digiy-proofs")
-        .upload(path, file, { contentType: file.type, upsert:false });
+        .from(BUCKET)
+        .upload(proofPath, file, { contentType: file.type, upsert:false });
 
       if(up.error) throw up.error;
 
-      // RPC submit proof
-      const { data, error } = await sb.rpc("digiy_driver_submit_payment_proof", {
-        p_amount_fcfa: amount,
-        p_payer_phone: payerPhone,
-        p_tx_ref: null,
-        p_proof_url: path,               // ✅ on stocke le PATH (bucket privé)
-        p_note: "Abonnement DRIVER PRO"
-      });
+      // UI success
+      setMsg("✅ Upload OK. Clique WhatsApp pour valider.", true);
 
-      if(error) throw error;
+      // expose for debug / buttons
+      window.DIGIY_LAST_PROOF_PATH = proofPath;
 
-      setMsg("✅ Preuve reçue. Validation en cours frérot.", true);
+      // show path if element exists
+      const hint = $("manualHint");
+      if(hint){
+        hint.textContent = "Preuve envoyée (path): " + proofPath;
+      }
+
+      // auto open whatsapp (option)
+      const auto = $("chkAutoWhatsApp");
+      const doAuto = auto ? !!auto.checked : true;
+
+      if(doAuto){
+        const msg = buildWaMessage(order, proofPath);
+        wa(msg);
+      }
+
       if(fileInput) fileInput.value = "";
 
     }catch(e){
       console.error(e);
-      setMsg("❌ " + (e.message || "Erreur paiement"), false);
+      setMsg("❌ " + (e?.message || "Erreur"), false);
+    }
+  }
+
+  function sendWhatsAppManually(){
+    try{
+      const proofPath = window.DIGIY_LAST_PROOF_PATH;
+      if(!proofPath) throw new Error("Aucune preuve uploadée pour l’instant.");
+      const order = getOrder();
+      const msg = buildWaMessage(order, proofPath);
+      wa(msg);
+    }catch(e){
+      setMsg("❌ " + (e?.message || "Erreur"), false);
     }
   }
 
   document.addEventListener("DOMContentLoaded", ()=>{
-    const btn = document.getElementById("btnSendProof");
-    if(btn) btn.addEventListener("click", uploadAndSubmit);
+    const btn = $("btnSendProof");
+    if(btn) btn.addEventListener("click", uploadAndPrepare);
+
+    const btnWa = $("btnSendProofWA");
+    if(btnWa) btnWa.addEventListener("click", sendWhatsAppManually);
   });
 
 })();
