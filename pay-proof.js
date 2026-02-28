@@ -10,7 +10,7 @@
 
   const SUPPORT_WA = "+221771342889";
   const BUCKET = "pay-proofs";
-  const PUBLIC_FOLDER = "public";
+  const PUBLIC_FOLDER = "proofs";
   const MAX_MB = 8;
 
   // ✅ Où se trouve la page d'attente
