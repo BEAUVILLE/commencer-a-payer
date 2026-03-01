@@ -1,9 +1,9 @@
 // pay-proof.js (REST upload direct -> Supabase Storage)
-// + Enregistrement Cockpit (subscription_payments)
+// + Enregistrement Cockpit (subscription_payments) via RPC digiy_pay_create_payment (RLS safe)
 // + Phone obligatoire
 // + Slug optionnel -> auto-généré si vide (driver-xxxxxxxx)
 // + Focus + blocage avant upload
-// + Redirect vers wait.html après upload
+// + WhatsApp admin + Redirect vers wait.html après upload
 
 (function(){
   "use strict";
@@ -79,7 +79,6 @@
   }
 
   function buildReference(){
-    // reference lisible pour cockpit
     return "DIGIY-" + Math.random().toString(16).slice(2, 10).toUpperCase();
   }
 
@@ -149,74 +148,6 @@
     try{ return JSON.parse(text); } catch(_){ return { ok:true, raw:text }; }
   }
 
-  // ✅ INSERT dans subscription_payments (nouvelle table)
-  async function createSubscriptionPayment({ url, key, order, proofPath }){
-    const reference = buildReference();
-
-    const module = String(order.module || order.plan || "").trim().toUpperCase();
-    const plan   = String(order.plan   || "").trim();
-
-    // BOOST-ready (si page le fournit)
-    const boost_code = String(order.boost_code || order.boostCode || "").trim() || null;
-    const boost_amount_xof = Number(order.boost_amount_xof || order.boostAmount || 0) || 0;
-
-    const payload = {
-      city: order.city || null,
-      amount: Number(order.amount || 0) || null,            // TOTAL
-      status: "pending",
-      pro_name: order.pro_name || order.proName || null,
-      pro_phone: order.phone || null,
-      reference,
-
-      module: module || null,
-      plan: plan || null,
-      boost_code,
-      boost_amount_xof: boost_code ? boost_amount_xof : null,
-      slug: order.slug || null,
-
-      meta: {
-        code: order.code || null,
-        slug: order.slug || null,
-        module: module || null,
-        plan: plan || null,
-        boost_code,
-        boost_amount_xof: boost_code ? boost_amount_xof : 0,
-        amount_total: Number(order.amount || 0) || 0,
-        proof_path: proofPath,
-        ts: new Date().toISOString()
-      }
-    };
-
-    const res = await fetch(url + "/rest/v1/subscription_payments?select=id,reference", {
-      method: "POST",
-      headers: {
-        "apikey": key,
-        "Authorization": `Bearer ${key}`,
-        "Content-Type": "application/json",
-        "Prefer": "return=representation"
-      },
-      body: JSON.stringify(payload)
-    });
-
-    const text = await res.text();
-    if(!res.ok){
-      let msg = text;
-      try{
-        const j = JSON.parse(text);
-        msg = j?.message || j?.hint || j?.details || j?.error || text;
-      }catch(_){}
-      throw new Error(`subscription_payments: insert refusé (${res.status}) : ${msg}`);
-    }
-
-    try{
-      const arr = JSON.parse(text);
-      const row = arr?.[0] || null;
-      return { id: row?.id || null, reference: row?.reference || reference };
-    }catch(_){
-      return { id: null, reference };
-    }
-  }
-
   function getPhoneAndSlugFallback(order){
     let phone = normalizePhone(order.phone);
     let slug = normalizeSlug(order.slug);
@@ -236,13 +167,9 @@
 
   function setSlugToUI(slug, slugEl){
     try{
-      if(slugEl){
-        slugEl.value = slug;
-      }
+      if(slugEl) slugEl.value = slug;
       const out = $("slugAuto") || $("paySlugAuto");
-      if(out){
-        out.textContent = "Slug auto : " + slug;
-      }
+      if(out) out.textContent = "Slug auto : " + slug;
     }catch(_){}
   }
 
@@ -253,6 +180,51 @@
     q.set("slug", slug);
     if(reference) q.set("ref", reference);
     location.href = WAIT_PAGE + "?" + q.toString();
+  }
+
+  // ✅ INSERT payment via RPC (RLS safe)
+  async function createSubscriptionPaymentRPC({ order, proofPath }){
+    if(!window.sb || typeof window.sb.rpc !== "function"){
+      throw new Error("Supabase client (window.sb) introuvable. Vérifie supabase-js.");
+    }
+
+    const reference = buildReference();
+
+    const module = String(order.module || order.plan || "").trim().toUpperCase();
+    const plan   = String(order.plan || "").trim();
+
+    const boost_code = String(order.boost_code || order.boostCode || "").trim() || null;
+    const boost_amount_xof = Number(order.boost_amount_xof || order.boostAmount || 0) || 0;
+
+    const payload = {
+      p_city: order.city || null,
+      p_amount: Number(order.amount || 0) || null,          // TOTAL
+      p_pro_name: order.pro_name || order.proName || null,
+      p_pro_phone: order.phone || null,                     // digits
+      p_reference: reference,
+      p_module: module || null,
+      p_plan: plan || null,
+      p_boost_code: boost_code,
+      p_boost_amount_xof: boost_amount_xof,
+      p_slug: order.slug || null,
+      p_meta: {
+        code: order.code || null,
+        slug: order.slug || null,
+        module: module || null,
+        plan: plan || null,
+        boost_code,
+        boost_amount_xof: boost_code ? boost_amount_xof : 0,
+        amount_total: Number(order.amount || 0) || 0,
+        proof_path: proofPath,
+        ts: new Date().toISOString()
+      }
+    };
+
+    const { data, error } = await window.sb.rpc("digiy_pay_create_payment", payload);
+    if(error) throw error;
+    if(!data?.ok) throw new Error(data?.error || "payment_insert_failed");
+
+    return { id: data.id || null, reference: data.reference || reference };
   }
 
   async function uploadAndPrepare(){
@@ -293,6 +265,9 @@
       order.phone = phone;
       order.slug = finalSlug;
 
+      // ✅ module optionnel (par défaut = plan)
+      if(!order.module) order.module = String(order.plan || "").toUpperCase();
+
       const ext = safeName(file.name).split(".").pop() || "jpg";
       const proofPath = `${PUBLIC_FOLDER}/${Date.now()}-${Math.random().toString(16).slice(2)}.${ext}`;
 
@@ -307,8 +282,8 @@
         file
       });
 
-      // 2) Insert subscription_payments (cockpit)
-      const payment = await createSubscriptionPayment({ url, key, order, proofPath });
+      // 2) Insert subscription_payments (cockpit) via RPC (RLS safe)
+      const payment = await createSubscriptionPaymentRPC({ order, proofPath });
 
       window.DIGIY_LAST_PROOF_PATH = proofPath;
       window.DIGIY_LAST_PAYMENT_REFERENCE = payment?.reference || null;
