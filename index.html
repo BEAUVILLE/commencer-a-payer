@@ -1,4 +1,4 @@
- <!doctype html>
+<!doctype html>
 <html lang="fr">
 <head>
   <meta charset="utf-8"/>
@@ -57,7 +57,6 @@
     .small{ font-size:13px; color:var(--muted); line-height:1.35; }
     .hide{ display:none; }
 
-    /* Lang switch */
     .topbar{
       display:flex; align-items:center; justify-content:space-between;
       gap:10px; flex-wrap:wrap; margin-bottom:10px;
@@ -72,7 +71,6 @@
     }
     .lang-switch button.active{ background:#0f172a; color:#fff; }
 
-    /* Pricing grid */
     .section-sep{
       margin:16px 0 8px;
       font-size:11px; font-weight:1100; letter-spacing:.8px;
@@ -131,7 +129,6 @@
     .priceDesc{ margin-top:6px; font-size:11px; color:var(--muted); line-height:1.35; }
     .hintLine{ margin-top:10px; font-size:12px; color:var(--muted); }
 
-    /* Upload proof */
     .uploadBox{
       border:1px dashed rgba(255,255,255,.20);
       border-radius:16px;
@@ -148,7 +145,6 @@
       color:var(--text);
     }
 
-    /* Inputs */
     .digiy-input{
       width:100%;
       padding:12px;
@@ -159,7 +155,6 @@
       font-size:15px;
     }
 
-    /* ✅ DIGIY KNOWLEDGE widget */
     .kbWrap{
       border:1px solid rgba(34,197,94,.30);
       background: linear-gradient(180deg, rgba(34,197,94,.10), rgba(0,0,0,.08));
@@ -243,7 +238,6 @@
     }
     .kbQuick button:hover{ border-color: rgba(34,197,94,.40); }
 
-    /* ✅ VIP Box (valorisation client) */
     .vipBox{
       border:1px solid rgba(250,204,21,.28);
       background: linear-gradient(180deg, rgba(250,204,21,.08), rgba(0,0,0,.08));
@@ -285,7 +279,7 @@
         <span class="tag" data-i18n="tag_digiy">DIGIY PAY</span>
       </div>
 
-      <h1 data-i18n="page_title">ACTIVER MON MODULE — DIGIY </h1>
+      <h1 data-i18n="page_title">ACTIVER MON MODULE — DIGIY</h1>
       <p class="small" data-i18n="subtitle">Paiement direct · 0% commission · Activation sécurisée</p>
 
       <div class="hr"></div>
@@ -298,8 +292,6 @@
               <span class="kbBadge">∞</span>
               <div>
                 <div style="font-size:14px;">DIGIY KNOWLEDGE</div>
-
-                <!-- ✅ FIX IMPORTANT : fermeture div correcte -->
                 <div class="kbSub">
                   Assistant professionnel intégré •
                   DRIVER • LOC • RESTO • PAY • JOBS • MARKET • BUILD • EXPLORE • FRET
@@ -418,7 +410,7 @@
         <div class="section-sep">📅 CODE 4 · DIGIY RÉSA</div>
         <div class="priceGrid" id="grid_resa"></div>
 
-        <div class="section-sep">🧾 CODE 5 · DIGIY POS PRO</div>
+        <div class="section-sep">🧾 CODE 5 · DIGIY POS</div>
         <div class="priceGrid" id="grid_pos"></div>
 
         <div class="section-sep">🛒 CODE 6 · DIGIY MARKET</div>
@@ -436,10 +428,10 @@
         <div class="section-sep">📦 CODE 10 · DIGIY FRET CLIENT</div>
         <div class="priceGrid" id="grid_fret_client"></div>
 
-        <div class="section-sep">✨ CODE E · BOOST (supplément visibilité)</div>
+        <div class="section-sep">✨ CODE E · BOOST</div>
         <div class="priceGrid" id="grid_boost"></div>
 
-        <div class="hintLine" id="pricingHint">📞 Tu peux aussi commander par téléphone en disant juste le code : <strong>+221 77 134 28 89</strong></div>
+        <div class="hintLine" id="pricingHint">📞 Commander par téléphone (juste le code) : <strong>+221 77 134 28 89</strong></div>
       </div>
 
       <div class="hr"></div>
@@ -478,38 +470,22 @@
 
         <div class="hr"></div>
 
-        <!-- ✅ INFOS (PHONE obligatoire, SLUG conseillé/auto) -->
         <div class="box" style="margin:12px 0;">
           <h2 style="margin:0;font-size:16px;font-weight:1100;">📱 Infos</h2>
-          <p class="small" style="margin-top:6px;">
-            Téléphone obligatoire. Slug conseillé (si vide, DIGIY le génère automatiquement).
-          </p>
+          <p class="small" style="margin-top:6px;">Téléphone obligatoire. Slug conseillé (si vide, DIGIY le génère automatiquement).</p>
           <div class="hr"></div>
 
           <div class="row">
             <div>
               <div style="font-weight:1100;">Téléphone (digits uniquement)</div>
-              <input
-                type="tel"
-                id="payPhone"
-                class="digiy-input"
-                placeholder="Ex: 221771234567"
-                inputmode="numeric"
-              />
+              <input type="tel" id="payPhone" class="digiy-input" placeholder="Ex: 221771234567" inputmode="numeric"/>
               <div class="small muted" style="margin-top:6px;">Conseil : mets 221 + ton numéro (sans espaces, sans +).</div>
             </div>
 
             <div>
               <div style="font-weight:1100;">Slug (nom public)</div>
-              <input
-                type="text"
-                id="paySlug"
-                class="digiy-input"
-                placeholder="Ex: chez-astou-saly (ou laisse vide)"
-              />
-              <div class="small muted" style="margin-top:6px;">
-                Le slug sert à ouvrir ton cockpit : <span class="mono">?slug=...</span>
-              </div>
+              <input type="text" id="paySlug" class="digiy-input" placeholder="Ex: chez-astou-saly (ou laisse vide)"/>
+              <div class="small muted" style="margin-top:6px;">Le slug sert à ouvrir ton cockpit : <span class="mono">?slug=...</span></div>
               <div id="slugAuto" class="small" style="margin-top:6px; color:rgba(234,255,241,.85);"></div>
             </div>
           </div>
@@ -517,12 +493,9 @@
 
         <div class="hr"></div>
 
-        <!-- ✅ UPLOAD PREUVE (Supabase Storage) -->
         <div class="uploadBox">
           <div style="font-weight:1100;margin-bottom:6px;">📸 Envoyer la preuve Wave (upload)</div>
-          <p class="small" style="margin-top:0;">
-            Sélectionne la capture (reçu Wave) → envoyer.
-          </p>
+          <p class="small" style="margin-top:0;">Sélectionne la capture (reçu Wave) → envoyer.</p>
           <input type="file" id="proofFile" accept="image/*" />
           <div class="hr"></div>
           <button class="btn ok" id="btnSendProof" type="button">📤 Envoyer preuve Wave</button>
@@ -555,66 +528,6 @@
   (function(){
     "use strict";
 
-    /* =====================================================
-       GRILLE COMPLÈTE — MENU CODIFIÉ V2
-    ===================================================== */
-    const PRICE_GROUPS = {
-      driver: [
-        { code:"1", plan:"DRIVER",        amount:12900,  label:"🚗 DRIVER",         desc:"GPS temps réel · Courses · Wave & OM" }
-      ],
-      loc: [
-        { code:"2A", plan:"LOC_2A",       amount:12900,  label:"🥉 LOC 1-5 logements",  desc:"Pack essentiel propriétaire" },
-        { code:"2B", plan:"LOC_2B",       amount:25000,  label:"🥈 LOC 6-9 logements",  desc:"Gestionnaire intermédiaire" },
-        { code:"2C", plan:"LOC_2C",       amount:45000,  label:"🥇 LOC 10-20 logements", desc:"Gestionnaire confirmé" },
-        { code:"2D", plan:"LOC_2D",       amount:60000,  label:"💎 LOC 21-30 logements", desc:"Grand propriétaire" },
-        { code:"2E", plan:"LOC_2E",       amount:90000,  label:"👑 LOC 30+ logements",   desc:"Parc immobilier premium" }
-      ],
-      resto: [
-        { code:"3A", plan:"RESTO_3A",     amount:19900,  label:"🥉 RESTO ESSENTIEL",  desc:"2 licences · 15 tables" },
-        { code:"3B", plan:"RESTO_3B",     amount:39900,  label:"🥈 RESTO STANDARD",   desc:"4 licences · 30 tables" },
-        { code:"3C", plan:"RESTO_3C",     amount:59900,  label:"🥇 RESTO PRO",        desc:"6 licences · 45 tables" }
-      ],
-      resa: [
-        { code:"4A", plan:"RESA_4A",      amount:12900,  label:"🥉 RÉSA 1-5 tables",  desc:"Petite salle" },
-        { code:"4B", plan:"RESA_4B",      amount:25000,  label:"🥈 RÉSA 6-9 tables",  desc:"Moyenne salle" },
-        { code:"4C", plan:"RESA_4C",      amount:45000,  label:"🥇 RÉSA 10-20 tables", desc:"Grande salle" },
-        { code:"4D", plan:"RESA_4D",      amount:60000,  label:"💎 RÉSA 21-30 tables", desc:"Salle événementielle" },
-        { code:"4E", plan:"RESA_4E",      amount:90000,  label:"👑 RÉSA 30+ tables",  desc:"Site multi-salles" }
-      ],
-      pos: [
-        { code:"5",  plan:"POS_PRO",      amount:19900,  label:"🧾 POS PRO",          desc:"Caisse tactile · Stock · Multi-users" }
-      ],
-      market: [
-        { code:"6",  plan:"MARKET",       amount:19900,  label:"🛒 MARKET",           desc:"Boutique en ligne · Catalogue illimité" }
-      ],
-      build: [
-        { code:"7",  plan:"BUILD",        amount:12900,  label:"🏗️ BUILD",            desc:"Artisans · Devis · Portfolio" }
-      ],
-      explore: [
-        { code:"8A", plan:"EXPLORE_8A",   amount:30000,  label:"🟢 EXPLORE ESSENTIEL", desc:"Visibilité locale agence" },
-        { code:"8B", plan:"EXPLORE_8B",   amount:60000,  label:"🔵 EXPLORE PRO",       desc:"Visibilité régionale agence" },
-        { code:"8C", plan:"EXPLORE_8C",   amount:120000, label:"🟣 EXPLORE PREMIUM",   desc:"Visibilité internationale" },
-        { code:"8D", plan:"EXPLORE_8D",   amount:150000, label:"🎫 EXPLORE SETUP",     desc:"Droit d'entrée one-shot · Onboarding", isOneShot:true }
-      ],
-      fret_chauf: [
-        { code:"9A", plan:"FRET_CHAUF_9A", amount:25000,  label:"🥉 FRET LOCAL <50km",    desc:"Zone locale chauffeur" },
-        { code:"9B", plan:"FRET_CHAUF_9B", amount:60000,  label:"🥈 FRET RÉGIONAL 50-200km", desc:"Région chauffeur" },
-        { code:"9C", plan:"FRET_CHAUF_9C", amount:120000, label:"🥇 FRET NATIONAL 200km+", desc:"National chauffeur" },
-        { code:"9D", plan:"FRET_CHAUF_9D", amount:200000, label:"👑 FRET INTERNATIONAL CEDEAO", desc:"CEDEAO chauffeur" }
-      ],
-      fret_client: [
-        { code:"10A", plan:"FRET_CLI_10A", amount:9900,   label:"🥉 FRET CLIENT LOCAL",      desc:"Expéditeur zone locale" },
-        { code:"10B", plan:"FRET_CLI_10B", amount:25000,  label:"🥈 FRET CLIENT RÉGIONAL",   desc:"Expéditeur régional" },
-        { code:"10C", plan:"FRET_CLI_10C", amount:60000,  label:"🥇 FRET CLIENT NATIONAL",   desc:"Expéditeur national" },
-        { code:"10D", plan:"FRET_CLI_10D", amount:120000, label:"👑 FRET CLIENT INTERNATIONAL", desc:"Expéditeur CEDEAO" }
-      ],
-      boost: [
-        { code:"E1", plan:"BOOST_E1",     amount:5000,   label:"E1 · BOOST LOCAL",    desc:"Badge + vitrine locale + WhatsApp", isGold:true },
-        { code:"E2", plan:"BOOST_E2",     amount:10000,  label:"E2 · BOOST STANDARD", desc:"Mise en avant + SEO + leads",       isGold:true },
-        { code:"E3", plan:"BOOST_E3",     amount:20000,  label:"E3 · BOOST PREMIUM",  desc:"Priorité + support média + max visibilité", isGold:true }
-      ]
-    };
-
     /* ==================== CONFIG SUPABASE ==================== */
     const SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
     const SUPABASE_ANON_KEY =
@@ -634,8 +547,7 @@
           autoRefreshToken: false,
           detectSessionInUrl: false,
           storage: { getItem: () => null, setItem: () => {}, removeItem: () => {} }
-        },
-        global: { headers: { Authorization: `Bearer ${SUPABASE_ANON_KEY}` } }
+        }
       }
     );
     window.sb = sb;
@@ -696,14 +608,31 @@
     const token  = (qp.get("token")  || "").trim();
     const ret    = (qp.get("return") || "").trim();
     const auto   = (qp.get("auto")   === "1");
-    const access = (qp.get("module") || "").trim().toUpperCase();
     const from_  = (qp.get("from")   || "").trim();
+
+    // ✅ module demandé dans l’URL (CAISSE => POS)
+    const rawAccess = (qp.get("module") || "").trim().toUpperCase();
+    const MODULE_ALIAS = {
+      CAISSE: "POS",
+      POS: "POS",
+      DRIVER: "DRIVER",
+      LOC: "LOC",
+      RESTO: "RESTO",
+      RESA: "RESA_TABLE",
+      MARKET: "MARKET",
+      BUILD: "BUILD",
+      EXPLORE: "EXPLORE",
+      FRET_PRO: "FRET_PRO",
+      FRET_CLIENT_PRO: "FRET_CLIENT_PRO"
+    };
+    const accessModule = MODULE_ALIAS[rawAccess] || rawAccess || "";
 
     // ✅ init phone/slug depuis URL
     let userPhoneDigits = normPhone(qp.get("phone") || "");
     let userSlug        = normSlug(qp.get("slug") || "");
 
     // ✅ base + boost init depuis URL
+    let baseModule = (qp.get("base_module") || "").trim().toUpperCase(); // optionnel
     let basePlan   = (qp.get("plan") || "").trim();
     let baseAmount = Number((qp.get("amount") || "").toString().replace(/[^\d]/g,"") || 0);
     let baseCode   = (qp.get("code") || "").trim();
@@ -728,9 +657,7 @@
       document.getElementById("lang-fr").classList.remove("active");
     });
 
-    /* =========================================================
-       ✅ DIGIY KNOWLEDGE — Accueil PUBLIC (via ai.digiylyfe.com)
-    ========================================================= */
+    /* ==================== DIGIY KNOWLEDGE ==================== */
     const KB_ENDPOINTS = ["https://ai.digiylyfe.com/chat"];
 
     async function kbAsk(question){
@@ -795,7 +722,7 @@
     function totalAmount(){ return (Number(baseAmount||0) + Number(boostAmount||0)); }
 
     function productLabel(){
-      const base = baseCode ? ("Code " + baseCode) : (basePlan || access || "DIGIY");
+      const base = baseCode ? ("Code " + baseCode) : (basePlan || accessModule || "DIGIY");
       const boost = boostCode ? (" + BOOST " + boostCode) : "";
       return "DIGIY · " + base + boost;
     }
@@ -823,12 +750,12 @@
     function syncSelectionToUrl(){
       const u = new URL(location.href);
 
-      // base
+      if(baseModule) u.searchParams.set("base_module", baseModule); else u.searchParams.delete("base_module");
+
       if(basePlan)   u.searchParams.set("plan", basePlan); else u.searchParams.delete("plan");
       if(baseAmount) u.searchParams.set("amount", String(baseAmount)); else u.searchParams.delete("amount");
       if(baseCode)   u.searchParams.set("code", baseCode); else u.searchParams.delete("code");
 
-      // boost
       if(boostPlan)   u.searchParams.set("boost", boostPlan); else u.searchParams.delete("boost");
       if(boostAmount) u.searchParams.set("boost_amount", String(boostAmount)); else u.searchParams.delete("boost_amount");
       if(boostCode)   u.searchParams.set("boost_code", boostCode); else u.searchParams.delete("boost_code");
@@ -836,37 +763,108 @@
       history.replaceState(null, "", u.toString());
     }
 
-    /* ==================== RENDER ORDER RECAP ==================== */
-    // ✅ State global pour pay-proof.js (module + plan + boost)
-function inferModuleFromPlan(plan){
-  const p = String(plan||"").toUpperCase();
+    /* ==================== RENDER ORDER RECAP ✅ (FIX) ==================== */
+    function renderOrder(){
+      const t = totalAmount();
 
-  if(p === "DRIVER") return "DRIVER";
-  if(p.startsWith("LOC_")) return "LOC";
-  if(p.startsWith("RESTO_")) return "RESTO";
-  if(p.startsWith("RESA_")) return "RESA_TABLE";
-  if(p.startsWith("EXPLORE_")) return "EXPLORE";
-  if(p.startsWith("FRET_CHAUF_")) return "FRET_PRO";
-  if(p.startsWith("FRET_CLI_")) return "FRET_CLIENT_PRO";
-  if(p.startsWith("POS")) return "POS";
-  if(p === "MARKET") return "MARKET";
-  if(p === "BUILD") return "BUILD";
+      $("orderProduct").textContent = productLabel();
+      $("orderPlan").textContent = basePlan ? basePlan : (accessModule || "—");
+      $("orderAmount").textContent = t ? (Number(t).toLocaleString("fr-FR") + " FCFA") : "—";
 
-  return p || "";
-}
+      const ref =
+        (baseModule || accessModule || "DIGIY") + "-" +
+        (baseCode || "X") + "-" +
+        (userPhoneDigits ? userPhoneDigits.slice(-6) : "000000");
+      $("orderRef").textContent = ref;
 
-window.DIGIY_PAY_STATE = {
-  getOrder: () => ({
-    module: inferModuleFromPlan(basePlan),  // ✅ module réel (DRIVER/LOC/POS/...)
-    plan: basePlan || "",                   // ✅ plan réel (LOC_2A, RESTO_3B...)
-    amount: t,                              // ✅ total = base + boost
-    code: baseCode || "",
-    boost_code: boostCode || "",
-    boost_amount_xof: Number(boostAmount || 0),
-    phone: userPhoneDigits || null,
-    slug: userSlug || null
-  })
-};
+      const hint = [];
+      if(!basePlan || !baseAmount) hint.push("👉 Choisis ton module dans la grille.");
+      if(boostCode) hint.push("✅ BOOST ajouté : " + boostCode);
+      if(!userPhoneDigits) hint.push("📱 Mets ton téléphone (digits).");
+      if(!userSlug) hint.push("🔗 Slug conseillé (ou laisse vide = auto).");
+      $("orderHint").textContent = hint.join("  •  ");
+
+      updateVipBox();
+    }
+
+    // ✅ State global pour pay-proof.js (module + plan + boost) — PROPRE
+    window.DIGIY_PAY_STATE = {
+      getOrder: () => {
+        const t = totalAmount();
+        return {
+          module: (baseModule || accessModule || ""),     // ✅ module réel (POS/DRIVER/LOC/...)
+          plan: (basePlan || ""),                         // ✅ plan réel (standard, LOC_2A, RESTO_3B...)
+          amount: t,                                      // ✅ total base+boost
+          code: (baseCode || ""),
+          boost_code: (boostCode || ""),
+          boost_amount_xof: Number(boostAmount || 0),
+          phone: userPhoneDigits || null,
+          slug: userSlug || null
+        };
+      }
+    };
+
+    /* =====================================================
+       GRILLE COMPLÈTE — MENU CODIFIÉ V2 (module + plan séparés)
+    ===================================================== */
+    const PRICE_GROUPS = {
+      driver: [
+        { code:"1",  module:"DRIVER", plan:"standard", amount:12900, label:"🚗 DRIVER", desc:"GPS temps réel · Courses · Wave & OM" }
+      ],
+      loc: [
+        { code:"2A", module:"LOC", plan:"LOC_2A", amount:12900,  label:"🥉 LOC 1-5 logements",  desc:"Pack essentiel propriétaire" },
+        { code:"2B", module:"LOC", plan:"LOC_2B", amount:25000,  label:"🥈 LOC 6-9 logements",  desc:"Gestionnaire intermédiaire" },
+        { code:"2C", module:"LOC", plan:"LOC_2C", amount:45000,  label:"🥇 LOC 10-20 logements", desc:"Gestionnaire confirmé" },
+        { code:"2D", module:"LOC", plan:"LOC_2D", amount:60000,  label:"💎 LOC 21-30 logements", desc:"Grand propriétaire" },
+        { code:"2E", module:"LOC", plan:"LOC_2E", amount:90000,  label:"👑 LOC 30+ logements",   desc:"Parc immobilier premium" }
+      ],
+      resto: [
+        { code:"3A", module:"RESTO", plan:"RESTO_3A", amount:19900, label:"🥉 RESTO ESSENTIEL", desc:"2 licences · 15 tables" },
+        { code:"3B", module:"RESTO", plan:"RESTO_3B", amount:39900, label:"🥈 RESTO STANDARD",  desc:"4 licences · 30 tables" },
+        { code:"3C", module:"RESTO", plan:"RESTO_3C", amount:59900, label:"🥇 RESTO PRO",       desc:"6 licences · 45 tables" }
+      ],
+      resa: [
+        { code:"4A", module:"RESA_TABLE", plan:"RESA_4A", amount:12900, label:"🥉 RÉSA 1-5 tables",  desc:"Petite salle" },
+        { code:"4B", module:"RESA_TABLE", plan:"RESA_4B", amount:25000, label:"🥈 RÉSA 6-9 tables",  desc:"Moyenne salle" },
+        { code:"4C", module:"RESA_TABLE", plan:"RESA_4C", amount:45000, label:"🥇 RÉSA 10-20 tables", desc:"Grande salle" },
+        { code:"4D", module:"RESA_TABLE", plan:"RESA_4D", amount:60000, label:"💎 RÉSA 21-30 tables", desc:"Salle événementielle" },
+        { code:"4E", module:"RESA_TABLE", plan:"RESA_4E", amount:90000, label:"👑 RÉSA 30+ tables",  desc:"Site multi-salles" }
+      ],
+      // ✅ POS = module POS + plan standard (match backbone)
+      pos: [
+        { code:"5",  module:"POS", plan:"standard", amount:12900, label:"🧾 POS STANDARD", desc:"Caisse · Stock · Multi-users" }
+      ],
+      market: [
+        { code:"6",  module:"MARKET", plan:"standard", amount:19900, label:"🛒 MARKET", desc:"Boutique en ligne · Catalogue" }
+      ],
+      build: [
+        { code:"7",  module:"BUILD", plan:"standard", amount:12900, label:"🏗️ BUILD", desc:"Artisans · Devis · Portfolio" }
+      ],
+      explore: [
+        { code:"8A", module:"EXPLORE", plan:"EXPLORE_8A", amount:30000,  label:"🟢 EXPLORE ESSENTIEL", desc:"Visibilité locale agence" },
+        { code:"8B", module:"EXPLORE", plan:"EXPLORE_8B", amount:60000,  label:"🔵 EXPLORE PRO",       desc:"Visibilité régionale agence" },
+        { code:"8C", module:"EXPLORE", plan:"EXPLORE_8C", amount:120000, label:"🟣 EXPLORE PREMIUM",   desc:"Visibilité internationale" },
+        { code:"8D", module:"EXPLORE", plan:"EXPLORE_8D", amount:150000, label:"🎫 EXPLORE SETUP",     desc:"Droit d'entrée one-shot · Onboarding", isOneShot:true }
+      ],
+      fret_chauf: [
+        { code:"9A", module:"FRET_PRO", plan:"FRET_CHAUF_9A", amount:25000,  label:"🥉 FRET LOCAL <50km", desc:"Zone locale chauffeur" },
+        { code:"9B", module:"FRET_PRO", plan:"FRET_CHAUF_9B", amount:60000,  label:"🥈 FRET RÉGIONAL 50-200km", desc:"Région chauffeur" },
+        { code:"9C", module:"FRET_PRO", plan:"FRET_CHAUF_9C", amount:120000, label:"🥇 FRET NATIONAL 200km+", desc:"National chauffeur" },
+        { code:"9D", module:"FRET_PRO", plan:"FRET_CHAUF_9D", amount:200000, label:"👑 FRET INTERNATIONAL CEDEAO", desc:"CEDEAO chauffeur" }
+      ],
+      fret_client: [
+        { code:"10A", module:"FRET_CLIENT_PRO", plan:"FRET_CLI_10A", amount:9900,   label:"🥉 FRET CLIENT LOCAL", desc:"Expéditeur zone locale" },
+        { code:"10B", module:"FRET_CLIENT_PRO", plan:"FRET_CLI_10B", amount:25000,  label:"🥈 FRET CLIENT RÉGIONAL", desc:"Expéditeur régional" },
+        { code:"10C", module:"FRET_CLIENT_PRO", plan:"FRET_CLI_10C", amount:60000,  label:"🥇 FRET CLIENT NATIONAL", desc:"Expéditeur national" },
+        { code:"10D", module:"FRET_CLIENT_PRO", plan:"FRET_CLI_10D", amount:120000, label:"👑 FRET CLIENT INTERNATIONAL", desc:"Expéditeur CEDEAO" }
+      ],
+      boost: [
+        { code:"E1", module:"BOOST", plan:"BOOST_E1", amount:5000,  label:"E1 · BOOST LOCAL",    desc:"Badge + vitrine locale + WhatsApp", isGold:true },
+        { code:"E2", module:"BOOST", plan:"BOOST_E2", amount:10000, label:"E2 · BOOST STANDARD", desc:"Mise en avant + SEO + leads", isGold:true },
+        { code:"E3", module:"BOOST", plan:"BOOST_E3", amount:20000, label:"E3 · BOOST PREMIUM",  desc:"Priorité + support média + max visibilité", isGold:true }
+      ]
+    };
+
     /* ==================== RENDER PRICE GRIDS ==================== */
     function renderGrids(){
       const groups = {
@@ -890,7 +888,7 @@ window.DIGIY_PAY_STATE = {
 
         grid.innerHTML = items.map(p => {
           const isBoost = String(p.code||"").startsWith("E");
-          const isActiveBase = (!isBoost && basePlan && basePlan === p.plan);
+          const isActiveBase = (!isBoost && basePlan && basePlan === p.plan && baseModule === p.module);
           const isActiveBoost = (isBoost && boostPlan && boostPlan === p.plan);
 
           const amtText = p.amount > 0 ? prettyFCFA(p.amount) : "Sur devis";
@@ -900,7 +898,7 @@ window.DIGIY_PAY_STATE = {
 
           return `
             <button class="priceBtn ${activeClass}" type="button"
-              data-plan="${p.plan}" data-amount="${p.amount}" data-code="${p.code}">
+              data-module="${p.module}" data-plan="${p.plan}" data-amount="${p.amount}" data-code="${p.code}">
               <div class="priceTop">
                 <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0;">
                   <div class="${codeClass}">${p.code}</div>
@@ -915,13 +913,13 @@ window.DIGIY_PAY_STATE = {
 
         grid.querySelectorAll(".priceBtn").forEach(btn => {
           btn.addEventListener("click", () => {
+            const pModule = (btn.getAttribute("data-module") || "").trim().toUpperCase();
             const pPlan   = (btn.getAttribute("data-plan")   || "").trim();
             const pAmt    = Number(btn.getAttribute("data-amount") || 0);
             const pCode   = (btn.getAttribute("data-code")   || "").trim();
             const isBoost = pCode.startsWith("E");
 
             if(isBoost){
-              // toggle boost (clic une 2e fois => retire)
               if(boostCode === pCode){
                 boostPlan = "";
                 boostAmount = 0;
@@ -934,6 +932,7 @@ window.DIGIY_PAY_STATE = {
                 setStatus("👑 BOOST " + pCode + " ajouté — tu passes en mise en avant.", "ok", "BOOST " + pCode);
               }
             } else {
+              baseModule = pModule;
               basePlan = pPlan;
               baseAmount = pAmt;
               baseCode = pCode;
@@ -1028,7 +1027,7 @@ window.DIGIY_PAY_STATE = {
 
     /* ==================== WHATSAPP CONFIRM ==================== */
     $("btnWaConfirm").addEventListener("click", function(){
-      if(!baseAmount || !basePlan){
+      if(!baseAmount || !basePlan || !baseModule){
         setStatus("⚠️ Étape 1 : Choisis ton module dans la grille d'abord.", "warn", "MODULE");
         return;
       }
@@ -1037,9 +1036,8 @@ window.DIGIY_PAY_STATE = {
         return;
       }
 
-      // ✅ slug optionnel -> auto si vide
       if(!userSlug || userSlug.length < 3){
-        userSlug = genSlug(basePlan || "digiy");
+        userSlug = genSlug(baseModule || basePlan || "digiy");
         if(paySlugEl) paySlugEl.value = userSlug;
         if(slugAutoEl) slugAutoEl.textContent = "Slug auto : " + userSlug;
         syncInputsToUrlAndState();
@@ -1052,7 +1050,8 @@ window.DIGIY_PAY_STATE = {
       msg += "Wave: " + WAVE_TO + "\n\n";
       msg += "Téléphone: " + displayPhoneDigitsAsPlus(userPhoneDigits) + "\n";
 
-      msg += "Module (code): " + (baseCode || "-") + "\n";
+      msg += "Module: " + (baseModule || "-") + "\n";
+      msg += "Code: " + (baseCode || "-") + "\n";
       msg += "Plan module: " + (basePlan || "-") + "\n";
       msg += "Montant module: " + (baseAmount || 0) + " FCFA\n";
 
@@ -1068,7 +1067,6 @@ window.DIGIY_PAY_STATE = {
       msg += "\nJe joins le reçu Wave ici.\nMerci d'activer. — DIGIY";
 
       wa(msg);
-
       setStatus("✅ Message WhatsApp prêt. Ajoute le reçu.", "warn", "EN ATTENTE");
     });
 
@@ -1077,9 +1075,10 @@ window.DIGIY_PAY_STATE = {
 
       let msg = "DIGIY — Support Paiement\n\n";
       if(userPhoneDigits) msg += "Téléphone: " + displayPhoneDigitsAsPlus(userPhoneDigits) + "\n";
-      if(baseCode) msg += "Module (code): " + baseCode + "\n";
-      if(basePlan) msg += "Plan module: " + basePlan + "\n";
-      if(baseAmount) msg += "Montant module: " + baseAmount + " FCFA\n";
+      if(baseModule) msg += "Module: " + baseModule + "\n";
+      if(baseCode) msg += "Code: " + baseCode + "\n";
+      if(basePlan) msg += "Plan: " + basePlan + "\n";
+      if(baseAmount) msg += "Montant: " + baseAmount + " FCFA\n";
 
       if(boostCode){
         msg += "BOOST: " + boostCode + " (" + boostAmount + " FCFA)\n";
@@ -1098,7 +1097,7 @@ window.DIGIY_PAY_STATE = {
   })();
   </script>
 
-  <!-- ✅ Upload proof (phone requis, slug auto si vide, redirect wait.html) -->
+  <!-- ✅ Upload proof (lis DIGIY_PAY_STATE.getOrder()) -->
   <script src="./pay-proof.js?v=3"></script>
 
 </body>
