@@ -1,5 +1,5 @@
 // pay-proof.js (REST upload direct -> Supabase Storage)
-// + Enregistrement Cockpit (digiy_pay_orders)
+// + Enregistrement Cockpit (subscription_payments)
 // + Phone obligatoire
 // + Slug optionnel -> auto-généré si vide (driver-xxxxxxxx)
 // + Focus + blocage avant upload
@@ -30,7 +30,6 @@
       if(!el) return;
       el.scrollIntoView({ behavior:"smooth", block:"center" });
       el.focus({ preventScroll:true });
-      // petit flash si tu veux (sans CSS externe)
       el.style.outline = "2px solid rgba(239,68,68,.8)";
       setTimeout(()=>{ el.style.outline = ""; }, 900);
     }catch(_){}
@@ -51,7 +50,6 @@
   function normalizePhone(raw){
     const v = String(raw || "").trim();
     const digits = v.replace(/[^\d]/g, "");
-    // 9 à 15 digits
     if(digits.length < 9) return "";
     return digits;
   }
@@ -80,12 +78,20 @@
     return {};
   }
 
-  function buildWaMessage(order, proofPath, orderId){
-    const code = order.code || "";
-    const plan = order.plan || "";
+  function buildReference(){
+    // reference lisible pour cockpit
+    return "DIGIY-" + Math.random().toString(16).slice(2, 10).toUpperCase();
+  }
+
+  function buildWaMessage(order, proofPath, paymentId, reference){
+    const code   = order.code || "";
+    const plan   = order.plan || "";
     const amount = order.amount || 0;
-    const phone = order.phone || "";
-    const slug = order.slug || "";
+    const phone  = order.phone || "";
+    const slug   = order.slug || "";
+
+    const boostCode = order.boost_code || order.boostCode || "";
+    const boostAmt  = order.boost_amount_xof || order.boostAmount || 0;
 
     let msg = "DIGIY — Preuve paiement Wave (UPLOAD)\n\n";
     msg += "Bénéficiaire: JB BEAUVILLE\n";
@@ -93,9 +99,11 @@
     if(phone) msg += "Téléphone client: " + phone + "\n";
     if(code)  msg += "Code menu: " + code + "\n";
     if(plan)  msg += "Plan/Module: " + plan + "\n";
-    if(amount) msg += "Montant: " + amount + " FCFA\n";
+    if(amount) msg += "Montant TOTAL: " + amount + " FCFA\n";
+    if(boostCode) msg += "BOOST: " + boostCode + " (" + (boostAmt||0) + " FCFA)\n";
     if(slug)  msg += "Slug: " + slug + "\n";
-    if(orderId) msg += "Order ID: " + orderId + "\n";
+    if(reference) msg += "Reference: " + reference + "\n";
+    if(paymentId) msg += "Payment ID: " + paymentId + "\n";
     msg += "\nPreuve (Storage path):\n" + proofPath + "\n\n";
     msg += "Merci de valider & activer. — DIGIY";
     return msg;
@@ -141,18 +149,45 @@
     try{ return JSON.parse(text); } catch(_){ return { ok:true, raw:text }; }
   }
 
-  async function createCockpitOrder({ url, key, order, proofPath }){
+  // ✅ INSERT dans subscription_payments (nouvelle table)
+  async function createSubscriptionPayment({ url, key, order, proofPath }){
+    const reference = buildReference();
+
+    const module = String(order.module || order.plan || "").trim().toUpperCase();
+    const plan   = String(order.plan   || "").trim();
+
+    // BOOST-ready (si page le fournit)
+    const boost_code = String(order.boost_code || order.boostCode || "").trim() || null;
+    const boost_amount_xof = Number(order.boost_amount_xof || order.boostAmount || 0) || 0;
+
     const payload = {
-      phone: order.phone || null,
-      code: order.code || null,
-      plan: order.plan || null,
-      amount: order.amount || null,
+      city: order.city || null,
+      amount: Number(order.amount || 0) || null,            // TOTAL
+      status: "pending",
+      pro_name: order.pro_name || order.proName || null,
+      pro_phone: order.phone || null,
+      reference,
+
+      module: module || null,
+      plan: plan || null,
+      boost_code,
+      boost_amount_xof: boost_code ? boost_amount_xof : null,
       slug: order.slug || null,
-      proof_path: proofPath,
-      status: "pending"
+
+      meta: {
+        code: order.code || null,
+        slug: order.slug || null,
+        module: module || null,
+        plan: plan || null,
+        boost_code,
+        boost_amount_xof: boost_code ? boost_amount_xof : 0,
+        amount_total: Number(order.amount || 0) || 0,
+        proof_path: proofPath,
+        ts: new Date().toISOString()
+      }
     };
 
-    const res = await fetch(url + "/rest/v1/digiy_pay_orders?select=id", {
+    const res = await fetch(url + "/rest/v1/subscription_payments?select=id,reference", {
       method: "POST",
       headers: {
         "apikey": key,
@@ -170,23 +205,22 @@
         const j = JSON.parse(text);
         msg = j?.message || j?.hint || j?.details || j?.error || text;
       }catch(_){}
-      throw new Error(`Cockpit: insert refusé (${res.status}) : ${msg}`);
+      throw new Error(`subscription_payments: insert refusé (${res.status}) : ${msg}`);
     }
 
     try{
       const arr = JSON.parse(text);
-      return arr?.[0]?.id || null;
+      const row = arr?.[0] || null;
+      return { id: row?.id || null, reference: row?.reference || reference };
     }catch(_){
-      return null;
+      return { id: null, reference };
     }
   }
 
   function getPhoneAndSlugFallback(order){
-    // 1) depuis order
     let phone = normalizePhone(order.phone);
     let slug = normalizeSlug(order.slug);
 
-    // 2) fallback inputs UI si présents
     const phoneEl = $("payPhone") || $("phone");
     const slugEl  = $("paySlug")  || $("slug");
 
@@ -207,17 +241,17 @@
       }
       const out = $("slugAuto") || $("paySlugAuto");
       if(out){
-        out.textContent = slug;
+        out.textContent = "Slug auto : " + slug;
       }
     }catch(_){}
   }
 
-  function redirectToWait({ phone, module, slug, orderId }){
+  function redirectToWait({ phone, module, slug, reference }){
     const q = new URLSearchParams();
     q.set("phone", phone);
     q.set("module", module);
     q.set("slug", slug);
-    if(orderId) q.set("order_id", orderId);
+    if(reference) q.set("ref", reference);
     location.href = WAIT_PAGE + "?" + q.toString();
   }
 
@@ -250,7 +284,6 @@
 
       let finalSlug = slug;
       if(!finalSlug || finalSlug.length < 3){
-        // auto slug : driver-xxxxxxxx (ou basé sur le module)
         const base = String(order.plan || "driver").toLowerCase();
         finalSlug = genSlug(base);
         setSlugToUI(finalSlug, slugEl);
@@ -274,10 +307,11 @@
         file
       });
 
-      // 2) Insert cockpit
-      const orderId = await createCockpitOrder({ url, key, order, proofPath });
+      // 2) Insert subscription_payments (cockpit)
+      const payment = await createSubscriptionPayment({ url, key, order, proofPath });
 
       window.DIGIY_LAST_PROOF_PATH = proofPath;
+      window.DIGIY_LAST_PAYMENT_REFERENCE = payment?.reference || null;
 
       const hint = $("manualHint");
       if(hint) hint.textContent = "Preuve envoyée (path): " + proofPath;
@@ -285,7 +319,7 @@
       setMsg("✅ Upload OK. Validation en cours…", true);
 
       // 3) WhatsApp admin
-      const msg = buildWaMessage(order, proofPath, orderId);
+      const msg = buildWaMessage(order, proofPath, payment?.id, payment?.reference);
       wa(msg);
 
       if(fileInput) fileInput.value = "";
@@ -294,9 +328,9 @@
       setTimeout(()=>{
         redirectToWait({
           phone,
-          module: String(order.plan || "").toUpperCase(),
+          module: String(order.module || order.plan || "").toUpperCase(),
           slug: finalSlug,
-          orderId
+          reference: payment?.reference
         });
       }, 900);
 
