@@ -14,8 +14,7 @@
   const MAX_MB = 8;
 
   // ✅ Où se trouve la page d'attente
-  const WAIT_PAGE = "/abos/wait.html";
-
+  const WAIT_PAGE = "./wait.html";
   const $ = (id) => document.getElementById(id);
 
   function setMsg(text, ok){
