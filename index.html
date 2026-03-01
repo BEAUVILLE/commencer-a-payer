@@ -1,4 +1,4 @@
-<!doctype html>
+ <!doctype html>
 <html lang="fr">
 <head>
   <meta charset="utf-8"/>
@@ -837,37 +837,36 @@
     }
 
     /* ==================== RENDER ORDER RECAP ==================== */
-    function renderOrder(){
-      const t = totalAmount();
-      const ref = userSlug || baseCode || (token ? ("token:" + token.slice(0,8) + "…") : "—");
+    // ✅ State global pour pay-proof.js (module + plan + boost)
+function inferModuleFromPlan(plan){
+  const p = String(plan||"").toUpperCase();
 
-      $("orderProduct").textContent = basePlan ? productLabel() : "—";
-      $("orderPlan").textContent = basePlan ? (basePlan + (boostPlan ? (" + " + boostPlan) : "")) : "—";
-      $("orderAmount").textContent = basePlan ? (prettyFCFA(t) || "—") : "—";
-      $("orderRef").textContent = ref;
+  if(p === "DRIVER") return "DRIVER";
+  if(p.startsWith("LOC_")) return "LOC";
+  if(p.startsWith("RESTO_")) return "RESTO";
+  if(p.startsWith("RESA_")) return "RESA_TABLE";
+  if(p.startsWith("EXPLORE_")) return "EXPLORE";
+  if(p.startsWith("FRET_CHAUF_")) return "FRET_PRO";
+  if(p.startsWith("FRET_CLI_")) return "FRET_CLIENT_PRO";
+  if(p.startsWith("POS")) return "POS";
+  if(p === "MARKET") return "MARKET";
+  if(p === "BUILD") return "BUILD";
 
-      $("orderHint").textContent = !basePlan || !baseAmount
-        ? "⚠️ Étape 1 : choisis ton module dans la grille."
-        : (boostCode
-            ? "✅ Module + BOOST sélectionnés. Paye le montant total puis envoie le reçu."
-            : "✅ Module sélectionné. Tu peux ajouter un BOOST (optionnel), puis payer et envoyer le reçu.");
+  return p || "";
+}
 
-      // ✅ State global pour pay-proof.js
-      window.DIGIY_PAY_STATE = {
-        getOrder: () => ({
-          plan: basePlan || "",
-          boost: boostPlan || null,
-          amount: t,                 // ✅ total envoyé au flow proof
-          code: baseCode || "",
-          boostCode: boostCode || "",
-          phone: userPhoneDigits || null,
-          slug: userSlug || null
-        })
-      };
-
-      updateVipBox();
-    }
-
+window.DIGIY_PAY_STATE = {
+  getOrder: () => ({
+    module: inferModuleFromPlan(basePlan),  // ✅ module réel (DRIVER/LOC/POS/...)
+    plan: basePlan || "",                   // ✅ plan réel (LOC_2A, RESTO_3B...)
+    amount: t,                              // ✅ total = base + boost
+    code: baseCode || "",
+    boost_code: boostCode || "",
+    boost_amount_xof: Number(boostAmount || 0),
+    phone: userPhoneDigits || null,
+    slug: userSlug || null
+  })
+};
     /* ==================== RENDER PRICE GRIDS ==================== */
     function renderGrids(){
       const groups = {
