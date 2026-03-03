@@ -641,6 +641,24 @@
     let boostAmount = Number((qp.get("boost_amount") || "").toString().replace(/[^\d]/g,"") || 0);
     let boostCode   = (qp.get("boost_code") || "").trim();
 
+    /* ============================================================
+       ✅ SLUG-FIRST RETURN HELPERS (FIX BOUCLE PRO)
+       - Retour PRO doit contenir ?slug=moduleLower-phoneDigits
+       ============================================================ */
+    function inferModuleForSlug(){
+      return (baseModule || accessModule || "LOC").trim().toUpperCase();
+    }
+    function subscriptionSlug(module, phoneDigits){
+      return `${String(module||"LOC").toLowerCase()}-${String(phoneDigits||"").replace(/\D/g,"")}`;
+    }
+    function buildReturnUrlWithSlug(retUrl, module, phoneDigits){
+      const u = new URL(retUrl, location.origin);
+      if(!u.searchParams.get("slug")){
+        u.searchParams.set("slug", subscriptionSlug(module, phoneDigits));
+      }
+      return u.toString();
+    }
+
     /* ==================== LANG (minimal) ==================== */
     let CURRENT_LANG = localStorage.getItem("digiy_lang") || "fr";
 
@@ -763,7 +781,7 @@
       history.replaceState(null, "", u.toString());
     }
 
-    /* ==================== RENDER ORDER RECAP ✅ (FIX) ==================== */
+    /* ==================== RENDER ORDER RECAP ==================== */
     function renderOrder(){
       const t = totalAmount();
 
@@ -787,14 +805,14 @@
       updateVipBox();
     }
 
-    // ✅ State global pour pay-proof.js (module + plan + boost) — PROPRE
+    // ✅ State global pour pay-proof.js (module + plan + boost)
     window.DIGIY_PAY_STATE = {
       getOrder: () => {
         const t = totalAmount();
         return {
-          module: (baseModule || accessModule || ""),     // ✅ module réel (POS/DRIVER/LOC/...)
-          plan: (basePlan || ""),                         // ✅ plan réel (standard, LOC_2A, RESTO_3B...)
-          amount: t,                                      // ✅ total base+boost
+          module: (baseModule || accessModule || ""),     // POS/DRIVER/LOC/...
+          plan: (basePlan || ""),                         // standard, LOC_2A, ...
+          amount: t,                                      // total base+boost
           code: (baseCode || ""),
           boost_code: (boostCode || ""),
           boost_amount_xof: Number(boostAmount || 0),
@@ -804,9 +822,7 @@
       }
     };
 
-    /* =====================================================
-       GRILLE COMPLÈTE — MENU CODIFIÉ V2 (module + plan séparés)
-    ===================================================== */
+    /* ==================== GRILLE TARIFS ==================== */
     const PRICE_GROUPS = {
       driver: [
         { code:"1",  module:"DRIVER", plan:"standard", amount:12900, label:"🚗 DRIVER", desc:"GPS temps réel · Courses · Wave & OM" }
@@ -830,7 +846,6 @@
         { code:"4D", module:"RESA_TABLE", plan:"RESA_4D", amount:60000, label:"💎 RÉSA 21-30 tables", desc:"Salle événementielle" },
         { code:"4E", module:"RESA_TABLE", plan:"RESA_4E", amount:90000, label:"👑 RÉSA 30+ tables",  desc:"Site multi-salles" }
       ],
-      // ✅ POS = module POS + plan standard (match backbone)
       pos: [
         { code:"5",  module:"POS", plan:"standard", amount:12900, label:"🧾 POS STANDARD", desc:"Caisse · Stock · Multi-users" }
       ],
@@ -1002,14 +1017,31 @@
       $("spinnerToken").style.display = "inline-block";
       setStatus("⏳ Activation en cours…", "warn", "EN COURS");
       try{
-        const { data, error } = window.sb ? await window.sb.rpc("digiy_pay_activate_token", { p_token: token }) : { data:null, error:{message:"sb missing"} };
+        const { data, error } = window.sb
+          ? await window.sb.rpc("digiy_pay_activate_token", { p_token: token })
+          : { data:null, error:{message:"sb missing"} };
+
         if(error) throw error;
         if(!data?.ok) throw new Error(data?.reason || "activation_failed");
+
         setStatus("🟢 Activé ! Tu peux continuer.", "ok", "ACTIF");
+
+        // ✅ FIX BOUCLE : retour PRO doit contenir ?slug=...
         if(ret){
+          const m = inferModuleForSlug();
+          const p = normPhone(qp.get("phone") || userPhoneDigits || "");
+
           const u = new URL(ret, location.origin);
           u.searchParams.set("from", "digiy-pay-token");
-          location.href = u.toString();
+
+          if(p){
+            location.href = buildReturnUrlWithSlug(u.toString(), m, p);
+          } else {
+            $("tokenHint").innerHTML =
+              "✅ Activation OK.<br>" +
+              "⚠️ Il manque le <b>téléphone</b> pour construire le slug.<br>" +
+              "Ouvre ton PRO avec : <span class='mono'>?slug=" + subscriptionSlug(m,"221XXXXXXXXX") + "</span>";
+          }
         } else {
           $("tokenHint").textContent = "Activation OK. Tu peux fermer cette page.";
         }
