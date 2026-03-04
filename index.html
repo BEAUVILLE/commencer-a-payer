@@ -850,7 +850,7 @@
         { code:"5",  module:"POS", plan:"standard", amount:12900, label:"🧾 POS STANDARD", desc:"Caisse · Stock · Multi-users" }
       ],
       market: [
-        { code:"6",  module:"MARKET", plan:"standard", amount:19900, label:"🛒 MARKET", desc:"Boutique en ligne · Catalogue" }
+        { code:"6",  module:"MARKET", plan:"standard", amount:12900, label:"🛒 MARKET", desc:"Vitrine + Fiche pro + WhatsApp" }
       ],
       build: [
         { code:"7",  module:"BUILD", plan:"standard", amount:12900, label:"🏗️ BUILD", desc:"Artisans · Devis · Portfolio" }
@@ -875,8 +875,8 @@
       ],
       boost: [
         { code:"E1", module:"BOOST", plan:"BOOST_E1", amount:5000,  label:"E1 · BOOST LOCAL",    desc:"Badge + vitrine locale + WhatsApp", isGold:true },
-        { code:"E2", module:"BOOST", plan:"BOOST_E2", amount:10000, label:"E2 · BOOST STANDARD", desc:"Mise en avant + SEO + leads", isGold:true },
-        { code:"E3", module:"BOOST", plan:"BOOST_E3", amount:20000, label:"E3 · BOOST PREMIUM",  desc:"Priorité + support média + max visibilité", isGold:true }
+        { code:"E2", module:"BOOST", plan:"BOOST_E2", amount:10000, label:"E2 · BOOST STANDARD", desc:"Mise en avant + visibilité", isGold:true },
+        { code:"E3", module:"BOOST", plan:"BOOST_E3", amount:20000, label:"E3 · BOOST PREMIUM",  desc:"Priorité + max visibilité", isGold:true }
       ]
     };
 
@@ -964,6 +964,19 @@
 
     renderGrids();
     renderOrder();
+
+    /* ==================== AUTO-SELECT via ?module=MARKET ==================== */
+    // Si on arrive depuis PRO-MARKET avec ?module=MARKET&plan=standard&amount=12900&code=6
+    if(accessModule === "MARKET" && !baseModule){
+      baseModule = "MARKET";
+      basePlan = basePlan || "standard";
+      baseAmount = baseAmount || 12900;
+      baseCode = baseCode || "6";
+      syncSelectionToUrl();
+      renderGrids();
+      renderOrder();
+      setStatus("💳 MARKET sélectionné — il reste à payer Wave.", "warn", "CODE 6");
+    }
 
     /* ==================== PHONE + SLUG SYNC ==================== */
     const payPhoneEl = $("payPhone");
