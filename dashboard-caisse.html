@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>DIGIY • Dashboard Caisse Centrale</title>
   <meta name="theme-color" content="#16a34a"/>
+  <meta name="robots" content="noindex"/>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -17,19 +18,19 @@
       --radius:18px; --shadow:0 18px 50px rgba(0,0,0,.35);
     }
     *{box-sizing:border-box; margin:0; padding:0;}
-    body{ 
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial; 
-      background:var(--bg); 
+    body{
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      background:var(--bg);
       color:var(--text);
       padding:16px;
     }
     .wrap{ max-width:1600px; margin:0 auto; }
-    .card{ 
-      background:var(--card); 
-      border:1px solid var(--line); 
-      border-radius:var(--radius); 
-      padding:20px; 
-      box-shadow:var(--shadow); 
+    .card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      padding:20px;
+      box-shadow:var(--shadow);
       margin-bottom:16px;
     }
     h1{ font-size:28px; font-weight:1200; margin-bottom:8px; }
@@ -37,7 +38,7 @@
     h3{ font-size:16px; font-weight:1000; margin-bottom:8px; }
     .small{ font-size:13px; color:var(--muted); line-height:1.4; }
     .hr{ height:1px; background:var(--line); margin:16px 0; }
-    
+
     .kpi-grid{
       display:grid;
       grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
@@ -57,13 +58,13 @@
     .kpi.ok{ border-color:rgba(34,197,94,.55); }
     .kpi.warn{ border-color:rgba(245,158,11,.55); }
     .kpi.gold{ border-color:rgba(250,204,21,.55); }
-    
+
     .chart-container{
       position:relative;
       height:300px;
       margin:20px 0;
     }
-    
+
     table{
       width:100%;
       border-collapse:collapse;
@@ -83,9 +84,10 @@
       padding:12px;
       border-bottom:1px solid var(--line);
       font-size:14px;
+      vertical-align:top;
     }
     tr:hover{ background:rgba(255,255,255,.05); }
-    
+
     .badge{
       display:inline-block;
       padding:6px 12px;
@@ -98,7 +100,7 @@
     .badge.ok{ background:rgba(34,197,94,.2); color:var(--ok); border:1px solid rgba(34,197,94,.5); }
     .badge.warn{ background:rgba(245,158,11,.2); color:var(--warn); border:1px solid rgba(245,158,11,.5); }
     .badge.bad{ background:rgba(239,68,68,.2); color:var(--bad); border:1px solid rgba(239,68,68,.5); }
-    
+
     .btn{
       border:1px solid var(--line);
       background:transparent;
@@ -118,13 +120,14 @@
     .btn.ok{ border-color:rgba(34,197,94,.55); color:var(--ok); }
     .btn.gold{ border-color:rgba(250,204,21,.55); color:var(--gold); }
     .btn.warn{ border-color:rgba(245,158,11,.55); color:var(--warn); }
-    
+    .btn.bad{ border-color:rgba(239,68,68,.55); color:var(--bad); }
+
     .btn-group{
       display:flex;
       gap:6px;
       flex-wrap:wrap;
     }
-    
+
     .filters{
       display:flex;
       gap:12px;
@@ -140,26 +143,9 @@
       font-weight:500;
       cursor:pointer;
     }
-    
-    .auth-box{
-      max-width:400px;
-      margin:100px auto;
-      text-align:center;
-    }
-    input[type="tel"], input[type="password"]{
-      width:100%;
-      padding:14px;
-      margin:10px 0;
-      border:1px solid var(--line);
-      border-radius:12px;
-      background:rgba(0,0,0,.2);
-      color:var(--text);
-      font-size:16px;
-      font-weight:500;
-    }
-    
+
     .mono{ font-family: ui-monospace, Menlo, Monaco, monospace; font-size:13px; }
-    
+
     #loading{
       display:none;
       text-align:center;
@@ -167,7 +153,7 @@
       font-size:18px;
       color:var(--muted);
     }
-    
+
     .grid-2{
       display:grid;
       grid-template-columns:1fr 1fr;
@@ -192,23 +178,31 @@
       font-size:11px;
       color:var(--muted);
       word-break:break-all;
+      margin-top:4px;
+    }
+
+    .session-box{
+      max-width:460px;
+      margin:90px auto;
+      text-align:center;
     }
   </style>
 </head>
 
 <body>
   <div class="wrap">
-    <!-- AUTH BOX -->
-    <div class="card auth-box" id="authBox">
-      <h1>🔐 Accès Dashboard</h1>
-      <p class="small">Réservé au propriétaire DIGIYLYFE</p>
+
+    <!-- GATE -->
+    <div class="card session-box" id="sessionBox" style="display:none;">
+      <h1>🔐 Session caisse requise</h1>
+      <p class="small">
+        Passe d’abord par la page d’accès caisse pour ouvrir le dashboard.
+      </p>
       <div class="hr"></div>
-      <input type="tel" id="authPhone" placeholder="Téléphone (+221...)">
-      <input type="password" id="authPin" placeholder="PIN">
-      <button class="btn ok" id="btnAuth" style="width:100%; margin-top:10px;">
-        ✅ Connexion
-      </button>
-      <p class="small" style="margin-top:12px;" id="authError"></p>
+      <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+        <button class="btn ok" id="btnBackGate">⬅️ Retour</button>
+        <button class="btn" id="btnGoIndexGate">🏠 Index</button>
+      </div>
     </div>
 
     <!-- DASHBOARD -->
@@ -218,11 +212,12 @@
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
           <div>
             <h1>🏦 CAISSE CENTRALE DIGIYLYFE</h1>
-            <p class="small">Dashboard temps réel • 0% Commission • Made in Sénégal 🇸🇳</p>
+            <p class="small">Dashboard temps réel • 0% commission • Made in Sénégal 🇸🇳</p>
+            <p class="small" id="sessionInfo" style="margin-top:8px;"></p>
           </div>
           <div style="display:flex; gap:10px;">
             <button class="btn ok" id="btnRefresh">🔄 Actualiser</button>
-            <button class="btn" id="btnLogout">🚪 Déconnexion</button>
+            <button class="btn bad" id="btnLogout">🚪 Déconnexion</button>
           </div>
         </div>
       </div>
@@ -237,19 +232,19 @@
           <div class="kpi-value" id="kpiTotal">—</div>
           <div class="kpi-label">Total Encaissements</div>
         </div>
-        
+
         <div class="kpi ok">
           <div class="kpi-icon">✅</div>
           <div class="kpi-value" id="kpiConfirmes">—</div>
           <div class="kpi-label">Confirmés / Actifs</div>
         </div>
-        
+
         <div class="kpi warn">
           <div class="kpi-icon">⏳</div>
           <div class="kpi-value" id="kpiAttente">—</div>
           <div class="kpi-label">En Attente</div>
         </div>
-        
+
         <div class="kpi gold">
           <div class="kpi-icon">📊</div>
           <div class="kpi-value" id="kpiMRR">—</div>
@@ -265,7 +260,7 @@
             <canvas id="chartModules"></canvas>
           </div>
         </div>
-        
+
         <div class="card">
           <h3>📈 Évolution des Encaissements</h3>
           <div class="chart-container">
@@ -286,19 +281,21 @@
             <option value="ACTIF">Actif</option>
             <option value="ANNULE">Annulé</option>
           </select>
-          
+
           <select id="filterModule">
             <option value="">Tous les modules</option>
-            <option value="RESTO_PRO">RESTO PRO</option>
-            <option value="RESTO_RESA">RESTO RÉSA</option>
-            <option value="POS_PRO">POS PRO</option>
             <option value="DRIVER">DRIVER</option>
             <option value="LOC">LOC</option>
+            <option value="RESTO">RESTO</option>
+            <option value="RESA_TABLE">RÉSA TABLE</option>
+            <option value="POS">POS</option>
             <option value="MARKET">MARKET</option>
-            <option value="JOBS">JOBS</option>
             <option value="BUILD">BUILD</option>
+            <option value="EXPLORE">EXPLORE</option>
+            <option value="FRET_PRO">FRET PRO</option>
+            <option value="FRET_CLIENT_PRO">FRET CLIENT</option>
           </select>
-          
+
           <select id="filterPeriode">
             <option value="7">7 derniers jours</option>
             <option value="30" selected>30 derniers jours</option>
@@ -341,112 +338,98 @@
   <script>
     (function(){
       "use strict";
-      
+
       const SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
       const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc3Ftd2pqdHNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA";
-      const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-      
+      const CAISSE_KEY = "DIGIY_CAISSE_ADMIN_SESSION";
+      const TTL_MS = 8 * 60 * 60 * 1000;
+
+      const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+        auth: {
+          persistSession: false,
+          autoRefreshToken: false,
+          detectSessionInUrl: false
+        }
+      });
+
       const $ = id => document.getElementById(id);
       let allData = [];
       let chartModules = null;
       let chartTimeline = null;
 
-      // AUTH VIA SUPABASE
-      $("btnAuth").onclick = async function(){
-        const phone = $("authPhone").value.trim();
-        const pin = $("authPin").value.trim();
-        
-        $("authError").textContent = "⏳ Vérification...";
-        $("btnAuth").disabled = true;
-        
-        try {
-          const result = await sb.rpc("dashboard_auth", {
-            p_phone: phone,
-            p_pin: pin
-          });
-          
-          if(result.error) throw result.error;
-          
-          const data = result.data;
-          
-          if(!data.ok){
-            $("authError").textContent = "❌ " + (data.error || "Accès refusé");
-            $("btnAuth").disabled = false;
-            return;
-          }
-          
-          localStorage.setItem("digiy_dashboard_auth", JSON.stringify({
-            phone: data.user.phone,
-            nom: data.user.nom,
-            role: data.user.role,
-            timestamp: Date.now()
-          }));
-          
-          showDashboard(data.user);
-          
-        } catch(e) {
-          console.error(e);
-          $("authError").textContent = "❌ Erreur: " + e.message;
-          $("btnAuth").disabled = false;
-        }
-      };
+      function loadCaisseSession(){
+        try{
+          const raw = localStorage.getItem(CAISSE_KEY);
+          if(!raw) return null;
 
-      $("btnLogout").onclick = function(){
-        localStorage.removeItem("digiy_dashboard_auth");
-        location.reload();
-      };
-
-      // CHECK AUTH
-      const savedAuth = localStorage.getItem("digiy_dashboard_auth");
-      if(savedAuth){
-        try {
-          const auth = JSON.parse(savedAuth);
-          if(Date.now() - auth.timestamp < 24 * 60 * 60 * 1000){
-            showDashboard(auth);
-          } else {
-            localStorage.removeItem("digiy_dashboard_auth");
+          const s = JSON.parse(raw);
+          if(!s || !s.ts){
+            localStorage.removeItem(CAISSE_KEY);
+            return null;
           }
-        } catch(e) {
-          localStorage.removeItem("digiy_dashboard_auth");
+
+          if(Date.now() - Number(s.ts) > TTL_MS){
+            localStorage.removeItem(CAISSE_KEY);
+            return null;
+          }
+
+          return s;
+        }catch(e){
+          localStorage.removeItem(CAISSE_KEY);
+          return null;
         }
       }
 
-      function showDashboard(user){
-        $("authBox").style.display = "none";
+      function clearCaisseSession(){
+        localStorage.removeItem(CAISSE_KEY);
+      }
+
+      function showGate(){
+        $("sessionBox").style.display = "block";
+        $("dashboard").style.display = "none";
+      }
+
+      function showDashboard(session){
+        $("sessionBox").style.display = "none";
         $("dashboard").style.display = "block";
-        
-        if(user){
-          const headerUser = document.createElement("div");
-          headerUser.className = "small";
-          headerUser.style.marginTop = "8px";
-          headerUser.textContent = "👤 Connecté: " + user.nom + " (" + user.role + ")";
-          document.querySelector("#dashboard .card h1").after(headerUser);
-        }
-        
+        $("sessionInfo").textContent = "🔐 Session caisse active • rôle: " + (session.role || "caisse_admin");
         loadData();
       }
 
-      // LOAD DATA
+      function fmt(n){
+        return Number(n || 0).toLocaleString("fr-FR");
+      }
+
+      function filterData(){
+        let data = allData.slice();
+
+        const statut = $("filterStatut").value;
+        const module = $("filterModule").value;
+
+        if(statut) data = data.filter(r => r.statut === statut);
+        if(module) data = data.filter(r => r.module === module);
+
+        return data;
+      }
+
       async function loadData(){
         $("loading").style.display = "block";
-        
+
         try{
           const periode = $("filterPeriode").value;
           let query = sb.from("encaissements_digiylyfe").select("*").order("created_at", { ascending: false });
-          
+
           if(periode !== "all"){
             const dateDebut = new Date();
-            dateDebut.setDate(dateDebut.getDate() - parseInt(periode));
+            dateDebut.setDate(dateDebut.getDate() - parseInt(periode, 10));
             query = query.gte("created_at", dateDebut.toISOString());
           }
-          
+
           const result = await query;
-          
           if(result.error) throw result.error;
-          
-          allData = result.data || [];
+
+          allData = Array.isArray(result.data) ? result.data : [];
           renderAll();
-          
         }catch(e){
           console.error(e);
           alert("Erreur chargement: " + e.message);
@@ -462,133 +445,127 @@
         renderModuleStats();
       }
 
-      function fmt(n){
-        return Number(n||0).toLocaleString("fr-FR");
-      }
-
       function renderKPIs(){
         const filtered = filterData();
-        
-        const total = filtered.reduce((sum, row) => sum + (row.montant||0), 0);
+
+        const total = filtered.reduce((sum, row) => sum + Number(row.montant || 0), 0);
         const confirmes = filtered.filter(r => ["CONFIRME","ACTIF"].includes(r.statut)).length;
         const attente = filtered.filter(r => r.statut === "EN_ATTENTE").length;
-        const mrr = filtered.filter(r => ["CONFIRME","ACTIF"].includes(r.statut)).reduce((sum, row) => sum + (row.montant||0), 0);
-        
+        const mrr = filtered
+          .filter(r => ["CONFIRME","ACTIF"].includes(r.statut))
+          .reduce((sum, row) => sum + Number(row.montant || 0), 0);
+
         $("kpiTotal").textContent = fmt(total) + " F";
         $("kpiConfirmes").textContent = confirmes;
         $("kpiAttente").textContent = attente;
         $("kpiMRR").textContent = fmt(mrr) + " F";
       }
 
-      // CONFIRMER PAIEMENT
-      async function confirmerPaiement(id, phone, nom){
-        if(!confirm(`Confirmer le paiement de ${nom}?`)) return;
-        
-        try {
+      async function confirmerPaiement(id, nom){
+        if(!confirm(`Confirmer le paiement de ${nom} ?`)) return;
+
+        try{
           const result = await sb
             .from("encaissements_digiylyfe")
-            .update({ statut: "CONFIRME", date_confirmation: new Date().toISOString() })
+            .update({
+              statut: "CONFIRME",
+              date_confirmation: new Date().toISOString()
+            })
             .eq("id", id);
-          
+
           if(result.error) throw result.error;
-          
-          alert("✅ Paiement confirmé! L'activation va se faire automatiquement.");
+
+          alert("✅ Paiement confirmé.");
           loadData();
-          
-        } catch(e) {
+        }catch(e){
           alert("❌ Erreur: " + e.message);
         }
       }
 
-      // ACTIVER MODULE
       async function activerModule(id, nom){
-        if(!confirm(`Activer le module pour ${nom}?`)) return;
-        
-        try {
+        if(!confirm(`Activer le module pour ${nom} ?`)) return;
+
+        try{
           const result = await sb.rpc("digiy_activate_subscription", {
             p_encaissement_id: id
           });
-          
+
           if(result.error) throw result.error;
-          
+
           const data = result.data;
-          
-          if(!data.ok){
-            alert("❌ Erreur: " + (data.error || "Activation échouée"));
+          if(!data?.ok){
+            alert("❌ Erreur: " + (data?.error || "Activation échouée"));
             return;
           }
-          
-          alert(`✅ Module activé!\n\nSlug: ${data.slug}\nURL: ${data.url}`);
+
+          alert(`✅ Module activé !\n\nSlug: ${data.slug || "—"}\nURL: ${data.url || "—"}`);
           loadData();
-          
-        } catch(e) {
+        }catch(e){
           alert("❌ Erreur: " + e.message);
         }
       }
 
-      // ENVOYER WHATSAPP
       async function envoyerWhatsApp(id){
-        try {
-          // Récupérer l'encaissement
+        try{
           const result = await sb
             .from("encaissements_digiylyfe")
             .select("*")
             .eq("id", id)
             .single();
-          
+
           if(result.error) throw result.error;
-          
           const row = result.data;
-          
+
           if(!row.slug){
-            alert("⚠️ Ce module n'est pas encore activé!");
+            alert("⚠️ Ce module n'est pas encore activé.");
             return;
           }
-          
-          // Générer l'URL
+
           const moduleUrls = {
-            "RESTO_PRO": "https://beauville.github.io/digiy-resto-pro/?slug=",
-            "RESTO_RESA": "https://beauville.github.io/digiy-resa/?slug=",
-            "POS_PRO": "https://beauville.github.io/digiy-pos-pro/?slug=",
-            "DRIVER": "https://beauville.github.io/digiy-driver/?slug=",
-            "LOC": "https://beauville.github.io/digiy-loc-pro/?slug=",
-            "MARKET": "https://beauville.github.io/digiy-market/?slug=",
-            "JOBS": "https://beauville.github.io/digiy-jobs/?slug=",
-            "BUILD": "https://beauville.github.io/digiy-build/?slug="
+            DRIVER: "https://beauville.github.io/digiy-driver/?slug=",
+            LOC: "https://beauville.github.io/digiy-loc-pro/?slug=",
+            RESTO: "https://beauville.github.io/digiy-resto-pro/?slug=",
+            RESA_TABLE: "https://beauville.github.io/digiy-resa/?slug=",
+            POS: "https://beauville.github.io/digiy-pos-pro/?slug=",
+            MARKET: "https://beauville.github.io/digiy-market/?slug=",
+            BUILD: "https://beauville.github.io/digiy-build/?slug=",
+            EXPLORE: "https://beauville.github.io/digiy-explore/?slug=",
+            FRET_PRO: "https://beauville.github.io/digiy-fret-pro/?slug=",
+            FRET_CLIENT_PRO: "https://beauville.github.io/digiy-fret-client/?slug="
           };
-          
+
           const url = (moduleUrls[row.module] || "https://beauville.github.io/digiy/?slug=") + row.slug;
           const nom = [row.prenom, row.nom].filter(Boolean).join(" ") || "Cher client";
-          
-          const expiresAt = new Date(row.date_activation);
+
+          const baseDate = row.date_activation ? new Date(row.date_activation) : new Date();
+          const expiresAt = new Date(baseDate);
           expiresAt.setMonth(expiresAt.getMonth() + 1);
-          
+
           const msg = `
-🎉 DIGIYLYFE - Activation confirmée!
+🎉 DIGIYLYFE - Activation confirmée !
 
 Bonjour ${nom},
 
-Ton abonnement ${row.module} (${row.plan}) est maintenant ACTIF! 🚀
+Ton abonnement ${row.module} (${row.plan}) est maintenant ACTIF 🚀
 
-📱 Accède à ton cockpit:
+📱 Accède à ton cockpit :
 ${url}
 
-🔐 Connexion:
-Téléphone: ${row.phone}
+🔐 Connexion :
+Téléphone : ${row.phone}
 
-📅 Valable jusqu'au: ${expiresAt.toLocaleDateString('fr-FR')}
+📅 Valable jusqu'au : ${expiresAt.toLocaleDateString('fr-FR')}
 
-💪 Tu es maintenant 100% autonome avec 0% de commission!
+💪 Tu es maintenant 100% autonome avec 0% de commission.
 
-Support: wa.me/221771342889
+Support : wa.me/221771342889
 
 —
 DIGIYLYFE • Made in Sénégal 🇸🇳
           `.trim();
-          
-          window.open(`https://wa.me/${row.phone.replace(/\+/g, '')}?text=${encodeURIComponent(msg)}`);
-          
-        } catch(e) {
+
+          window.open(`https://wa.me/${String(row.phone || "").replace(/\+/g, "")}?text=${encodeURIComponent(msg)}`);
+        }catch(e){
           alert("❌ Erreur: " + e.message);
         }
       }
@@ -596,34 +573,37 @@ DIGIYLYFE • Made in Sénégal 🇸🇳
       function renderTable(){
         const filtered = filterData();
         const tbody = $("tableBody");
-        
-        if(filtered.length === 0){
+
+        if(!filtered.length){
           tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding:40px;">Aucun encaissement</td></tr>';
           return;
         }
-        
+
         tbody.innerHTML = filtered.map(row => {
-          const date = new Date(row.created_at).toLocaleDateString("fr-FR", {day:"2-digit", month:"short", year:"numeric"});
+          const date = row.created_at
+            ? new Date(row.created_at).toLocaleDateString("fr-FR", {day:"2-digit", month:"short", year:"numeric"})
+            : "—";
           const nom = [row.prenom, row.nom].filter(Boolean).join(" ") || "—";
           const statut = row.statut || "—";
-          
+
           let badgeClass = "badge";
           if(["CONFIRME","ACTIF"].includes(statut)) badgeClass += " ok";
-          else if(statut === "EN_ATTENTE") badgeClass += " warn";
+          else if(statut === "EN_ATTENTE" || statut === "WAVE_RECU") badgeClass += " warn";
           else if(statut === "ANNULE") badgeClass += " bad";
-          
-          // Slug/URL display
+
           let slugDisplay = "—";
           if(row.slug){
             const moduleUrls = {
-              "RESTO_PRO": "digiy-resto-pro",
-              "RESTO_RESA": "digiy-resa",
-              "POS_PRO": "digiy-pos-pro",
-              "DRIVER": "digiy-driver",
-              "LOC": "digiy-loc-pro",
-              "MARKET": "digiy-market",
-              "JOBS": "digiy-jobs",
-              "BUILD": "digiy-build"
+              DRIVER: "digiy-driver",
+              LOC: "digiy-loc-pro",
+              RESTO: "digiy-resto-pro",
+              RESA_TABLE: "digiy-resa",
+              POS: "digiy-pos-pro",
+              MARKET: "digiy-market",
+              BUILD: "digiy-build",
+              EXPLORE: "digiy-explore",
+              FRET_PRO: "digiy-fret-pro",
+              FRET_CLIENT_PRO: "digiy-fret-client"
             };
             const repo = moduleUrls[row.module] || "digiy";
             slugDisplay = `
@@ -631,13 +611,12 @@ DIGIYLYFE • Made in Sénégal 🇸🇳
               <div class="url-display">/${repo}/?slug=${row.slug}</div>
             `;
           }
-          
-          // Actions buttons
+
           let actions = "";
-          if(statut === "EN_ATTENTE"){
+          if(statut === "EN_ATTENTE" || statut === "WAVE_RECU"){
             actions = `
               <div class="btn-group">
-                <button class="btn ok" onclick="confirmerPaiement('${row.id}', '${row.phone}', '${nom}')">
+                <button class="btn ok" onclick="confirmerPaiement('${row.id}', '${nom.replace(/'/g, "\\'")}')">
                   ✅ Confirmer
                 </button>
               </div>
@@ -645,12 +624,12 @@ DIGIYLYFE • Made in Sénégal 🇸🇳
           } else if(statut === "CONFIRME" && !row.slug){
             actions = `
               <div class="btn-group">
-                <button class="btn gold" onclick="activerModule('${row.id}', '${nom}')">
+                <button class="btn gold" onclick="activerModule('${row.id}', '${nom.replace(/'/g, "\\'")}')">
                   🚀 Activer
                 </button>
               </div>
             `;
-          } else if(statut === "ACTIF" && row.slug){
+          } else if((statut === "ACTIF" || statut === "CONFIRME") && row.slug){
             actions = `
               <div class="btn-group">
                 <button class="btn warn" onclick="envoyerWhatsApp('${row.id}')">
@@ -658,15 +637,17 @@ DIGIYLYFE • Made in Sénégal 🇸🇳
                 </button>
               </div>
             `;
+          } else {
+            actions = "—";
           }
-          
+
           return `
             <tr>
               <td>${date}</td>
               <td><b>${nom}</b></td>
-              <td class="mono">${row.phone||"—"}</td>
-              <td><b>${row.module}</b></td>
-              <td class="small">${row.plan||"—"}</td>
+              <td class="mono">${row.phone || "—"}</td>
+              <td><b>${row.module || "—"}</b></td>
+              <td class="small">${row.plan || "—"}</td>
               <td><b>${fmt(row.montant)} F</b></td>
               <td><span class="${badgeClass}">${statut}</span></td>
               <td>${slugDisplay}</td>
@@ -676,24 +657,22 @@ DIGIYLYFE • Made in Sénégal 🇸🇳
         }).join("");
       }
 
-      // Expose functions globally
       window.confirmerPaiement = confirmerPaiement;
       window.activerModule = activerModule;
       window.envoyerWhatsApp = envoyerWhatsApp;
 
       function renderCharts(){
         const filtered = filterData();
-        
-        // Chart Modules
+
         const moduleData = {};
         filtered.forEach(row => {
           const m = row.module || "AUTRE";
-          moduleData[m] = (moduleData[m]||0) + (row.montant||0);
+          moduleData[m] = (moduleData[m] || 0) + Number(row.montant || 0);
         });
-        
+
         const moduleLabels = Object.keys(moduleData);
         const moduleValues = Object.values(moduleData);
-        
+
         if(chartModules) chartModules.destroy();
         chartModules = new Chart($("chartModules"), {
           type: "doughnut",
@@ -701,7 +680,7 @@ DIGIYLYFE • Made in Sénégal 🇸🇳
             labels: moduleLabels,
             datasets: [{
               data: moduleValues,
-              backgroundColor: ["#22c55e","#facc15","#f59e0b","#ef4444","#3b82f6","#8b5cf6","#ec4899","#06b6d4"]
+              backgroundColor: ["#22c55e","#facc15","#f59e0b","#ef4444","#3b82f6","#8b5cf6","#ec4899","#06b6d4","#14b8a6","#a855f7"]
             }]
           },
           options: {
@@ -712,17 +691,16 @@ DIGIYLYFE • Made in Sénégal 🇸🇳
             }
           }
         });
-        
-        // Chart Timeline
+
         const timelineData = {};
         filtered.forEach(row => {
           const date = new Date(row.created_at).toLocaleDateString("fr-FR");
-          timelineData[date] = (timelineData[date]||0) + (row.montant||0);
+          timelineData[date] = (timelineData[date] || 0) + Number(row.montant || 0);
         });
-        
+
         const timelineLabels = Object.keys(timelineData).slice(-14);
-        const timelineValues = timelineLabels.map(d => timelineData[d]||0);
-        
+        const timelineValues = timelineLabels.map(d => timelineData[d] || 0);
+
         if(chartTimeline) chartTimeline.destroy();
         chartTimeline = new Chart($("chartTimeline"), {
           type: "line",
@@ -754,52 +732,62 @@ DIGIYLYFE • Made in Sénégal 🇸🇳
       function renderModuleStats(){
         const filtered = filterData();
         const moduleStats = {};
-        
+
         filtered.forEach(row => {
           const m = row.module || "AUTRE";
           if(!moduleStats[m]){
             moduleStats[m] = { count: 0, total: 0, actifs: 0 };
           }
           moduleStats[m].count++;
-          moduleStats[m].total += (row.montant||0);
+          moduleStats[m].total += Number(row.montant || 0);
           if(["CONFIRME","ACTIF"].includes(row.statut)) moduleStats[m].actifs++;
         });
-        
+
         const html = Object.entries(moduleStats).map(([module, stats]) => `
-          <div style="display:flex; justify-content:space-between; align-items:center; padding:12px; border:1px solid var(--line); border-radius:12px; margin:8px 0;">
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:12px; border:1px solid var(--line); border-radius:12px; margin:8px 0; gap:12px; flex-wrap:wrap;">
             <div>
               <b style="font-size:16px;">${module}</b>
-              <div class="small">${stats.count} abonnements · ${stats.actifs} actifs</div>
+              <div class="small">${stats.count} abonnement(s) · ${stats.actifs} actif(s)</div>
             </div>
             <div style="text-align:right;">
               <b style="font-size:20px; color:var(--gold);">${fmt(stats.total)} F</b>
-              <div class="small">MRR: ${fmt(stats.total / (stats.count||1))} F/mois</div>
+              <div class="small">Moyenne: ${fmt(stats.total / (stats.count || 1))} F</div>
             </div>
           </div>
         `).join("");
-        
+
         $("moduleStats").innerHTML = html || '<p class="small">Aucune donnée</p>';
       }
 
-      function filterData(){
-        let data = allData;
-        
-        const statut = $("filterStatut").value;
-        const module = $("filterModule").value;
-        
-        if(statut) data = data.filter(r => r.statut === statut);
-        if(module) data = data.filter(r => r.module === module);
-        
-        return data;
-      }
-
-      // EVENTS
       $("btnRefresh").onclick = loadData;
       $("filterStatut").onchange = renderAll;
       $("filterModule").onchange = renderAll;
       $("filterPeriode").onchange = loadData;
+
+      $("btnLogout").onclick = function(){
+        clearCaisseSession();
+        location.reload();
+      };
+
+      $("btnBackGate").onclick = function(){
+        if(document.referrer){
+          history.back();
+        } else {
+          location.href = "./index.html";
+        }
+      };
+
+      $("btnGoIndexGate").onclick = function(){
+        location.href = "./index.html";
+      };
+
+      const caisseSession = loadCaisseSession();
+      if(caisseSession){
+        showDashboard(caisseSession);
+      } else {
+        showGate();
+      }
     })();
   </script>
 </body>
 </html>
-
