@@ -284,7 +284,6 @@
 
       <div class="hr"></div>
 
-      <!-- ✅ DIGIY KNOWLEDGE — Accueil (PUBLIC) -->
       <div class="kbWrap" id="kbWrap">
         <div class="kbTop">
           <div>
@@ -323,7 +322,7 @@
             <button type="button" data-q="Quel code choisir pour DRIVER ?">🚗 S'inscrire DRIVER</button>
             <button type="button" data-q="Explique les tarifs LOC (2A à 2E).">🏠 Tarifs LOC</button>
             <button type="button" data-q="Pourquoi DIGIY est à 0% commission ?">💰 0% Commission</button>
-            <button type="button" data-q="C’est quoi le slug et à quoi ça sert ?">🔗 Le slug</button>
+            <button type="button" data" data-q="C’est quoi le slug et à quoi ça sert ?">🔗 Le slug</button>
           </div>
 
           <div class="kbAns" id="kbAns"></div>
@@ -339,7 +338,6 @@
 
       <div class="hr"></div>
 
-      <!-- ✅ VALORISATION CLIENT (VIP / BOOST) -->
       <div class="vipBox" id="vipBox">
         <div class="vipTitle">
           <div>✨ Ton entreprise mérite d’être vue (pas juste “présente”).</div>
@@ -357,7 +355,6 @@
 
       <div class="hr"></div>
 
-      <!-- RECAP -->
       <div class="box" id="orderBox">
         <h2 style="margin:0;font-size:16px;font-weight:1100;">🧾 Récap paiement</h2>
         <p class="small">Vérifie ce que tu payes avant de confirmer.</p>
@@ -392,7 +389,6 @@
 
       <div class="hr"></div>
 
-      <!-- GRILLE TARIFS -->
       <div class="box" id="pricingBox">
         <h2 style="margin:0;font-size:16px;font-weight:1100;">💰 Menu Codifié — Dis le CODE, choisis ton pack</h2>
         <p class="small">1) Clique ton module → 2) (optionnel) ajoute un BOOST → total calculé automatiquement.</p>
@@ -436,7 +432,6 @@
 
       <div class="hr"></div>
 
-      <!-- TOKEN MODE -->
       <div class="box" id="tokenBox">
         <h2 style="margin:0;font-size:16px;font-weight:1100;">🔐 Activation sécurisée</h2>
         <p class="small">Si tu as reçu un lien DIGIY avec token, clique simplement.</p>
@@ -450,7 +445,6 @@
 
       <div class="hr"></div>
 
-      <!-- MANUAL MODE -->
       <div class="box" id="manualBox">
         <h2 style="margin:0;font-size:16px;font-weight:1100;">💳 Paiement manuel (Wave)</h2>
         <p class="small">Paye sur Wave, puis envoie le reçu (upload) ou WhatsApp. On active ensuite.</p>
@@ -528,7 +522,6 @@
   (function(){
     "use strict";
 
-    /* ==================== CONFIG SUPABASE ==================== */
     const SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
     const SUPABASE_ANON_KEY =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc3Ftd2pqdHNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA";
@@ -558,7 +551,6 @@
     const $ = (id) => document.getElementById(id);
     const qp = new URLSearchParams(location.search);
 
-    /* ==================== UTILS ==================== */
     function setStatus(text, tone, tag){
       const box = $("statusBox");
       box.className = "status " + (tone || "warn");
@@ -604,13 +596,11 @@
       return Number(x).toLocaleString("fr-FR") + " FCFA";
     }
 
-    /* ==================== URL PARAMS ==================== */
     const token  = (qp.get("token")  || "").trim();
     const ret    = (qp.get("return") || "").trim();
     const auto   = (qp.get("auto")   === "1");
     const from_  = (qp.get("from")   || "").trim();
 
-    // ✅ module demandé dans l’URL (CAISSE => POS)
     const rawAccess = (qp.get("module") || "").trim().toUpperCase();
     const MODULE_ALIAS = {
       CAISSE: "POS",
@@ -619,20 +609,21 @@
       LOC: "LOC",
       RESTO: "RESTO",
       RESA: "RESA_TABLE",
+      RESA_TABLE: "RESA_TABLE",
       MARKET: "MARKET",
       BUILD: "BUILD",
       EXPLORE: "EXPLORE",
       FRET_PRO: "FRET_PRO",
+      FRET_CHAUF: "FRET_PRO",
+      FRET_CLIENT: "FRET_CLIENT_PRO",
       FRET_CLIENT_PRO: "FRET_CLIENT_PRO"
     };
     const accessModule = MODULE_ALIAS[rawAccess] || rawAccess || "";
 
-    // ✅ init phone/slug depuis URL
     let userPhoneDigits = normPhone(qp.get("phone") || "");
     let userSlug        = normSlug(qp.get("slug") || "");
 
-    // ✅ base + boost init depuis URL
-    let baseModule = (qp.get("base_module") || "").trim().toUpperCase(); // optionnel
+    let baseModule = (qp.get("base_module") || "").trim().toUpperCase();
     let basePlan   = (qp.get("plan") || "").trim();
     let baseAmount = Number((qp.get("amount") || "").toString().replace(/[^\d]/g,"") || 0);
     let baseCode   = (qp.get("code") || "").trim();
@@ -641,10 +632,6 @@
     let boostAmount = Number((qp.get("boost_amount") || "").toString().replace(/[^\d]/g,"") || 0);
     let boostCode   = (qp.get("boost_code") || "").trim();
 
-    /* ============================================================
-       ✅ SLUG-FIRST RETURN HELPERS (FIX BOUCLE PRO)
-       - Retour PRO doit contenir ?slug=moduleLower-phoneDigits
-       ============================================================ */
     function inferModuleForSlug(){
       return (baseModule || accessModule || "LOC").trim().toUpperCase();
     }
@@ -659,23 +646,24 @@
       return u.toString();
     }
 
-    /* ==================== LANG (minimal) ==================== */
     let CURRENT_LANG = localStorage.getItem("digiy_lang") || "fr";
 
-    document.getElementById("lang-fr").addEventListener("click", ()=>{
+    function applyLangButtons(){
+      $("lang-fr").classList.toggle("active", CURRENT_LANG === "fr");
+      $("lang-wo").classList.toggle("active", CURRENT_LANG === "wo");
+    }
+    $("lang-fr").addEventListener("click", ()=>{
       CURRENT_LANG = "fr";
       localStorage.setItem("digiy_lang","fr");
-      document.getElementById("lang-fr").classList.add("active");
-      document.getElementById("lang-wo").classList.remove("active");
+      applyLangButtons();
     });
-    document.getElementById("lang-wo").addEventListener("click", ()=>{
+    $("lang-wo").addEventListener("click", ()=>{
       CURRENT_LANG = "wo";
       localStorage.setItem("digiy_lang","wo");
-      document.getElementById("lang-wo").classList.add("active");
-      document.getElementById("lang-fr").classList.remove("active");
+      applyLangButtons();
     });
+    applyLangButtons();
 
-    /* ==================== DIGIY KNOWLEDGE ==================== */
     const KB_ENDPOINTS = ["https://ai.digiylyfe.com/chat"];
 
     async function kbAsk(question){
@@ -718,25 +706,24 @@
       console.error("KB error:", lastErr);
     }
 
-    document.getElementById("kbSend").addEventListener("click", ()=>{
-      kbAsk(document.getElementById("kbInput").value);
+    $("kbSend").addEventListener("click", ()=>{
+      kbAsk($("kbInput").value);
     });
 
-    document.getElementById("kbInput").addEventListener("keydown", (e)=>{
-      if(e.key === "Enter") kbAsk(document.getElementById("kbInput").value);
+    $("kbInput").addEventListener("keydown", (e)=>{
+      if(e.key === "Enter") kbAsk($("kbInput").value);
     });
 
     document.querySelectorAll(".kbQuick button[data-q]").forEach(btn=>{
       btn.addEventListener("click", ()=>{
         const q = btn.getAttribute("data-q") || "";
-        document.getElementById("kbInput").value = q;
+        $("kbInput").value = q;
         kbAsk(q);
       });
     });
 
     setTimeout(()=>kbAsk("Explique DIGIY PAY en 2 lignes."), 250);
 
-    /* ==================== ORDER / VIP HELPERS ==================== */
     function totalAmount(){ return (Number(baseAmount||0) + Number(boostAmount||0)); }
 
     function productLabel(){
@@ -781,7 +768,6 @@
       history.replaceState(null, "", u.toString());
     }
 
-    /* ==================== RENDER ORDER RECAP ==================== */
     function renderOrder(){
       const t = totalAmount();
 
@@ -805,14 +791,13 @@
       updateVipBox();
     }
 
-    // ✅ State global pour pay-proof.js (module + plan + boost)
     window.DIGIY_PAY_STATE = {
       getOrder: () => {
         const t = totalAmount();
         return {
-          module: (baseModule || accessModule || ""),     // POS/DRIVER/LOC/...
-          plan: (basePlan || ""),                         // standard, LOC_2A, ...
-          amount: t,                                      // total base+boost
+          module: (baseModule || accessModule || ""),
+          plan: (basePlan || ""),
+          amount: t,
           code: (baseCode || ""),
           boost_code: (boostCode || ""),
           boost_amount_xof: Number(boostAmount || 0),
@@ -822,7 +807,6 @@
       }
     };
 
-    /* ==================== GRILLE TARIFS ==================== */
     const PRICE_GROUPS = {
       driver: [
         { code:"1",  module:"DRIVER", plan:"standard", amount:12900, label:"🚗 DRIVER", desc:"GPS temps réel · Courses · Wave & OM" }
@@ -880,7 +864,6 @@
       ]
     };
 
-    /* ==================== RENDER PRICE GRIDS ==================== */
     function renderGrids(){
       const groups = {
         driver:      "grid_driver",
@@ -962,23 +945,40 @@
       }
     }
 
+    const AUTO_DEFAULTS = {
+      DRIVER:          { module:"DRIVER",          plan:"standard",        amount:12900,  code:"1"  },
+      LOC:             { module:"LOC",             plan:"LOC_2A",          amount:12900,  code:"2A" },
+      RESTO:           { module:"RESTO",           plan:"RESTO_3A",        amount:19900,  code:"3A" },
+      RESA_TABLE:      { module:"RESA_TABLE",      plan:"RESA_4A",         amount:12900,  code:"4A" },
+      POS:             { module:"POS",             plan:"standard",        amount:12900,  code:"5"  },
+      MARKET:          { module:"MARKET",          plan:"standard",        amount:12900,  code:"6"  },
+      BUILD:           { module:"BUILD",           plan:"standard",        amount:12900,  code:"7"  },
+      EXPLORE:         { module:"EXPLORE",         plan:"EXPLORE_8A",      amount:30000,  code:"8A" },
+      FRET_PRO:        { module:"FRET_PRO",        plan:"FRET_CHAUF_9A",   amount:25000,  code:"9A" },
+      FRET_CLIENT_PRO: { module:"FRET_CLIENT_PRO", plan:"FRET_CLI_10A",    amount:9900,   code:"10A" }
+    };
+
+    function autoSelectFromUrl(){
+      if(baseModule) return;
+      if(!accessModule) return;
+
+      const def = AUTO_DEFAULTS[accessModule];
+      if(!def) return;
+
+      baseModule = def.module;
+      basePlan   = basePlan || def.plan;
+      baseAmount = baseAmount || def.amount;
+      baseCode   = baseCode || def.code;
+
+      syncSelectionToUrl();
+      setStatus(`💳 Module ${baseCode} sélectionné — tu peux ajouter un BOOST.`, "warn", `CODE ${baseCode}`);
+    }
+
+    renderGrids();
+    autoSelectFromUrl();
     renderGrids();
     renderOrder();
 
-    /* ==================== AUTO-SELECT via ?module=MARKET ==================== */
-    // Si on arrive depuis PRO-MARKET avec ?module=MARKET&plan=standard&amount=12900&code=6
-    if(accessModule === "MARKET" && !baseModule){
-      baseModule = "MARKET";
-      basePlan = basePlan || "standard";
-      baseAmount = baseAmount || 12900;
-      baseCode = baseCode || "6";
-      syncSelectionToUrl();
-      renderGrids();
-      renderOrder();
-      setStatus("💳 MARKET sélectionné — il reste à payer Wave.", "warn", "CODE 6");
-    }
-
-    /* ==================== PHONE + SLUG SYNC ==================== */
     const payPhoneEl = $("payPhone");
     const paySlugEl  = $("paySlug");
     const slugAutoEl = $("slugAuto");
@@ -1014,14 +1014,14 @@
 
     syncInputsToUrlAndState();
 
-    /* ==================== TOKEN MODE ==================== */
     if(!token){
       $("tokenBox").classList.add("hide");
-      setStatus("💳 Paiement Wave · Étape 1 : Choisis ton module", "warn", "MANUEL");
+      setStatus(baseModule ? "💳 Module prêt. Tu peux ajouter un BOOST ou payer Wave." : "💳 Paiement Wave · Étape 1 : Choisis ton module", "warn", "MANUEL");
       $("manualHint").textContent = "Sélectionne un module. Ensuite (optionnel) ajoute un BOOST pour être mis en avant.";
     } else {
       setStatus("🔐 Lien sécurisé détecté. Clique pour activer.", "ok", "TOKEN");
       $("tokenHint").textContent = "Token détecté. Activation en 1 clic.";
+      $("manualHint").textContent = "Tu peux aussi utiliser le mode manuel si besoin, mais le lien sécurisé est prioritaire.";
     }
 
     async function activateToken(){
@@ -1039,7 +1039,6 @@
 
         setStatus("🟢 Activé ! Tu peux continuer.", "ok", "ACTIF");
 
-        // ✅ FIX BOUCLE : retour PRO doit contenir ?slug=...
         if(ret){
           const m = inferModuleForSlug();
           const p = normPhone(qp.get("phone") || userPhoneDigits || "");
@@ -1070,7 +1069,6 @@
     $("btnActivateToken").addEventListener("click", activateToken);
     if(auto && token) setTimeout(activateToken, 400);
 
-    /* ==================== WHATSAPP CONFIRM ==================== */
     $("btnWaConfirm").addEventListener("click", function(){
       if(!baseAmount || !basePlan || !baseModule){
         setStatus("⚠️ Étape 1 : Choisis ton module dans la grille d'abord.", "warn", "MODULE");
@@ -1142,8 +1140,6 @@
   })();
   </script>
 
-  <!-- ✅ Upload proof (lis DIGIY_PAY_STATE.getOrder()) -->
   <script src="./pay-proof.js?v=3"></script>
-
 </body>
 </html>
