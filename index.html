@@ -5,11 +5,21 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
   <title>DIGIYLYFE — L'Afrique enracinée, connectée au monde</title>
   <meta name="theme-color" content="#0b1612"/>
-  <meta name="description" content="DIGIYLYFE — des outils premium, simples et directs pour faire avancer ton business. 0% commission. Paiement direct au pro."/>
+  <meta
+    name="description"
+    content="DIGIYLYFE — des outils premium, simples et directs pour faire avancer ton business. 0% commission. Paiement direct au pro."
+  />
+
+  <link rel="icon" href="./icon-192.png" sizes="192x192"/>
+  <link rel="apple-touch-icon" href="./icon-192.png"/>
+  <link rel="manifest" href="./manifest.json"/>
 
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Manrope:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
 
   <style>
     :root{
@@ -35,6 +45,7 @@
 
     *{box-sizing:border-box}
     html{scroll-behavior:smooth}
+
     body{
       margin:0;
       font-family:var(--fontB);
@@ -45,7 +56,10 @@
       color:var(--text);
     }
 
-    a{ color:inherit; text-decoration:none; }
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
 
     .wrap{
       max-width:920px;
@@ -205,7 +219,9 @@
       max-width:12ch;
     }
 
-    .gold{ color:var(--champ); }
+    .gold{
+      color:var(--champ);
+    }
 
     .sub{
       margin-top:10px;
@@ -213,6 +229,10 @@
       line-height:1.5;
       font-size:14px;
       max-width:620px;
+    }
+
+    .sub strong{
+      color:#fff;
     }
 
     .heroChips{
@@ -486,6 +506,10 @@
       text-align:center;
     }
 
+    .footer strong{
+      color:#fff;
+    }
+
     .stickyBar{
       position:fixed;
       left:0; right:0; bottom:0;
@@ -558,13 +582,13 @@
     <div class="card">
 
       <div class="topbar">
-        <div class="brandRow">
+        <a class="brandRow" href="https://digiylyfe.com/" aria-label="Accueil DIGIYLYFE">
           <div class="logo">∞</div>
           <div class="brandText">
             <div class="brandTitle">DIGIYLYFE</div>
             <div class="brandSub">L'Afrique enracinée, connectée au monde</div>
           </div>
-        </div>
+        </a>
 
         <div class="lang-switch" aria-label="Choix de langue">
           <button id="lang-fr" class="active" type="button">FR</button>
@@ -573,10 +597,10 @@
       </div>
 
       <div class="menuBar">
-        <a class="menuBtn gold" href="#hero">Accueil</a>
-        <a class="menuBtn" href="#modules">Modules</a>
-        <a class="menuBtn" href="#vision">Vision</a>
-        <a class="menuBtn" href="#contact">Entrer</a>
+        <a class="menuBtn gold" href="https://digiylyfe.com/" target="_blank" rel="noopener">Accueil</a>
+        <a class="menuBtn" href="https://articles.digiylyfe.com/" target="_blank" rel="noopener">Articles</a>
+        <a class="menuBtn" href="https://beauville.github.io/galerie-chauffeurs/" target="_blank" rel="noopener">Galerie Chauffeurs</a>
+        <a class="menuBtn" href="https://knowledge.digiylyfe.com/widget/" target="_blank" rel="noopener">Assistant IA</a>
       </div>
 
       <section class="hero" id="hero">
@@ -590,7 +614,8 @@
         <p class="sub">
           DIGIYLYFE rassemble des outils clairs pour la mobilité, la location, la restauration,
           la caisse, le commerce, les artisans et le fret.
-          Une logique simple : <strong>0% commission</strong>, paiement direct au pro, expérience propre sur téléphone.
+          Une logique simple :
+          <strong>0% commission</strong>, paiement direct au pro, expérience propre sur téléphone.
         </p>
 
         <div class="heroChips">
@@ -601,8 +626,8 @@
         </div>
 
         <div class="heroActions">
-          <a class="btn gold" href="#modules">🧭 Voir les modules</a>
-          <a class="btn ok" href="#contact">🚀 Entrer dans DIGIY</a>
+          <a class="btn gold" id="heroOpenBtn" href="https://explore.digiylyfe.com/" target="_blank" rel="noopener">🧭 Ouvrir le module</a>
+          <a class="btn ok" href="#modules">🚀 Voir les modules</a>
         </div>
       </section>
 
@@ -637,8 +662,8 @@
           </div>
 
           <div class="focusActions">
-            <a class="btn gold" id="focusOpen" href="#">Ouvrir le module</a>
-            <a class="btn" href="#contact">Voir la suite DIGIY</a>
+            <a class="btn gold" id="focusOpen" href="https://explore.digiylyfe.com/" target="_blank" rel="noopener">Ouvrir le module</a>
+            <a class="btn" href="https://digiylyfe.com/" target="_blank" rel="noopener">Voir la suite DIGIY</a>
           </div>
         </div>
       </section>
@@ -670,8 +695,8 @@
           </div>
 
           <div class="heroActions" style="margin-top:14px;">
-            <a class="btn ok" id="mainEnterBtn" href="#">➡️ Entrer dans le module sélectionné</a>
-            <a class="btn" href="#hero">↩ Retour haut</a>
+            <a class="btn ok" id="mainEnterBtn" href="https://explore.digiylyfe.com/" target="_blank" rel="noopener">➡️ Entrer dans le module sélectionné</a>
+            <a class="btn" href="https://knowledge.digiylyfe.com/widget/" target="_blank" rel="noopener">🧠 Ouvrir l’assistant</a>
           </div>
         </div>
       </section>
@@ -692,7 +717,7 @@
       </div>
       <div class="stickyActions">
         <a class="btn" href="#modules">Modules</a>
-        <a class="btn gold" id="stickyOpenBtn" href="#">Ouvrir</a>
+        <a class="btn gold" id="stickyOpenBtn" href="https://explore.digiylyfe.com/" target="_blank" rel="noopener">Ouvrir</a>
       </div>
     </div>
   </div>
@@ -715,16 +740,16 @@
       ];
 
       const MODULE_LINKS = {
-        EXPLORE: "#",
-        DRIVER: "#",
-        LOC: "#",
-        RESTO: "#",
-        RESA_TABLE: "#",
-        POS: "#",
-        MARKET: "#",
-        BUILD: "#",
-        FRET_PRO: "#",
-        FRET_CLIENT_PRO: "#"
+        EXPLORE: "https://explore.digiylyfe.com/",
+        DRIVER: "https://driver.digiylyfe.com/",
+        LOC: "https://loc.digiylyfe.com/",
+        RESTO: "https://resto.digiylyfe.com/",
+        RESA_TABLE: "https://resa.digiylyfe.com/",
+        POS: "https://pos.digiylyfe.com/",
+        MARKET: "https://market.digiylyfe.com/",
+        BUILD: "https://build.digiylyfe.com/",
+        FRET_PRO: "https://fret-pro.digiylyfe.com/",
+        FRET_CLIENT_PRO: "https://fret-client.digiylyfe.com/"
       };
 
       const MODULE_COPY = {
@@ -780,6 +805,7 @@
       const stickyValue = document.getElementById("stickyValue");
       const stickyOpenBtn = document.getElementById("stickyOpenBtn");
       const mainEnterBtn = document.getElementById("mainEnterBtn");
+      const heroOpenBtn = document.getElementById("heroOpenBtn");
 
       let currentModule = "EXPLORE";
 
@@ -808,16 +834,19 @@
       function renderFocus(){
         const item = MODULES.find(x => x.module === currentModule) || MODULES[0];
         const copy = MODULE_COPY[item.module] || { text:item.hint, badge:"DIGIY" };
-        const href = MODULE_LINKS[item.module] || "#";
+        const href = MODULE_LINKS[item.module] || "https://digiylyfe.com/";
 
         focusIcon.textContent = item.icon;
         focusLabel.textContent = item.label;
         focusHint.textContent = item.hint;
         focusText.textContent = copy.text;
         focusBadge.textContent = copy.badge;
+
         focusOpen.href = href;
         stickyOpenBtn.href = href;
         mainEnterBtn.href = href;
+        heroOpenBtn.href = href;
+
         stickyValue.textContent = `${item.label} • ${item.hint}`;
       }
 
