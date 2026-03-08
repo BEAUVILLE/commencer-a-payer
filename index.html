@@ -4,249 +4,531 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
   <title>ACTIVER MON MODULE — DIGIYLYFE</title>
-  <meta name="theme-color" content="#16a34a"/>
+  <meta name="theme-color" content="#1a120d"/>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     :root{
-      --bg:#061b14; --card:#0b2a1f; --line:rgba(255,255,255,.14);
-      --text:#eafff1; --muted:rgba(234,255,241,.75);
-      --ok:#22c55e; --warn:#f59e0b; --bad:#ef4444; --gold:#facc15;
-      --radius:18px; --shadow:0 18px 50px rgba(0,0,0,.35);
+      --bg:#0b1612;
+      --card:#12211b;
+      --card2:#182922;
+      --line:rgba(255,255,255,.10);
+      --text:#f8f5ef;
+      --muted:rgba(248,245,239,.68);
+
+      --champ:#f4dfb5;
+      --champ-2:#d8b56a;
+      --berry:#c35a7d;
+      --berry-2:#8e3757;
+      --green:#22c55e;
+      --warn:#f59e0b;
+      --bad:#ef4444;
+
+      --radius:22px;
+      --shadow:0 20px 60px rgba(0,0,0,.38);
     }
+
     *{box-sizing:border-box}
-    body{ margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial; background:var(--bg); color:var(--text); }
-    .wrap{ max-width:760px; margin:0 auto; padding:16px; }
-    .card{ background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow); }
-    h1{ margin:0; font-size:20px; font-weight:1100; }
-    p{ margin:8px 0 0; color:var(--muted); line-height:1.4; }
-    .hr{ height:1px; background:var(--line); margin:14px 0; }
-
-    .status{
-      padding:12px; border-radius:16px; border:1px solid var(--line);
-      font-weight:1100; display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:
+        radial-gradient(900px 500px at 10% 0%, rgba(244,223,181,.09), transparent 55%),
+        radial-gradient(900px 520px at 100% 100%, rgba(195,90,125,.10), transparent 55%),
+        linear-gradient(180deg,#0a1511 0%, #0b1612 100%);
+      color:var(--text);
     }
-    .status.ok{ border-color: rgba(34,197,94,.55); }
-    .status.warn{ border-color: rgba(245,158,11,.55); }
-    .status.bad{ border-color: rgba(239,68,68,.55); }
 
-    .tag{ font-size:12px; padding:6px 10px; border-radius:999px; border:1px solid var(--line); color:var(--muted); }
-    .tag.ok{ color: var(--ok); border-color: rgba(34,197,94,.45); }
-    .tag.warn{ color: var(--warn); border-color: rgba(245,158,11,.45); }
-    .tag.bad{ color: var(--bad); border-color: rgba(239,68,68,.45); }
-    .tag.gold{ color: var(--gold); border-color: rgba(250,204,21,.55); }
-
-    .btn{
-      width:100%; min-height:52px; border-radius:16px; cursor:pointer;
-      border:1px solid var(--line); background:transparent; color:var(--text);
-      padding:12px 14px; font-weight:1100;
+    .wrap{
+      max-width:860px;
+      margin:0 auto;
+      padding:14px 14px 120px;
     }
-    .btn:disabled{ opacity:.55; cursor:not-allowed; }
-    .btn.ok{ border-color: rgba(34,197,94,.55); }
-    .btn.warn{ border-color: rgba(245,158,11,.55); }
-    .btn.bad{ border-color: rgba(239,68,68,.55); }
-    .btn.gold{ border-color: rgba(250,204,21,.65); }
 
-    .box{ border:1px solid var(--line); border-radius:16px; padding:14px; background:rgba(0,0,0,.12); }
-    .steps{ margin:0; padding-left:18px; color:var(--muted); }
-    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace; }
-    .row{ display:flex; gap:10px; flex-wrap:wrap; }
-    .row > *{ flex:1; min-width:220px; }
-    .small{ font-size:13px; color:var(--muted); line-height:1.35; }
-    .hide{ display:none; }
+    .card{
+      background:linear-gradient(180deg, rgba(18,33,27,.98), rgba(15,28,23,.96));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      padding:16px;
+      box-shadow:var(--shadow);
+    }
 
     .topbar{
-      display:flex; align-items:center; justify-content:space-between;
-      gap:10px; flex-wrap:wrap; margin-bottom:10px;
-    }
-    .lang-switch{
-      display:flex; gap:6px; padding:4px; border-radius:999px;
-      border:1px solid var(--line); background:rgba(0,0,0,.08);
-    }
-    .lang-switch button{
-      border:none; padding:7px 12px; border-radius:999px; cursor:pointer;
-      font-weight:1100; font-size:12px; background:transparent; color:var(--text);
-    }
-    .lang-switch button.active{ background:#0f172a; color:#fff; }
-
-    .section-sep{
-      margin:16px 0 8px;
-      font-size:11px; font-weight:1100; letter-spacing:.8px;
-      text-transform:uppercase; color:var(--gold);
-      display:flex; align-items:center; gap:8px;
-    }
-    .section-sep::after{
-      content:""; flex:1; height:1px; background:rgba(250,204,21,.18);
-    }
-
-    .priceGrid{
-      display:grid;
-      grid-template-columns:repeat(auto-fill, minmax(220px,1fr));
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
       gap:10px;
-      position: relative;
-      z-index: 2;
+      flex-wrap:wrap;
+      margin-bottom:12px;
     }
-    .priceBtn{
-      text-align:left;
+
+    .lang-switch{
+      display:flex;
+      gap:6px;
+      padding:4px;
+      border-radius:999px;
       border:1px solid var(--line);
-      background:rgba(0,0,0,.10);
-      border-radius:16px;
-      padding:12px;
+      background:rgba(255,255,255,.03);
+    }
+
+    .lang-switch button{
+      border:none;
+      padding:8px 12px;
+      border-radius:999px;
       cursor:pointer;
+      font-weight:1000;
+      font-size:12px;
+      background:transparent;
       color:var(--text);
-      transition:border-color .18s, transform .06s;
-      position: relative;
-      z-index: 2;
-    }
-    .priceBtn:hover{ border-color: rgba(250,204,21,.55); }
-    .priceBtn:active{ transform: translateY(1px); }
-    .priceBtn.active{
-      border-color: rgba(250,204,21,.85);
-      background:rgba(250,204,21,.06);
-      box-shadow: 0 10px 30px rgba(250,204,21,.08);
-    }
-    .priceBtn.boostActive{
-      border-color: rgba(34,197,94,.70);
-      background: rgba(34,197,94,.07);
-      box-shadow: 0 10px 30px rgba(34,197,94,.10);
     }
 
-    .priceTop{
-      display:flex; justify-content:space-between; gap:10px; align-items:center;
-    }
-    .priceCode{
-      display:inline-flex; align-items:center; justify-content:center;
-      min-width:34px; height:34px; border-radius:8px;
-      background:linear-gradient(135deg,#667eea,#764ba2);
-      font-size:13px; font-weight:1100; color:#fff; flex-shrink:0;
-    }
-    .priceCode.gold{ background:linear-gradient(135deg,#facc15,#f59e0b); color:#0f172a; }
-    .priceCode.boost{ background:linear-gradient(135deg,#22c55e,#16a34a); color:#062014; }
-    .priceName{ font-size:13px; font-weight:1100; line-height:1.2; }
-    .priceAmt{ font-size:13px; font-weight:1100; color: var(--gold); white-space:nowrap; }
-    .priceDesc{ margin-top:6px; font-size:11px; color:var(--muted); line-height:1.35; }
-    .hintLine{ margin-top:10px; font-size:12px; color:var(--muted); }
-
-    .digiy-input{
-      width:100%;
-      padding:12px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(0,0,0,.12);
-      color:var(--text);
-      font-size:15px;
+    .lang-switch button.active{
+      background:linear-gradient(135deg, rgba(244,223,181,.20), rgba(195,90,125,.18));
+      color:#fff;
     }
 
-    .kbWrap{
-      border:1px solid rgba(34,197,94,.30);
-      background: linear-gradient(180deg, rgba(34,197,94,.10), rgba(0,0,0,.08));
-      border-radius:18px;
-      padding:14px;
-      position: relative;
-      z-index: 1;
-    }
-    .kbTop{
-      display:flex; justify-content:space-between; gap:10px; align-items:flex-start; flex-wrap:wrap;
-    }
-    .kbTitle{
-      font-weight:1200;
-      display:flex; align-items:center; gap:10px;
-      line-height:1.2;
-    }
-    .kbBadge{
-      display:inline-flex; align-items:center; justify-content:center;
-      width:34px; height:34px; border-radius:10px;
-      background:rgba(34,197,94,.18);
-      border:1px solid rgba(34,197,94,.35);
-      font-weight:1200;
-    }
-    .kbSub{ margin-top:4px; color:var(--muted); font-size:12px; }
-    .kbMeta{
-      display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;
-    }
     .pill{
-      font-size:11px; padding:6px 10px; border-radius:999px;
-      border:1px solid rgba(255,255,255,.16);
-      color:var(--muted);
-      background:rgba(0,0,0,.10);
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:7px 11px;
+      border-radius:999px;
+      border:1px solid rgba(244,223,181,.26);
+      background:rgba(244,223,181,.06);
+      color:var(--champ);
+      font-size:12px;
       white-space:nowrap;
     }
-    .pill.ok{ border-color: rgba(34,197,94,.35); color:#bfffe0; }
 
-    .kbChat{
-      margin-top:12px;
-      border:1px solid rgba(255,255,255,.14);
-      border-radius:16px;
-      padding:12px;
-      background:rgba(0,0,0,.10);
+    .hero{
+      border:1px solid rgba(244,223,181,.12);
+      background:
+        linear-gradient(180deg, rgba(244,223,181,.06), rgba(195,90,125,.05)),
+        rgba(0,0,0,.08);
+      border-radius:20px;
+      padding:16px;
     }
-    .kbInputRow{ display:flex; gap:8px; flex-wrap:wrap; }
+
+    h1{
+      margin:0;
+      font-size:22px;
+      line-height:1.15;
+      font-weight:1200;
+      letter-spacing:.2px;
+    }
+
+    .sub{
+      margin-top:8px;
+      color:var(--muted);
+      line-height:1.45;
+      font-size:14px;
+    }
+
+    .hr{
+      height:1px;
+      background:var(--line);
+      margin:14px 0;
+    }
+
+    .status{
+      padding:12px 14px;
+      border-radius:18px;
+      border:1px solid var(--line);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      font-weight:1000;
+      background:rgba(255,255,255,.03);
+    }
+
+    .status.ok{ border-color:rgba(34,197,94,.40); }
+    .status.warn{ border-color:rgba(245,158,11,.35); }
+    .status.bad{ border-color:rgba(239,68,68,.35); }
+
+    .tag{
+      font-size:11px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      color:var(--muted);
+    }
+    .tag.ok{ color:#bbf7d0; border-color:rgba(34,197,94,.35); }
+    .tag.warn{ color:#fde68a; border-color:rgba(245,158,11,.35); }
+    .tag.bad{ color:#fecaca; border-color:rgba(239,68,68,.35); }
+    .tag.gold{ color:#fde7bf; border-color:rgba(244,223,181,.35); }
+
+    .flowBox{
+      border:1px solid rgba(244,223,181,.18);
+      background:rgba(244,223,181,.05);
+      color:#fceecf;
+      border-radius:18px;
+      padding:12px 14px;
+      font-size:13px;
+      line-height:1.45;
+    }
+
+    details.fold{
+      border:1px solid var(--line);
+      border-radius:18px;
+      background:rgba(255,255,255,.03);
+      overflow:hidden;
+    }
+    details.fold > summary{
+      list-style:none;
+      cursor:pointer;
+      padding:14px 16px;
+      font-weight:1000;
+      user-select:none;
+    }
+    details.fold > summary::-webkit-details-marker{display:none}
+    .foldBody{
+      padding:0 16px 16px;
+    }
+
+    .kbTop{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:flex-start;
+    }
+
+    .kbInputRow{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+
     .kbInputRow input{
-      flex:1; min-width:220px;
-      padding:12px; border-radius:14px;
-      border:1px solid rgba(255,255,255,.12);
+      flex:1;
+      min-width:220px;
+      padding:12px;
+      border-radius:14px;
+      border:1px solid var(--line);
       background:rgba(0,0,0,.12);
       color:var(--text);
       font-size:14px;
     }
+
     .kbInputRow button{
-      min-width:140px;
+      min-width:130px;
       border-radius:14px;
-      border:1px solid rgba(34,197,94,.45);
+      border:1px solid rgba(34,197,94,.35);
       background:rgba(34,197,94,.10);
       color:var(--text);
+      font-weight:1000;
       padding:12px 14px;
-      font-weight:1100;
       cursor:pointer;
     }
-    .kbAns{
-      margin-top:10px;
-      color:#dfffee;
-      line-height:1.45;
-      font-size:13px;
-      white-space:pre-wrap;
-    }
+
     .kbQuick{
-      margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:10px;
     }
+
     .kbQuick button{
-      border:1px solid rgba(255,255,255,.14);
-      background:rgba(0,0,0,.10);
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
       color:var(--text);
       padding:9px 10px;
       border-radius:999px;
       font-size:12px;
       cursor:pointer;
     }
-    .kbQuick button:hover{ border-color: rgba(34,197,94,.40); }
 
-    .vipBox{
-      border:1px solid rgba(250,204,21,.28);
-      background: linear-gradient(180deg, rgba(250,204,21,.08), rgba(0,0,0,.08));
+    .kbAns{
+      margin-top:10px;
+      color:#eafcf0;
+      line-height:1.45;
+      font-size:13px;
+      white-space:pre-wrap;
+    }
+
+    .sectionTitle{
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.8px;
+      color:var(--champ);
+      font-weight:1200;
+      margin-bottom:10px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .sectionTitle::after{
+      content:"";
+      flex:1;
+      height:1px;
+      background:rgba(244,223,181,.16);
+    }
+
+    .moduleRail,
+    .planRail,
+    .boostRail{
+      display:flex;
+      gap:10px;
+      overflow-x:auto;
+      padding-bottom:4px;
+      scroll-snap-type:x proximity;
+      -webkit-overflow-scrolling:touch;
+    }
+    .moduleRail::-webkit-scrollbar,
+    .planRail::-webkit-scrollbar,
+    .boostRail::-webkit-scrollbar{
+      height:6px;
+    }
+    .moduleRail::-webkit-scrollbar-thumb,
+    .planRail::-webkit-scrollbar-thumb,
+    .boostRail::-webkit-scrollbar-thumb{
+      background:rgba(255,255,255,.14);
+      border-radius:999px;
+    }
+
+    .moduleBtn{
+      min-width:130px;
+      border:1px solid rgba(244,223,181,.16);
+      background:
+        linear-gradient(180deg, rgba(244,223,181,.06), rgba(195,90,125,.05)),
+        rgba(255,255,255,.02);
+      color:var(--text);
+      border-radius:18px;
+      padding:14px 12px;
+      text-align:left;
+      cursor:pointer;
+      scroll-snap-align:start;
+      transition:transform .08s ease, border-color .18s ease;
+    }
+    .moduleBtn:active{ transform:translateY(1px); }
+    .moduleBtn.active{
+      border-color:rgba(244,223,181,.45);
+      box-shadow:0 10px 28px rgba(244,223,181,.08);
+    }
+    .moduleEmoji{
+      font-size:20px;
+      display:block;
+      margin-bottom:6px;
+    }
+    .moduleName{
+      font-size:13px;
+      font-weight:1100;
+    }
+    .moduleHint{
+      margin-top:4px;
+      font-size:11px;
+      color:var(--muted);
+      line-height:1.3;
+    }
+
+    .planCard,
+    .boostCard{
+      min-width:260px;
+      max-width:300px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      color:var(--text);
       border-radius:18px;
       padding:14px;
+      text-align:left;
+      cursor:pointer;
+      scroll-snap-align:start;
+      transition:transform .08s ease, border-color .18s ease;
     }
-    .vipTitle{
-      display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+    .planCard:active,
+    .boostCard:active{ transform:translateY(1px); }
+
+    .planCard.active{
+      border-color:rgba(244,223,181,.55);
+      background:rgba(244,223,181,.06);
+      box-shadow:0 10px 28px rgba(244,223,181,.08);
+    }
+
+    .boostCard.active{
+      border-color:rgba(195,90,125,.52);
+      background:rgba(195,90,125,.10);
+      box-shadow:0 10px 28px rgba(195,90,125,.10);
+    }
+
+    .planTop{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+    }
+
+    .codeBadge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:36px;
+      height:36px;
+      border-radius:10px;
+      font-size:12px;
+      font-weight:1200;
+      background:linear-gradient(135deg,#f4dfb5,#c89e49);
+      color:#22150d;
+    }
+
+    .codeBadge.berry{
+      background:linear-gradient(135deg,#e98bb0,#9e3d62);
+      color:#fff4f8;
+    }
+
+    .planName{
+      font-size:14px;
       font-weight:1100;
+      line-height:1.25;
     }
-    .vipPerks{
-      margin:10px 0 0;
+
+    .planAmount{
+      font-size:14px;
+      font-weight:1200;
+      color:var(--champ);
+      white-space:nowrap;
+    }
+
+    .planDesc{
+      margin-top:8px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.4;
+    }
+
+    .recapGrid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+    @media (max-width:640px){
+      .recapGrid{ grid-template-columns:1fr; }
+    }
+
+    .miniBox{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      border-radius:16px;
+      padding:12px;
+    }
+    .miniLabel{
+      font-size:12px;
+      color:var(--muted);
+      margin-bottom:6px;
+      font-weight:900;
+    }
+    .miniValue{
+      font-size:14px;
+      font-weight:1100;
+      line-height:1.4;
+      word-break:break-word;
+    }
+
+    .digiy-input{
+      width:100%;
+      padding:12px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.12);
+      color:var(--text);
+      font-size:15px;
+    }
+
+    .hint{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.35;
+      margin-top:6px;
+    }
+
+    .steps{
+      margin:0;
       padding-left:18px;
       color:var(--muted);
-      line-height:1.4;
+      line-height:1.5;
       font-size:13px;
     }
-    .vipStamp{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:6px 10px; border-radius:999px;
-      border:1px solid rgba(34,197,94,.35);
-      background:rgba(34,197,94,.08);
-      color:#bfffe0;
-      font-size:12px;
+
+    .actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      width:100%;
+      min-height:52px;
+      border-radius:16px;
+      cursor:pointer;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      color:var(--text);
+      padding:12px 14px;
       font-weight:1100;
     }
+    .btn:disabled{ opacity:.55; cursor:not-allowed; }
+    .btn.ok{ border-color:rgba(34,197,94,.40); background:rgba(34,197,94,.08); }
+    .btn.bad{ border-color:rgba(239,68,68,.36); background:rgba(239,68,68,.07); }
+    .btn.gold{ border-color:rgba(244,223,181,.40); background:rgba(244,223,181,.07); }
+
+    .stickyBar{
+      position:fixed;
+      left:0; right:0; bottom:0;
+      z-index:20;
+      padding:10px 12px calc(10px + env(safe-area-inset-bottom));
+      background:linear-gradient(180deg, rgba(11,22,18,.04), rgba(11,22,18,.96) 35%);
+      backdrop-filter:blur(10px);
+    }
+
+    .stickyInner{
+      max-width:860px;
+      margin:0 auto;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+      border:1px solid rgba(244,223,181,.16);
+      background:rgba(18,33,27,.96);
+      border-radius:18px;
+      padding:10px;
+      box-shadow:0 14px 40px rgba(0,0,0,.32);
+    }
+
+    .stickyInfo{
+      min-width:0;
+      flex:1;
+    }
+    .stickyTitle{
+      font-size:12px;
+      color:var(--muted);
+      margin-bottom:4px;
+    }
+    .stickyValue{
+      font-size:14px;
+      font-weight:1100;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .stickyActions{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .stickyActions .btn{
+      width:auto;
+      min-height:44px;
+      padding:10px 14px;
+    }
+
+    .hide{ display:none !important; }
   </style>
 </head>
 
@@ -259,57 +541,15 @@
           <button id="lang-fr" class="active" type="button">FR</button>
           <button id="lang-wo" type="button">WO</button>
         </div>
-        <span class="tag">DIGIY PAY</span>
+        <span class="pill">DIGIY PAY</span>
       </div>
 
-      <h1>ACTIVER MON MODULE — DIGIY</h1>
-      <p class="small">Paiement direct · 0% commission · Activation sécurisée</p>
-
-      <div class="hr"></div>
-
-      <div class="kbWrap" id="kbWrap">
-        <div class="kbTop">
-          <div>
-            <div class="kbTitle">
-              <span class="kbBadge">∞</span>
-              <div>
-                <div style="font-size:14px;">DIGIY KNOWLEDGE</div>
-                <div class="kbSub">
-                  Assistant professionnel intégré •
-                  DRIVER • LOC • RESTO • PAY • JOBS • MARKET • BUILD • EXPLORE • FRET
-                </div>
-              </div>
-            </div>
-
-            <div class="kbSub" style="margin-top:8px;">
-              👋 Bonjour ! Pose-moi ta question sur DRIVER, LOC, RESTO, PAY, JOBS, MARKET, BUILD, EXPLORE ou FRET.
-            </div>
-          </div>
-
-          <div class="kbMeta">
-            <span class="pill ok" id="kbStatus">En ligne</span>
-            <span class="pill">🇫🇷 Français</span>
-            <span class="pill">🇸🇳 Wolof</span>
-            <span class="pill">🇬🇧 English</span>
-          </div>
-        </div>
-
-        <div class="kbChat">
-          <div class="kbInputRow">
-            <input id="kbInput" type="text" placeholder="Ex: Comment payer Wave ? C’est quoi le slug ? Quel code LOC choisir ?" />
-            <button id="kbSend" type="button">Envoyer</button>
-          </div>
-
-          <div class="kbQuick">
-            <button type="button" data-q="Explique DIGIY PAY en 2 lignes.">💳 DIGIY PAY</button>
-            <button type="button" data-q="Quel code choisir pour DRIVER ?">🚗 S'inscrire DRIVER</button>
-            <button type="button" data-q="Explique les tarifs LOC (2A à 2E).">🏠 Tarifs LOC</button>
-            <button type="button" data-q="Pourquoi DIGIY est à 0% commission ?">💰 0% Commission</button>
-            <button type="button" data-q="C’est quoi le slug et à quoi ça sert ?">🔗 Le slug</button>
-          </div>
-
-          <div class="kbAns" id="kbAns"></div>
-        </div>
+      <div class="hero">
+        <h1>ACTIVER MON MODULE — DIGIY</h1>
+        <p class="sub">
+          Choisis ton module, ton pack, ajoute un boost si tu veux, puis continue vers le paiement.
+          On garde la force DIGIY, sans la grande autoroute du scroll.
+        </p>
       </div>
 
       <div class="hr"></div>
@@ -321,173 +561,149 @@
 
       <div class="hr"></div>
 
-      <div class="vipBox" id="vipBox">
-        <div class="vipTitle">
-          <div>✨ Ton entreprise mérite d’être vue (pas juste “présente”).</div>
-          <span class="vipStamp" id="vipStamp">⭐ Client DIGIY</span>
-        </div>
-        <ul class="vipPerks">
-          <li>Tu payes <strong>direct</strong> : pas de commission qui mange tes bénéfices.</li>
-          <li>Tu reçois un <strong>cockpit pro</strong> (slug) pour partager ton lien facilement.</li>
-          <li>Avec BOOST : tu passes en <strong>mise en avant</strong> (plus visible, plus crédible).</li>
-        </ul>
-        <p class="small" id="vipLine" style="margin-top:10px;">
-          Conseil : choisis ton module, puis ajoute un BOOST si tu veux accélérer.
-        </p>
+      <div class="flowBox">
+        Lecture simple :
+        <span class="mono">choix module → choix pack → boost optionnel → téléphone/slug → paiement ABOS</span>
       </div>
 
       <div class="hr"></div>
 
-      <div class="box" id="orderBox">
-        <h2 style="margin:0;font-size:16px;font-weight:1100;">🧾 Récap paiement</h2>
-        <p class="small">Vérifie ce que tu payes avant de continuer.</p>
-        <div class="hr"></div>
+      <details class="fold">
+        <summary>🧠 DIGIY KNOWLEDGE</summary>
+        <div class="foldBody">
+          <div class="kbTop">
+            <div class="small">
+              Assistant professionnel intégré • DRIVER • LOC • RESTO • PAY • JOBS • MARKET • BUILD • EXPLORE • FRET
+            </div>
+            <span class="pill ok" id="kbStatus">En ligne</span>
+          </div>
 
-        <div class="row">
-          <div>
-            <div style="font-weight:1100;">Produit / Module</div>
-            <div class="mono" style="font-weight:1000;" id="orderProduct">—</div>
+          <div class="kbInputRow">
+            <input id="kbInput" type="text" placeholder="Ex: Quel code choisir pour EXPLORE ?" />
+            <button id="kbSend" type="button">Envoyer</button>
           </div>
-          <div>
-            <div style="font-weight:1100;">Plan</div>
-            <div class="mono" style="font-weight:1000;" id="orderPlan">—</div>
+
+          <div class="kbQuick">
+            <button type="button" data-q="Explique DIGIY PAY en 2 lignes.">💳 DIGIY PAY</button>
+            <button type="button" data-q="Quel code choisir pour DRIVER ?">🚗 DRIVER</button>
+            <button type="button" data-q="Explique les tarifs LOC (2A à 2E).">🏠 LOC</button>
+            <button type="button" data-q="Explique les packs EXPLORE.">🧭 EXPLORE</button>
+            <button type="button" data-q="C’est quoi le slug et à quoi ça sert ?">🔗 Le slug</button>
           </div>
+
+          <div class="kbAns" id="kbAns"></div>
         </div>
+      </details>
 
-        <div class="hr"></div>
+      <div class="hr"></div>
 
-        <div class="row">
-          <div>
-            <div style="font-weight:1100;">Montant total</div>
-            <div class="mono" style="font-weight:1000;" id="orderAmount">—</div>
-          </div>
-          <div>
-            <div style="font-weight:1100;">Référence logique</div>
-            <div class="mono" style="font-weight:1000;" id="orderRef">—</div>
-          </div>
-        </div>
+      <div class="sectionTitle">1 · Choisis ton module</div>
+      <div class="moduleRail" id="moduleRail"></div>
 
-        <p class="small" id="orderHint" style="margin-top:10px;"></p>
+      <div class="hr"></div>
+
+      <div id="plansBlock">
+        <div class="sectionTitle">2 · Choisis ton pack</div>
+        <div class="small" id="plansHint" style="margin-bottom:10px;">Sélectionne d’abord un module.</div>
+        <div class="planRail" id="planRail"></div>
       </div>
 
       <div class="hr"></div>
 
-      <div class="box" id="pricingBox">
-        <h2 style="margin:0;font-size:16px;font-weight:1100;">💰 Menu Codifié — Dis le CODE, choisis ton pack</h2>
-        <p class="small">1) Clique ton module → 2) (optionnel) ajoute un BOOST → total calculé automatiquement.</p>
-        <div class="hr"></div>
-
-        <div class="section-sep">🚗 CODE 1 · DIGIY DRIVER</div>
-        <div class="priceGrid" id="grid_driver"></div>
-
-        <div class="section-sep">🏠 CODE 2 · DIGIY LOC — Location</div>
-        <div class="priceGrid" id="grid_loc"></div>
-
-        <div class="section-sep">🍽️ CODE 3 · DIGIY RESTO PRO</div>
-        <div class="priceGrid" id="grid_resto"></div>
-
-        <div class="section-sep">📅 CODE 4 · DIGIY RÉSA</div>
-        <div class="priceGrid" id="grid_resa"></div>
-
-        <div class="section-sep">🧾 CODE 5 · DIGIY POS</div>
-        <div class="priceGrid" id="grid_pos"></div>
-
-        <div class="section-sep">🛒 CODE 6 · DIGIY MARKET</div>
-        <div class="priceGrid" id="grid_market"></div>
-
-        <div class="section-sep">🏗️ CODE 7 · DIGIY BUILD</div>
-        <div class="priceGrid" id="grid_build"></div>
-
-        <div class="section-sep">🧭 CODE 8 · DIGIY EXPLORE — Agence</div>
-        <div class="priceGrid" id="grid_explore"></div>
-
-        <div class="section-sep">🚚 CODE 9 · DIGIY FRET CHAUFFEUR</div>
-        <div class="priceGrid" id="grid_fret_chauf"></div>
-
-        <div class="section-sep">📦 CODE 10 · DIGIY FRET CLIENT</div>
-        <div class="priceGrid" id="grid_fret_client"></div>
-
-        <div class="section-sep">✨ CODE E · BOOST</div>
-        <div class="priceGrid" id="grid_boost"></div>
-
-        <div class="hintLine">📞 Commander par téléphone (juste le code) : <strong>+221 77 134 28 89</strong></div>
+      <div id="boostBlock">
+        <div class="sectionTitle">3 · Ajoute un boost (optionnel)</div>
+        <div class="small" style="margin-bottom:10px;">Champagne et fraise : un petit plus de visibilité, sans alourdir le parcours.</div>
+        <div class="boostRail" id="boostRail"></div>
       </div>
+
+      <div class="hr"></div>
+
+      <div class="sectionTitle">4 · Récap rapide</div>
+      <div class="recapGrid">
+        <div class="miniBox">
+          <div class="miniLabel">Produit / plan</div>
+          <div class="miniValue mono" id="recapProduct">—</div>
+        </div>
+        <div class="miniBox">
+          <div class="miniLabel">Montant total</div>
+          <div class="miniValue mono" id="recapAmount">—</div>
+        </div>
+        <div class="miniBox">
+          <div class="miniLabel">Code / boost</div>
+          <div class="miniValue mono" id="recapCode">—</div>
+        </div>
+        <div class="miniBox">
+          <div class="miniLabel">Référence logique</div>
+          <div class="miniValue mono" id="recapRef">—</div>
+        </div>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="sectionTitle">5 · Infos client</div>
+      <div class="recapGrid">
+        <div class="miniBox">
+          <div class="miniLabel">Téléphone (digits uniquement)</div>
+          <input type="tel" id="payPhone" class="digiy-input" placeholder="Ex: 221771234567" inputmode="numeric"/>
+          <div class="hint">Conseil : mets 221 + ton numéro, sans espaces.</div>
+        </div>
+
+        <div class="miniBox">
+          <div class="miniLabel">Slug (nom public)</div>
+          <input type="text" id="paySlug" class="digiy-input" placeholder="Ex: chez-astou-saly (ou laisse vide)"/>
+          <div class="hint">Le slug sert à ouvrir ton cockpit : <span class="mono">?slug=...</span></div>
+          <div id="slugAuto" class="hint" style="color:rgba(248,245,239,.82);"></div>
+        </div>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="sectionTitle">6 · Suite logique</div>
+      <div class="miniBox">
+        <ol class="steps">
+          <li>Choisis ton module</li>
+          <li>Choisis ton pack</li>
+          <li>Ajoute un boost si tu veux</li>
+          <li>Renseigne téléphone et slug</li>
+          <li>Continue vers le paiement ABOS</li>
+          <li>Paye Wave et envoie le reçu</li>
+        </ol>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="actions">
+        <button class="btn ok" id="btnGoPayer">➡️ Continuer vers paiement</button>
+        <button class="btn bad" id="btnSupport">🛟 Support WhatsApp</button>
+      </div>
+      <p class="small" id="manualHint" style="margin-top:12px;"></p>
 
       <div class="hr"></div>
 
       <div class="box" id="tokenBox">
-        <h2 style="margin:0;font-size:16px;font-weight:1100;">🔐 Activation sécurisée</h2>
+        <div class="sectionTitle" style="margin-top:0;">Activation sécurisée</div>
         <p class="small">Si tu as reçu un lien DIGIY avec token, clique simplement.</p>
         <div class="hr"></div>
-        <button class="btn ok" id="btnActivateToken">
+        <button class="btn gold" id="btnActivateToken">
           ✅ Activer maintenant
           <span id="spinnerToken" class="mono" style="display:none;margin-left:8px;">⏳</span>
         </button>
         <p class="small" id="tokenHint" style="margin-top:10px;"></p>
       </div>
 
-      <div class="hr"></div>
+    </div>
+  </div>
 
-      <div class="box" id="manualBox">
-        <h2 style="margin:0;font-size:16px;font-weight:1100;">💳 Préparer le paiement Wave</h2>
-        <p class="small">Choisis ton pack ici, puis continue vers le tunnel de paiement sécurisé.</p>
-
-        <div class="hr"></div>
-
-        <div class="row">
-          <div>
-            <div style="font-weight:1100;">Bénéficiaire</div>
-            <div class="mono" style="font-weight:1000;">JB BEAUVILLE</div>
-          </div>
-          <div>
-            <div style="font-weight:1100;">Numéro Wave</div>
-            <div class="mono" style="font-weight:1000;">+221 77 134 28 89</div>
-          </div>
-        </div>
-
-        <div class="hr"></div>
-
-        <div class="box" style="margin:12px 0;">
-          <h2 style="margin:0;font-size:16px;font-weight:1100;">📱 Infos</h2>
-          <p class="small" style="margin-top:6px;">Téléphone obligatoire. Slug conseillé (si vide, DIGIY le génère automatiquement).</p>
-          <div class="hr"></div>
-
-          <div class="row">
-            <div>
-              <div style="font-weight:1100;">Téléphone (digits uniquement)</div>
-              <input type="tel" id="payPhone" class="digiy-input" placeholder="Ex: 221771234567" inputmode="numeric"/>
-              <div class="small" style="margin-top:6px;">Conseil : mets 221 + ton numéro (sans espaces, sans +).</div>
-            </div>
-
-            <div>
-              <div style="font-weight:1100;">Slug (nom public)</div>
-              <input type="text" id="paySlug" class="digiy-input" placeholder="Ex: chez-astou-saly (ou laisse vide)"/>
-              <div class="small" style="margin-top:6px;">Le slug sert à ouvrir ton cockpit : <span class="mono">?slug=...</span></div>
-              <div id="slugAuto" class="small" style="margin-top:6px; color:rgba(234,255,241,.85);"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="hr"></div>
-
-        <ol class="steps">
-          <li>Choisis ton module (et BOOST si tu veux)</li>
-          <li>Renseigne ton téléphone et ton slug</li>
-          <li>Continue vers la page de paiement</li>
-          <li>Paye Wave et envoie le reçu dans le dossier ABOS</li>
-          <li>Attends la validation et l’activation</li>
-        </ol>
-
-        <div class="hr"></div>
-
-        <div class="row">
-          <button class="btn ok" id="btnGoPayer">➡️ Continuer vers paiement</button>
-          <button class="btn bad" id="btnSupport">🛟 Support WhatsApp</button>
-        </div>
-        <p class="small" id="manualHint" style="margin-top:10px;"></p>
+  <div class="stickyBar">
+    <div class="stickyInner">
+      <div class="stickyInfo">
+        <div class="stickyTitle">Sélection actuelle</div>
+        <div class="stickyValue" id="stickyValue">Choisis ton module</div>
       </div>
-
-      <div class="hide" id="dbg"></div>
+      <div class="stickyActions">
+        <button class="btn bad" id="btnSupportSticky">Support</button>
+        <button class="btn ok" id="btnGoPayerSticky">Continuer</button>
+      </div>
     </div>
   </div>
 
@@ -500,28 +716,22 @@
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc3Ftd2pqdHNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA";
 
     const ABOS_PAYER_URL = "https://beauville.github.io/abos/payer.html";
+    const SUPPORT_WA = "+221771342889";
 
     window.DIGIY_SUPABASE_URL = SUPABASE_URL;
     window.DIGIY_SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
 
     if(!window.supabase) throw new Error("Supabase lib non chargée");
 
-    const sb = window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_ANON_KEY,
-      {
-        auth: {
-          persistSession: false,
-          autoRefreshToken: false,
-          detectSessionInUrl: false,
-          storage: { getItem: () => null, setItem: () => {}, removeItem: () => {} }
-        }
+    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+        detectSessionInUrl: false,
+        storage: { getItem: () => null, setItem: () => {}, removeItem: () => {} }
       }
-    );
+    });
     window.sb = sb;
-
-    const SUPPORT_WA = "+221771342889";
-    const WAVE_TO    = "+221771342889";
 
     const $ = (id) => document.getElementById(id);
     const qp = new URLSearchParams(location.search);
@@ -540,16 +750,39 @@
       location.href = "https://wa.me/" + num + "?text=" + encodeURIComponent(msg);
     }
 
-    function normPhone(p){ return String(p||"").trim().replace(/[^\d]/g,""); }
+    function normPhone(v){
+      return String(v || "").trim().replace(/[^\d]/g, "");
+    }
 
-    function normSlug(s){
-      return String(s||"")
+    function normSlug(v){
+      return String(v || "")
         .trim()
         .toLowerCase()
-        .replace(/\s+/g,"-")
-        .replace(/[^a-z0-9-]/g,"")
-        .replace(/-+/g,"-")
-        .replace(/^-|-$/g,"");
+        .replace(/\s+/g, "-")
+        .replace(/[^a-z0-9-]/g, "")
+        .replace(/-+/g, "-")
+        .replace(/^-|-$/g, "");
+    }
+
+    function normModule(v){
+      const raw = String(v || "").trim().toUpperCase();
+      const alias = {
+        CAISSE: "POS",
+        POS: "POS",
+        DRIVER: "DRIVER",
+        LOC: "LOC",
+        RESTO: "RESTO",
+        RESA: "RESA_TABLE",
+        RESA_TABLE: "RESA_TABLE",
+        MARKET: "MARKET",
+        BUILD: "BUILD",
+        EXPLORE: "EXPLORE",
+        FRET_PRO: "FRET_PRO",
+        FRET_CHAUF: "FRET_PRO",
+        FRET_CLIENT: "FRET_CLIENT_PRO",
+        FRET_CLIENT_PRO: "FRET_CLIENT_PRO"
+      };
+      return alias[raw] || raw || "";
     }
 
     function genSlug(prefix){
@@ -559,60 +792,45 @@
     }
 
     function displayPhoneDigitsAsPlus(phoneDigits){
-      const d = String(phoneDigits||"").replace(/[^\d]/g,"");
+      const d = String(phoneDigits || "").replace(/[^\d]/g, "");
       if(!d) return "";
-      if(d.startsWith("221")) return "+" + d;
-      return d;
+      return d.startsWith("221") ? "+" + d : d;
     }
 
     function prettyFCFA(n){
-      const x = String(n||"").replace(/[^\d]/g,"");
-      if(!x || x === "0") return "";
+      const x = String(n || "").replace(/[^\d]/g, "");
+      if(!x || x === "0") return "—";
       return Number(x).toLocaleString("fr-FR") + " FCFA";
     }
 
-    const token  = (qp.get("token")  || "").trim();
+    const token  = (qp.get("token") || "").trim();
     const ret    = (qp.get("return") || "").trim();
-    const auto   = (qp.get("auto")   === "1");
-    const from_  = (qp.get("from")   || "").trim();
+    const auto   = (qp.get("auto") === "1");
+    const from_  = (qp.get("from") || "").trim();
 
     const rawAccess = (qp.get("module") || "").trim().toUpperCase();
-    const MODULE_ALIAS = {
-      CAISSE: "POS",
-      POS: "POS",
-      DRIVER: "DRIVER",
-      LOC: "LOC",
-      RESTO: "RESTO",
-      RESA: "RESA_TABLE",
-      RESA_TABLE: "RESA_TABLE",
-      MARKET: "MARKET",
-      BUILD: "BUILD",
-      EXPLORE: "EXPLORE",
-      FRET_PRO: "FRET_PRO",
-      FRET_CHAUF: "FRET_PRO",
-      FRET_CLIENT: "FRET_CLIENT_PRO",
-      FRET_CLIENT_PRO: "FRET_CLIENT_PRO"
-    };
-    const accessModule = MODULE_ALIAS[rawAccess] || rawAccess || "";
+    const accessModule = normModule(rawAccess);
 
     let userPhoneDigits = normPhone(qp.get("phone") || "");
     let userSlug        = normSlug(qp.get("slug") || "");
 
-    let baseModule = (qp.get("base_module") || "").trim().toUpperCase();
+    let baseModule = normModule(qp.get("base_module") || "");
     let basePlan   = (qp.get("plan") || "").trim();
-    let baseAmount = Number((qp.get("amount") || "").toString().replace(/[^\d]/g,"") || 0);
+    let baseAmount = Number((qp.get("amount") || "").toString().replace(/[^\d]/g, "") || 0);
     let baseCode   = (qp.get("code") || "").trim();
 
     let boostPlan   = (qp.get("boost") || "").trim();
-    let boostAmount = Number((qp.get("boost_amount") || "").toString().replace(/[^\d]/g,"") || 0);
+    let boostAmount = Number((qp.get("boost_amount") || "").toString().replace(/[^\d]/g, "") || 0);
     let boostCode   = (qp.get("boost_code") || "").trim();
 
     function inferModuleForSlug(){
       return (baseModule || accessModule || "LOC").trim().toUpperCase();
     }
+
     function subscriptionSlug(module, phoneDigits){
-      return `${String(module||"LOC").toLowerCase()}-${String(phoneDigits||"").replace(/\D/g,"")}`;
+      return `${String(module || "LOC").toLowerCase()}-${String(phoneDigits || "").replace(/\D/g, "")}`;
     }
+
     function buildReturnUrlWithSlug(retUrl, module, phoneDigits){
       const u = new URL(retUrl, location.origin);
       if(!u.searchParams.get("slug")){
@@ -622,7 +840,6 @@
     }
 
     let CURRENT_LANG = localStorage.getItem("digiy_lang") || "fr";
-
     function applyLangButtons(){
       $("lang-fr").classList.toggle("active", CURRENT_LANG === "fr");
       $("lang-wo").classList.toggle("active", CURRENT_LANG === "wo");
@@ -676,19 +893,15 @@
       status.className = "pill";
       out.textContent =
         "⚠️ Assistant indisponible.\n" +
-        "Choisis ton code, puis continue vers le paiement.\n" +
+        "Choisis ton module, puis continue vers le paiement.\n" +
         "Sinon clique Support WhatsApp.";
       console.error("KB error:", lastErr);
     }
 
-    $("kbSend").addEventListener("click", ()=>{
-      kbAsk($("kbInput").value);
-    });
-
+    $("kbSend").addEventListener("click", ()=> kbAsk($("kbInput").value));
     $("kbInput").addEventListener("keydown", (e)=>{
       if(e.key === "Enter") kbAsk($("kbInput").value);
     });
-
     document.querySelectorAll(".kbQuick button[data-q]").forEach(btn=>{
       btn.addEventListener("click", ()=>{
         const q = btn.getAttribute("data-q") || "";
@@ -697,34 +910,92 @@
       });
     });
 
-    setTimeout(()=>kbAsk("Explique DIGIY PAY en 2 lignes."), 250);
+    const MODULES = [
+      { module:"DRIVER", icon:"🚗", label:"DRIVER", hint:"Mobilité terrain" },
+      { module:"LOC", icon:"🏠", label:"LOC", hint:"Location premium" },
+      { module:"RESTO", icon:"🍽️", label:"RESTO", hint:"Restauration pro" },
+      { module:"RESA_TABLE", icon:"📅", label:"RÉSA", hint:"Réservation tables" },
+      { module:"POS", icon:"🧾", label:"POS", hint:"Caisse" },
+      { module:"MARKET", icon:"🛒", label:"MARKET", hint:"Vitrine commerce" },
+      { module:"BUILD", icon:"🏗️", label:"BUILD", hint:"Artisans & devis" },
+      { module:"EXPLORE", icon:"🧭", label:"EXPLORE", hint:"Agence & tourisme" },
+      { module:"FRET_PRO", icon:"🚚", label:"FRET PRO", hint:"Chauffeur" },
+      { module:"FRET_CLIENT_PRO", icon:"📦", label:"FRET CLIENT", hint:"Expéditeur" }
+    ];
 
-    function totalAmount(){ return (Number(baseAmount||0) + Number(boostAmount||0)); }
+    const PLANS_BY_MODULE = {
+      DRIVER: [
+        { code:"1", module:"DRIVER", plan:"standard", amount:12900, label:"DRIVER", desc:"GPS temps réel · Courses · Wave & OM" }
+      ],
+      LOC: [
+        { code:"2A", module:"LOC", plan:"LOC_2A", amount:12900, label:"LOC 1-5 logements", desc:"Pack essentiel propriétaire" },
+        { code:"2B", module:"LOC", plan:"LOC_2B", amount:25000, label:"LOC 6-9 logements", desc:"Gestionnaire intermédiaire" },
+        { code:"2C", module:"LOC", plan:"LOC_2C", amount:45000, label:"LOC 10-20 logements", desc:"Gestionnaire confirmé" },
+        { code:"2D", module:"LOC", plan:"LOC_2D", amount:60000, label:"LOC 21-30 logements", desc:"Grand propriétaire" },
+        { code:"2E", module:"LOC", plan:"LOC_2E", amount:90000, label:"LOC 30+ logements", desc:"Parc immobilier premium" }
+      ],
+      RESTO: [
+        { code:"3A", module:"RESTO", plan:"RESTO_3A", amount:19900, label:"RESTO ESSENTIEL", desc:"2 licences · 15 tables" },
+        { code:"3B", module:"RESTO", plan:"RESTO_3B", amount:39900, label:"RESTO STANDARD", desc:"4 licences · 30 tables" },
+        { code:"3C", module:"RESTO", plan:"RESTO_3C", amount:59900, label:"RESTO PRO", desc:"6 licences · 45 tables" }
+      ],
+      RESA_TABLE: [
+        { code:"4A", module:"RESA_TABLE", plan:"RESA_4A", amount:12900, label:"RÉSA 1-5 tables", desc:"Petite salle" },
+        { code:"4B", module:"RESA_TABLE", plan:"RESA_4B", amount:25000, label:"RÉSA 6-9 tables", desc:"Moyenne salle" },
+        { code:"4C", module:"RESA_TABLE", plan:"RESA_4C", amount:45000, label:"RÉSA 10-20 tables", desc:"Grande salle" },
+        { code:"4D", module:"RESA_TABLE", plan:"RESA_4D", amount:60000, label:"RÉSA 21-30 tables", desc:"Salle événementielle" },
+        { code:"4E", module:"RESA_TABLE", plan:"RESA_4E", amount:90000, label:"RÉSA 30+ tables", desc:"Site multi-salles" }
+      ],
+      POS: [
+        { code:"5", module:"POS", plan:"standard", amount:12900, label:"POS STANDARD", desc:"Caisse · Stock · Multi-users" }
+      ],
+      MARKET: [
+        { code:"6", module:"MARKET", plan:"standard", amount:12900, label:"MARKET", desc:"Vitrine + Fiche pro + WhatsApp" }
+      ],
+      BUILD: [
+        { code:"7", module:"BUILD", plan:"standard", amount:12900, label:"BUILD", desc:"Artisans · Devis · Portfolio" }
+      ],
+      EXPLORE: [
+        { code:"8A", module:"EXPLORE", plan:"EXPLORE_8A", amount:30000, label:"EXPLORE ESSENTIEL", desc:"Visibilité locale agence" },
+        { code:"8B", module:"EXPLORE", plan:"EXPLORE_8B", amount:60000, label:"EXPLORE PRO", desc:"Visibilité régionale agence" },
+        { code:"8C", module:"EXPLORE", plan:"EXPLORE_8C", amount:120000, label:"EXPLORE PREMIUM", desc:"Visibilité internationale" },
+        { code:"8D", module:"EXPLORE", plan:"EXPLORE_8D", amount:150000, label:"EXPLORE SETUP", desc:"Droit d'entrée one-shot · onboarding" }
+      ],
+      FRET_PRO: [
+        { code:"9A", module:"FRET_PRO", plan:"FRET_CHAUF_9A", amount:25000, label:"FRET LOCAL <50km", desc:"Zone locale chauffeur" },
+        { code:"9B", module:"FRET_PRO", plan:"FRET_CHAUF_9B", amount:60000, label:"FRET RÉGIONAL 50-200km", desc:"Région chauffeur" },
+        { code:"9C", module:"FRET_PRO", plan:"FRET_CHAUF_9C", amount:120000, label:"FRET NATIONAL 200km+", desc:"National chauffeur" },
+        { code:"9D", module:"FRET_PRO", plan:"FRET_CHAUF_9D", amount:200000, label:"FRET INTERNATIONAL CEDEAO", desc:"CEDEAO chauffeur" }
+      ],
+      FRET_CLIENT_PRO: [
+        { code:"10A", module:"FRET_CLIENT_PRO", plan:"FRET_CLI_10A", amount:9900, label:"FRET CLIENT LOCAL", desc:"Expéditeur zone locale" },
+        { code:"10B", module:"FRET_CLIENT_PRO", plan:"FRET_CLI_10B", amount:25000, label:"FRET CLIENT RÉGIONAL", desc:"Expéditeur régional" },
+        { code:"10C", module:"FRET_CLIENT_PRO", plan:"FRET_CLI_10C", amount:60000, label:"FRET CLIENT NATIONAL", desc:"Expéditeur national" },
+        { code:"10D", module:"FRET_CLIENT_PRO", plan:"FRET_CLI_10D", amount:120000, label:"FRET CLIENT INTERNATIONAL", desc:"Expéditeur CEDEAO" }
+      ]
+    };
 
-    function productLabel(){
-      const base = baseCode ? ("Code " + baseCode) : (basePlan || accessModule || "DIGIY");
-      const boost = boostCode ? (" + BOOST " + boostCode) : "";
-      return "DIGIY · " + base + boost;
-    }
+    const BOOST_PLANS = [
+      { code:"E1", module:"BOOST", plan:"BOOST_E1", amount:5000, label:"BOOST LOCAL", desc:"Badge + vitrine locale + WhatsApp" },
+      { code:"E2", module:"BOOST", plan:"BOOST_E2", amount:10000, label:"BOOST STANDARD", desc:"Mise en avant + visibilité" },
+      { code:"E3", module:"BOOST", plan:"BOOST_E3", amount:20000, label:"BOOST PREMIUM", desc:"Priorité + max visibilité" }
+    ];
 
-    function updateVipBox(){
-      const stamp = $("vipStamp");
-      const line = $("vipLine");
-      if(!stamp || !line) return;
+    const AUTO_DEFAULTS = {
+      DRIVER:          { module:"DRIVER",          plan:"standard",      amount:12900,  code:"1"  },
+      LOC:             { module:"LOC",             plan:"LOC_2A",        amount:12900,  code:"2A" },
+      RESTO:           { module:"RESTO",           plan:"RESTO_3A",      amount:19900,  code:"3A" },
+      RESA_TABLE:      { module:"RESA_TABLE",      plan:"RESA_4A",       amount:12900,  code:"4A" },
+      POS:             { module:"POS",             plan:"standard",      amount:12900,  code:"5"  },
+      MARKET:          { module:"MARKET",          plan:"standard",      amount:12900,  code:"6"  },
+      BUILD:           { module:"BUILD",           plan:"standard",      amount:12900,  code:"7"  },
+      EXPLORE:         { module:"EXPLORE",         plan:"EXPLORE_8A",    amount:30000,  code:"8A" },
+      FRET_PRO:        { module:"FRET_PRO",        plan:"FRET_CHAUF_9A", amount:25000,  code:"9A" },
+      FRET_CLIENT_PRO: { module:"FRET_CLIENT_PRO", plan:"FRET_CLI_10A",  amount:9900,   code:"10A" }
+    };
 
-      if(boostCode){
-        stamp.textContent = "👑 Client BOOST — Prioritaire";
-        stamp.style.borderColor = "rgba(250,204,21,.55)";
-        stamp.style.background = "rgba(250,204,21,.08)";
-        stamp.style.color = "#fff6c8";
-        line.innerHTML = "✅ BOOST activé : tu passes en <strong>mise en avant</strong>. On te traite comme un client prioritaire.";
-      }else{
-        stamp.textContent = "⭐ Client DIGIY";
-        stamp.style.borderColor = "rgba(34,197,94,.35)";
-        stamp.style.background = "rgba(34,197,94,.08)";
-        stamp.style.color = "#bfffe0";
-        line.textContent = "Conseil : choisis ton module, puis ajoute un BOOST si tu veux accélérer.";
-      }
+    function totalAmount(){
+      return Number(baseAmount || 0) + Number(boostAmount || 0);
     }
 
     function syncSelectionToUrl(){
@@ -739,238 +1010,192 @@
       if(boostAmount) u.searchParams.set("boost_amount", String(boostAmount)); else u.searchParams.delete("boost_amount");
       if(boostCode)   u.searchParams.set("boost_code", boostCode); else u.searchParams.delete("boost_code");
 
+      if(userPhoneDigits) u.searchParams.set("phone", userPhoneDigits); else u.searchParams.delete("phone");
+      if(userSlug) u.searchParams.set("slug", userSlug); else u.searchParams.delete("slug");
+
       history.replaceState(null, "", u.toString());
     }
 
-    function renderOrder(){
-      const t = totalAmount();
+    function renderModuleRail(){
+      $("moduleRail").innerHTML = MODULES.map(m => `
+        <button class="moduleBtn ${baseModule === m.module ? 'active' : ''}" type="button" data-module="${m.module}">
+          <span class="moduleEmoji">${m.icon}</span>
+          <div class="moduleName">${m.label}</div>
+          <div class="moduleHint">${m.hint}</div>
+        </button>
+      `).join("");
 
-      $("orderProduct").textContent = productLabel();
-      $("orderPlan").textContent = basePlan ? basePlan : (accessModule || "—");
-      $("orderAmount").textContent = t ? (Number(t).toLocaleString("fr-FR") + " FCFA") : "—";
+      document.querySelectorAll(".moduleBtn[data-module]").forEach(btn=>{
+        btn.addEventListener("click", ()=>{
+          const mod = normModule(btn.getAttribute("data-module") || "");
+          baseModule = mod;
 
-      const ref =
+          const def = AUTO_DEFAULTS[mod];
+          if(def){
+            basePlan = def.plan;
+            baseAmount = def.amount;
+            baseCode = def.code;
+          } else {
+            basePlan = "";
+            baseAmount = 0;
+            baseCode = "";
+          }
+
+          boostPlan = "";
+          boostAmount = 0;
+          boostCode = "";
+
+          syncSelectionToUrl();
+          renderAll();
+          setStatus(`💳 ${mod} sélectionné — choisis ton pack.`, "warn", "MODULE");
+        });
+      });
+    }
+
+    function renderPlanRail(){
+      const rail = $("planRail");
+      const hint = $("plansHint");
+
+      if(!baseModule){
+        rail.innerHTML = "";
+        hint.textContent = "Sélectionne d’abord un module.";
+        return;
+      }
+
+      const items = PLANS_BY_MODULE[baseModule] || [];
+      hint.textContent = `Module actif : ${baseModule}`;
+
+      rail.innerHTML = items.map(p => `
+        <button class="planCard ${basePlan === p.plan ? 'active' : ''}" type="button" data-plan="${p.plan}">
+          <div class="planTop">
+            <div style="display:flex;gap:10px;align-items:flex-start;min-width:0;">
+              <div class="codeBadge">${p.code}</div>
+              <div>
+                <div class="planName">${p.label}</div>
+                <div class="planDesc">${p.desc}</div>
+              </div>
+            </div>
+            <div class="planAmount">${prettyFCFA(p.amount)}</div>
+          </div>
+        </button>
+      `).join("");
+
+      rail.querySelectorAll(".planCard[data-plan]").forEach(btn=>{
+        btn.addEventListener("click", ()=>{
+          const item = items.find(x => x.plan === btn.getAttribute("data-plan"));
+          if(!item) return;
+
+          baseModule = item.module;
+          basePlan = item.plan;
+          baseAmount = item.amount;
+          baseCode = item.code;
+
+          syncSelectionToUrl();
+          renderAll();
+          setStatus(`💳 Pack ${item.code} sélectionné — ajoute un boost si tu veux.`, "ok", `CODE ${item.code}`);
+        });
+      });
+    }
+
+    function renderBoostRail(){
+      const block = $("boostBlock");
+      const rail = $("boostRail");
+
+      if(!basePlan || !baseAmount){
+        block.classList.add("hide");
+        rail.innerHTML = "";
+        return;
+      }
+
+      block.classList.remove("hide");
+
+      rail.innerHTML = BOOST_PLANS.map(b => `
+        <button class="boostCard ${boostCode === b.code ? 'active' : ''}" type="button" data-boost="${b.code}">
+          <div class="planTop">
+            <div style="display:flex;gap:10px;align-items:flex-start;min-width:0;">
+              <div class="codeBadge berry">${b.code}</div>
+              <div>
+                <div class="planName">${b.label}</div>
+                <div class="planDesc">${b.desc}</div>
+              </div>
+            </div>
+            <div class="planAmount">${prettyFCFA(b.amount)}</div>
+          </div>
+        </button>
+      `).join("");
+
+      rail.querySelectorAll(".boostCard[data-boost]").forEach(btn=>{
+        btn.addEventListener("click", ()=>{
+          const code = btn.getAttribute("data-boost");
+          const item = BOOST_PLANS.find(x => x.code === code);
+          if(!item) return;
+
+          if(boostCode === item.code){
+            boostPlan = "";
+            boostAmount = 0;
+            boostCode = "";
+            setStatus("✨ Boost retiré. Tu peux continuer avec le module seul.", "warn", "MODULE");
+          } else {
+            boostPlan = item.plan;
+            boostAmount = item.amount;
+            boostCode = item.code;
+            setStatus(`👑 Boost ${item.code} ajouté — tu passes en mise en avant.`, "ok", `BOOST ${item.code}`);
+          }
+
+          syncSelectionToUrl();
+          renderAll();
+        });
+      });
+    }
+
+    function renderRecap(){
+      const product = baseModule ? `${baseModule} • ${basePlan || "—"}` : "—";
+      $("recapProduct").textContent = product;
+      $("recapAmount").textContent = prettyFCFA(totalAmount());
+      $("recapCode").textContent = (baseCode || "—") + (boostCode ? ` + ${boostCode}` : "");
+      $("recapRef").textContent =
         (baseModule || accessModule || "DIGIY") + "-" +
         (baseCode || "X") + "-" +
         (userPhoneDigits ? userPhoneDigits.slice(-6) : "000000");
-      $("orderRef").textContent = ref;
 
-      const hint = [];
-      if(!basePlan || !baseAmount) hint.push("👉 Choisis ton module dans la grille.");
-      if(boostCode) hint.push("✅ BOOST ajouté : " + boostCode);
-      if(!userPhoneDigits) hint.push("📱 Mets ton téléphone (digits).");
-      if(!userSlug) hint.push("🔗 Slug conseillé (ou laisse vide = auto).");
-      $("orderHint").textContent = hint.join("  •  ");
-
-      updateVipBox();
+      const stickyText =
+        baseModule && baseCode
+          ? `${baseCode}${boostCode ? " + " + boostCode : ""} • ${prettyFCFA(totalAmount())}`
+          : "Choisis ton module";
+      $("stickyValue").textContent = stickyText;
     }
-
-    const PRICE_GROUPS = {
-      driver: [
-        { code:"1",  module:"DRIVER", plan:"standard", amount:12900, label:"🚗 DRIVER", desc:"GPS temps réel · Courses · Wave & OM" }
-      ],
-      loc: [
-        { code:"2A", module:"LOC", plan:"LOC_2A", amount:12900,  label:"🥉 LOC 1-5 logements",  desc:"Pack essentiel propriétaire" },
-        { code:"2B", module:"LOC", plan:"LOC_2B", amount:25000,  label:"🥈 LOC 6-9 logements",  desc:"Gestionnaire intermédiaire" },
-        { code:"2C", module:"LOC", plan:"LOC_2C", amount:45000,  label:"🥇 LOC 10-20 logements", desc:"Gestionnaire confirmé" },
-        { code:"2D", module:"LOC", plan:"LOC_2D", amount:60000,  label:"💎 LOC 21-30 logements", desc:"Grand propriétaire" },
-        { code:"2E", module:"LOC", plan:"LOC_2E", amount:90000,  label:"👑 LOC 30+ logements",   desc:"Parc immobilier premium" }
-      ],
-      resto: [
-        { code:"3A", module:"RESTO", plan:"RESTO_3A", amount:19900, label:"🥉 RESTO ESSENTIEL", desc:"2 licences · 15 tables" },
-        { code:"3B", module:"RESTO", plan:"RESTO_3B", amount:39900, label:"🥈 RESTO STANDARD",  desc:"4 licences · 30 tables" },
-        { code:"3C", module:"RESTO", plan:"RESTO_3C", amount:59900, label:"🥇 RESTO PRO",       desc:"6 licences · 45 tables" }
-      ],
-      resa: [
-        { code:"4A", module:"RESA_TABLE", plan:"RESA_4A", amount:12900, label:"🥉 RÉSA 1-5 tables",  desc:"Petite salle" },
-        { code:"4B", module:"RESA_TABLE", plan:"RESA_4B", amount:25000, label:"🥈 RÉSA 6-9 tables",  desc:"Moyenne salle" },
-        { code:"4C", module:"RESA_TABLE", plan:"RESA_4C", amount:45000, label:"🥇 RÉSA 10-20 tables", desc:"Grande salle" },
-        { code:"4D", module:"RESA_TABLE", plan:"RESA_4D", amount:60000, label:"💎 RÉSA 21-30 tables", desc:"Salle événementielle" },
-        { code:"4E", module:"RESA_TABLE", plan:"RESA_4E", amount:90000, label:"👑 RÉSA 30+ tables",  desc:"Site multi-salles" }
-      ],
-      pos: [
-        { code:"5",  module:"POS", plan:"standard", amount:12900, label:"🧾 POS STANDARD", desc:"Caisse · Stock · Multi-users" }
-      ],
-      market: [
-        { code:"6",  module:"MARKET", plan:"standard", amount:12900, label:"🛒 MARKET", desc:"Vitrine + Fiche pro + WhatsApp" }
-      ],
-      build: [
-        { code:"7",  module:"BUILD", plan:"standard", amount:12900, label:"🏗️ BUILD", desc:"Artisans · Devis · Portfolio" }
-      ],
-      explore: [
-        { code:"8A", module:"EXPLORE", plan:"EXPLORE_8A", amount:30000,  label:"🟢 EXPLORE ESSENTIEL", desc:"Visibilité locale agence" },
-        { code:"8B", module:"EXPLORE", plan:"EXPLORE_8B", amount:60000,  label:"🔵 EXPLORE PRO",       desc:"Visibilité régionale agence" },
-        { code:"8C", module:"EXPLORE", plan:"EXPLORE_8C", amount:120000, label:"🟣 EXPLORE PREMIUM",   desc:"Visibilité internationale" },
-        { code:"8D", module:"EXPLORE", plan:"EXPLORE_8D", amount:150000, label:"🎫 EXPLORE SETUP",     desc:"Droit d'entrée one-shot · Onboarding", isOneShot:true }
-      ],
-      fret_chauf: [
-        { code:"9A", module:"FRET_PRO", plan:"FRET_CHAUF_9A", amount:25000,  label:"🥉 FRET LOCAL <50km", desc:"Zone locale chauffeur" },
-        { code:"9B", module:"FRET_PRO", plan:"FRET_CHAUF_9B", amount:60000,  label:"🥈 FRET RÉGIONAL 50-200km", desc:"Région chauffeur" },
-        { code:"9C", module:"FRET_PRO", plan:"FRET_CHAUF_9C", amount:120000, label:"🥇 FRET NATIONAL 200km+", desc:"National chauffeur" },
-        { code:"9D", module:"FRET_PRO", plan:"FRET_CHAUF_9D", amount:200000, label:"👑 FRET INTERNATIONAL CEDEAO", desc:"CEDEAO chauffeur" }
-      ],
-      fret_client: [
-        { code:"10A", module:"FRET_CLIENT_PRO", plan:"FRET_CLI_10A", amount:9900,   label:"🥉 FRET CLIENT LOCAL", desc:"Expéditeur zone locale" },
-        { code:"10B", module:"FRET_CLIENT_PRO", plan:"FRET_CLI_10B", amount:25000,  label:"🥈 FRET CLIENT RÉGIONAL", desc:"Expéditeur régional" },
-        { code:"10C", module:"FRET_CLIENT_PRO", plan:"FRET_CLI_10C", amount:60000,  label:"🥇 FRET CLIENT NATIONAL", desc:"Expéditeur national" },
-        { code:"10D", module:"FRET_CLIENT_PRO", plan:"FRET_CLI_10D", amount:120000, label:"👑 FRET CLIENT INTERNATIONAL", desc:"Expéditeur CEDEAO" }
-      ],
-      boost: [
-        { code:"E1", module:"BOOST", plan:"BOOST_E1", amount:5000,  label:"E1 · BOOST LOCAL",    desc:"Badge + vitrine locale + WhatsApp", isGold:true },
-        { code:"E2", module:"BOOST", plan:"BOOST_E2", amount:10000, label:"E2 · BOOST STANDARD", desc:"Mise en avant + visibilité", isGold:true },
-        { code:"E3", module:"BOOST", plan:"BOOST_E3", amount:20000, label:"E3 · BOOST PREMIUM",  desc:"Priorité + max visibilité", isGold:true }
-      ]
-    };
-
-    function renderGrids(){
-      const groups = {
-        driver:      "grid_driver",
-        loc:         "grid_loc",
-        resto:       "grid_resto",
-        resa:        "grid_resa",
-        pos:         "grid_pos",
-        market:      "grid_market",
-        build:       "grid_build",
-        explore:     "grid_explore",
-        fret_chauf:  "grid_fret_chauf",
-        fret_client: "grid_fret_client",
-        boost:       "grid_boost"
-      };
-
-      for(const [groupKey, gridId] of Object.entries(groups)){
-        const grid = $(gridId);
-        if(!grid) continue;
-        const items = PRICE_GROUPS[groupKey] || [];
-
-        grid.innerHTML = items.map(p => {
-          const isBoost = String(p.code||"").startsWith("E");
-          const isActiveBase = (!isBoost && basePlan && basePlan === p.plan && baseModule === p.module);
-          const isActiveBoost = (isBoost && boostPlan && boostPlan === p.plan);
-
-          const amtText = p.amount > 0 ? prettyFCFA(p.amount) : "Sur devis";
-          const codeClass = isBoost ? "priceCode boost" : (p.isGold ? "priceCode gold" : "priceCode");
-          const oneShotBadge = p.isOneShot ? '<span style="font-size:10px;color:var(--warn);margin-left:6px;">ONE-SHOT</span>' : "";
-          const activeClass = isActiveBase ? "active" : (isActiveBoost ? "boostActive" : "");
-
-          return `
-            <button class="priceBtn ${activeClass}" type="button"
-              data-module="${p.module}" data-plan="${p.plan}" data-amount="${p.amount}" data-code="${p.code}">
-              <div class="priceTop">
-                <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0;">
-                  <div class="${codeClass}">${p.code}</div>
-                  <div class="priceName">${p.label}${oneShotBadge}</div>
-                </div>
-                <div class="priceAmt">${amtText}</div>
-              </div>
-              <div class="priceDesc">${p.desc}</div>
-            </button>
-          `;
-        }).join("");
-
-        grid.querySelectorAll(".priceBtn").forEach(btn => {
-          btn.addEventListener("click", () => {
-            const pModule = (btn.getAttribute("data-module") || "").trim().toUpperCase();
-            const pPlan   = (btn.getAttribute("data-plan")   || "").trim();
-            const pAmt    = Number(btn.getAttribute("data-amount") || 0);
-            const pCode   = (btn.getAttribute("data-code")   || "").trim();
-            const isBoost = pCode.startsWith("E");
-
-            if(isBoost){
-              if(boostCode === pCode){
-                boostPlan = "";
-                boostAmount = 0;
-                boostCode = "";
-                setStatus("✨ BOOST retiré. Tu peux continuer avec le module seul.", "warn", "MODULE");
-              } else {
-                boostPlan = pPlan;
-                boostAmount = pAmt;
-                boostCode = pCode;
-                setStatus("👑 BOOST " + pCode + " ajouté — tu passes en mise en avant.", "ok", "BOOST " + pCode);
-              }
-            } else {
-              baseModule = pModule;
-              basePlan = pPlan;
-              baseAmount = pAmt;
-              baseCode = pCode;
-              setStatus("💳 Module " + pCode + " sélectionné — tu peux ajouter un BOOST.", "warn", "CODE " + pCode);
-            }
-
-            syncSelectionToUrl();
-            renderGrids();
-            renderOrder();
-          });
-        });
-      }
-    }
-
-    const AUTO_DEFAULTS = {
-      DRIVER:          { module:"DRIVER",          plan:"standard",        amount:12900,  code:"1"  },
-      LOC:             { module:"LOC",             plan:"LOC_2A",          amount:12900,  code:"2A" },
-      RESTO:           { module:"RESTO",           plan:"RESTO_3A",        amount:19900,  code:"3A" },
-      RESA_TABLE:      { module:"RESA_TABLE",      plan:"RESA_4A",         amount:12900,  code:"4A" },
-      POS:             { module:"POS",             plan:"standard",        amount:12900,  code:"5"  },
-      MARKET:          { module:"MARKET",          plan:"standard",        amount:12900,  code:"6"  },
-      BUILD:           { module:"BUILD",           plan:"standard",        amount:12900,  code:"7"  },
-      EXPLORE:         { module:"EXPLORE",         plan:"EXPLORE_8A",      amount:30000,  code:"8A" },
-      FRET_PRO:        { module:"FRET_PRO",        plan:"FRET_CHAUF_9A",   amount:25000,  code:"9A" },
-      FRET_CLIENT_PRO: { module:"FRET_CLIENT_PRO", plan:"FRET_CLI_10A",    amount:9900,   code:"10A" }
-    };
-
-    function autoSelectFromUrl(){
-      if(baseModule) return;
-      if(!accessModule) return;
-
-      const def = AUTO_DEFAULTS[accessModule];
-      if(!def) return;
-
-      baseModule = def.module;
-      basePlan   = basePlan || def.plan;
-      baseAmount = baseAmount || def.amount;
-      baseCode   = baseCode || def.code;
-
-      syncSelectionToUrl();
-      setStatus(`💳 Module ${baseCode} sélectionné — tu peux ajouter un BOOST.`, "warn", `CODE ${baseCode}`);
-    }
-
-    renderGrids();
-    autoSelectFromUrl();
-    renderGrids();
-    renderOrder();
 
     const payPhoneEl = $("payPhone");
-    const paySlugEl  = $("paySlug");
-    const slugAutoEl = $("slugAuto");
+    const paySlugEl = $("paySlug");
 
-    function syncInputsToUrlAndState(){
+    function syncInputsToState(){
       userPhoneDigits = normPhone(payPhoneEl?.value || userPhoneDigits || "");
-      userSlug        = normSlug(paySlugEl?.value  || userSlug        || "");
+      userSlug = normSlug(paySlugEl?.value || userSlug || "");
 
-      const u = new URL(location.href);
-      if(userPhoneDigits) u.searchParams.set("phone", userPhoneDigits);
-      else u.searchParams.delete("phone");
+      if(paySlugEl) paySlugEl.value = userSlug;
 
-      if(userSlug) u.searchParams.set("slug", userSlug);
-      else u.searchParams.delete("slug");
+      const slugAuto = $("slugAuto");
+      if(slugAuto){
+        const line = [];
+        if(baseModule) line.push("Module: " + baseModule);
+        if(basePlan) line.push("Plan: " + basePlan);
+        if(baseCode) line.push("Code: " + baseCode);
+        if(boostCode) line.push("Boost: " + boostCode);
+        slugAuto.textContent = line.join(" • ");
+      }
 
-      history.replaceState(null, "", u.toString());
-      renderOrder();
+      syncSelectionToUrl();
+      renderRecap();
     }
 
     if(payPhoneEl){
       if(userPhoneDigits) payPhoneEl.value = userPhoneDigits;
-      payPhoneEl.addEventListener("input", syncInputsToUrlAndState);
+      payPhoneEl.addEventListener("input", syncInputsToState);
     }
-
     if(paySlugEl){
       if(userSlug) paySlugEl.value = userSlug;
-      paySlugEl.addEventListener("input", ()=>{
-        paySlugEl.value = normSlug(paySlugEl.value);
-        if(slugAutoEl && paySlugEl.value) slugAutoEl.textContent = "";
-        syncInputsToUrlAndState();
-      });
+      paySlugEl.addEventListener("input", syncInputsToState);
     }
-
-    syncInputsToUrlAndState();
 
     function buildPayerUrl(){
       const u = new URL(ABOS_PAYER_URL);
@@ -994,26 +1219,65 @@
       return u.toString();
     }
 
-    if(!token){
-      $("tokenBox").classList.add("hide");
-      setStatus(baseModule ? "💳 Module prêt. Tu peux continuer vers le paiement." : "💳 Étape 1 : choisis ton module", "warn", "MANUEL");
-      $("manualHint").textContent = "Choisis un module, ajoute un BOOST si besoin, puis continue vers le dossier ABOS pour payer et envoyer le reçu.";
-    } else {
-      setStatus("🔐 Lien sécurisé détecté. Clique pour activer.", "ok", "TOKEN");
-      $("tokenHint").textContent = "Token détecté. Activation en 1 clic.";
-      $("manualHint").textContent = "Tu peux aussi utiliser le tunnel ABOS si besoin, mais le lien sécurisé est prioritaire.";
+    function continueToPayer(){
+      if(!baseAmount || !basePlan || !baseModule){
+        setStatus("⚠️ Choisis d’abord ton module et ton pack.", "warn", "MODULE");
+        return;
+      }
+
+      if(!userPhoneDigits || userPhoneDigits.length < 9){
+        setStatus("⚠️ Téléphone obligatoire (digits uniquement).", "warn", "PHONE");
+        payPhoneEl?.focus();
+        return;
+      }
+
+      if(!userSlug || userSlug.length < 3){
+        userSlug = genSlug(baseModule || basePlan || "digiy");
+        if(paySlugEl) paySlugEl.value = userSlug;
+        syncInputsToState();
+      }
+
+      const url = buildPayerUrl();
+      setStatus("➡️ Redirection vers le paiement ABOS…", "ok", "ABOS");
+      location.href = url;
     }
 
+    function supportMsg(){
+      const t = totalAmount();
+      let msg = "DIGIY — Support Paiement\n\n";
+      if(userPhoneDigits) msg += "Téléphone: " + displayPhoneDigitsAsPlus(userPhoneDigits) + "\n";
+      if(baseModule) msg += "Module: " + baseModule + "\n";
+      if(baseCode) msg += "Code: " + baseCode + "\n";
+      if(basePlan) msg += "Plan: " + basePlan + "\n";
+      if(baseAmount) msg += "Montant module: " + baseAmount + " FCFA\n";
+      if(boostCode) msg += "Boost: " + boostCode + " (" + boostAmount + " FCFA)\n";
+      if(t) msg += "Total: " + t + " FCFA\n";
+      if(userSlug) msg += "Slug: " + userSlug + "\n";
+      msg += "\nJ'ai besoin d'aide. — DIGIY";
+      return msg;
+    }
+
+    $("btnSupport").addEventListener("click", ()=>{
+      wa(supportMsg());
+      setStatus("💬 Support WhatsApp…", "warn", "INFO");
+    });
+
+    $("btnSupportSticky").addEventListener("click", ()=> wa(supportMsg()));
+    $("btnGoPayer").addEventListener("click", continueToPayer);
+    $("btnGoPayerSticky").addEventListener("click", continueToPayer);
+
     async function activateToken(){
-      if(!token){ alert("Token manquant."); return; }
+      if(!token){
+        alert("Token manquant.");
+        return;
+      }
+
       $("btnActivateToken").disabled = true;
       $("spinnerToken").style.display = "inline-block";
       setStatus("⏳ Activation en cours…", "warn", "EN COURS");
-      try{
-        const { data, error } = window.sb
-          ? await window.sb.rpc("digiy_pay_activate_token", { p_token: token })
-          : { data:null, error:{message:"sb missing"} };
 
+      try{
+        const { data, error } = await window.sb.rpc("digiy_pay_activate_token", { p_token: token });
         if(error) throw error;
         if(!data?.ok) throw new Error(data?.reason || "activation_failed");
 
@@ -1031,12 +1295,13 @@
           } else {
             $("tokenHint").innerHTML =
               "✅ Activation OK.<br>" +
-              "⚠️ Il manque le <b>téléphone</b> pour construire le slug.<br>" +
-              "Ouvre ton PRO avec : <span class='mono'>?slug=" + subscriptionSlug(m,"221XXXXXXXXX") + "</span>";
+              "⚠️ Il manque le téléphone pour construire le slug.<br>" +
+              "Ouvre ton PRO avec : <span class='mono'>?slug=" + subscriptionSlug(m, "221XXXXXXXXX") + "</span>";
           }
         } else {
           $("tokenHint").textContent = "Activation OK. Tu peux fermer cette page.";
         }
+
       } catch(e){
         setStatus("🔴 Activation impossible. Contacte le support.", "bad", "ERREUR");
         $("tokenHint").textContent = String(e.message || e);
@@ -1046,56 +1311,50 @@
       }
     }
 
-    function continueToPayer(){
-      if(!baseAmount || !basePlan || !baseModule){
-        setStatus("⚠️ Étape 1 : choisis ton module dans la grille d'abord.", "warn", "MODULE");
-        return;
-      }
+    $("btnActivateToken").addEventListener("click", activateToken);
 
-      if(!userPhoneDigits || userPhoneDigits.length < 9){
-        setStatus("⚠️ Téléphone obligatoire (digits uniquement).", "warn", "PHONE");
-        payPhoneEl?.focus();
-        return;
-      }
+    function autoSelectFromUrl(){
+      if(baseModule) return;
+      const candidate = accessModule;
+      if(!candidate) return;
+      const def = AUTO_DEFAULTS[candidate];
+      if(!def) return;
 
-      if(!userSlug || userSlug.length < 3){
-        userSlug = genSlug(baseModule || basePlan || "digiy");
-        if(paySlugEl) paySlugEl.value = userSlug;
-        if(slugAutoEl) slugAutoEl.textContent = "Slug auto : " + userSlug;
-        syncInputsToUrlAndState();
-      }
-
-      const url = buildPayerUrl();
-      setStatus("➡️ Redirection vers le tunnel de paiement…", "ok", "ABOS");
-      location.href = url;
+      baseModule = def.module;
+      basePlan = basePlan || def.plan;
+      baseAmount = baseAmount || def.amount;
+      baseCode = baseCode || def.code;
     }
 
-    $("btnActivateToken").addEventListener("click", activateToken);
-    $("btnGoPayer").addEventListener("click", continueToPayer);
+    autoSelectFromUrl();
+    syncInputsToState();
 
-    if(auto && token) setTimeout(activateToken, 400);
+    function renderAll(){
+      renderModuleRail();
+      renderPlanRail();
+      renderBoostRail();
+      renderRecap();
+    }
 
-    $("btnSupport").addEventListener("click", function(){
-      const t = totalAmount();
+    renderAll();
 
-      let msg = "DIGIY — Support Paiement\n\n";
-      if(userPhoneDigits) msg += "Téléphone: " + displayPhoneDigitsAsPlus(userPhoneDigits) + "\n";
-      if(baseModule) msg += "Module: " + baseModule + "\n";
-      if(baseCode) msg += "Code: " + baseCode + "\n";
-      if(basePlan) msg += "Plan: " + basePlan + "\n";
-      if(baseAmount) msg += "Montant module: " + baseAmount + " FCFA\n";
-      if(boostCode){
-        msg += "BOOST: " + boostCode + " (" + boostAmount + " FCFA)\n";
-      }
-      if(t) msg += "TOTAL: " + t + " FCFA\n";
-      if(userSlug) msg += "Slug: " + userSlug + "\n";
-      msg += "\nJ'ai besoin d'aide. — DIGIY";
+    if(!token){
+      $("tokenBox").classList.add("hide");
+      setStatus(baseModule ? "💳 Module prêt. Continue quand tu veux." : "💳 Choisis ton module", "warn", "MANUEL");
+      $("manualHint").textContent = "Choisis un module, ajoute un boost si besoin, puis continue vers le paiement ABOS.";
+    } else {
+      $("tokenBox").classList.remove("hide");
+      setStatus("🔐 Lien sécurisé détecté. Clique pour activer.", "ok", "TOKEN");
+      $("tokenHint").textContent = "Token détecté. Activation en 1 clic.";
+      $("manualHint").textContent = "Le lien sécurisé est prioritaire. Le tunnel ABOS reste disponible si besoin.";
+      if(auto) setTimeout(activateToken, 400);
+    }
 
-      wa(msg);
-      setStatus("💬 Support WhatsApp…", "warn", "INFO");
-    });
+    if(from_){
+      $("manualHint").textContent = "Après paiement et validation, tu retourneras sur ton module.";
+    }
 
-    if(from_) $("manualHint").textContent = "Après paiement et validation, tu retourneras sur ton module.";
+    setTimeout(()=>kbAsk("Explique DIGIY PAY en 2 lignes."), 250);
   })();
   </script>
 </body>
