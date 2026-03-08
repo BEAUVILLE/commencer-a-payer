@@ -1,872 +1,1132 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-  <title>DIGIYLYFE — L'Afrique enracinée, connectée au monde</title>
-  <meta name="theme-color" content="#0b1612"/>
-  <meta
-    name="description"
-    content="DIGIYLYFE — des outils premium, simples et directs pour faire avancer ton business. 0% commission. Paiement direct au pro."
-  />
-
-  <link rel="icon" href="./icon-192.png" sizes="192x192"/>
-  <link rel="apple-touch-icon" href="./icon-192.png"/>
-  <link rel="manifest" href="./manifest.json"/>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Manrope:wght@400;500;600;700;800&display=swap"
-    rel="stylesheet"
-  />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Commencer à payer — DIGIY PAY</title>
+  <meta name="theme-color" content="#0b3d2e" />
+  <meta name="description" content="Active ton module DIGIY simplement. Choisis ton module, ton plan, ton numéro, puis lance ta demande d’activation." />
 
   <style>
     :root{
-      --bg:#0b1612;
-      --card:#12211b;
-      --card2:#182922;
-      --line:rgba(255,255,255,.10);
-      --text:#f8f5ef;
-      --muted:rgba(248,245,239,.68);
+      --bg:#071b14;
+      --bg-soft:#0b241b;
+      --card:#0e2f23;
+      --card-2:#123828;
+      --line:rgba(255,255,255,.09);
+      --text:#f5fff8;
+      --muted:rgba(245,255,248,.72);
 
-      --champ:#f4dfb5;
-      --champ-2:#d8b56a;
-      --berry:#c35a7d;
-      --berry-2:#8e3757;
-      --green:#22c55e;
+      /* Vert Sénégal plus vivant */
+      --green:#0ca356;
+      --green-2:#16c46a;
+      --gold:#f2c94c;
+      --red:#d94444;
+
+      --ok:#22c55e;
       --warn:#f59e0b;
+      --danger:#ef4444;
 
       --radius:22px;
-      --shadow:0 20px 60px rgba(0,0,0,.38);
-      --fontA:"Outfit",system-ui,-apple-system,sans-serif;
-      --fontB:"Manrope",system-ui,-apple-system,sans-serif;
+      --shadow:0 18px 55px rgba(0,0,0,.38);
+      --max:1100px;
     }
 
     *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-
+    html,body{margin:0;padding:0}
     body{
-      margin:0;
-      font-family:var(--fontB);
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       background:
-        radial-gradient(900px 500px at 10% 0%, rgba(244,223,181,.09), transparent 55%),
-        radial-gradient(900px 520px at 100% 100%, rgba(195,90,125,.10), transparent 55%),
-        linear-gradient(180deg,#0a1511 0%, #0b1612 100%);
+        radial-gradient(circle at top right, rgba(22,196,106,.16), transparent 30%),
+        radial-gradient(circle at top left, rgba(242,201,76,.12), transparent 22%),
+        linear-gradient(180deg, #071b14 0%, #08160f 100%);
       color:var(--text);
+      min-height:100vh;
     }
 
-    a{
-      color:inherit;
-      text-decoration:none;
-    }
+    a{color:inherit;text-decoration:none}
+    button,input,select{font:inherit}
 
     .wrap{
-      max-width:920px;
+      width:min(100%, var(--max));
       margin:0 auto;
-      padding:14px 14px 110px;
+      padding:20px 16px 48px;
     }
 
-    .card{
-      background:linear-gradient(180deg, rgba(18,33,27,.98), rgba(15,28,23,.96));
+    .hero{
+      position:relative;
+      overflow:hidden;
+      background:
+        linear-gradient(135deg, rgba(12,163,86,.18), rgba(242,201,76,.08)),
+        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
       border:1px solid var(--line);
-      border-radius:var(--radius);
-      padding:16px;
+      border-radius:30px;
+      box-shadow:var(--shadow);
+      padding:22px;
+    }
+
+    .hero::after{
+      content:"";
+      position:absolute;
+      inset:auto -50px -50px auto;
+      width:180px;height:180px;border-radius:50%;
+      background:radial-gradient(circle, rgba(12,163,86,.28), transparent 70%);
+      pointer-events:none;
+    }
+
+    .badge-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-bottom:14px;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border:1px solid rgba(255,255,255,.1);
+      border-radius:999px;
+      background:rgba(255,255,255,.04);
+      color:var(--text);
+      font-size:.9rem;
+      font-weight:700;
+    }
+
+    h1{
+      margin:0 0 10px;
+      font-size:clamp(2rem, 5vw, 3.4rem);
+      line-height:1.02;
+      letter-spacing:-.03em;
+    }
+
+    .hero p{
+      margin:0;
+      color:var(--muted);
+      font-size:1.02rem;
+      line-height:1.55;
+      max-width:760px;
+    }
+
+    .hero-grid{
+      margin-top:22px;
+      display:grid;
+      grid-template-columns:1.35fr .95fr;
+      gap:16px;
+    }
+
+    .panel{
+      background:linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.02));
+      border:1px solid var(--line);
+      border-radius:24px;
+      padding:18px;
       box-shadow:var(--shadow);
     }
 
-    .topbar{
+    .panel h2{
+      margin:0 0 12px;
+      font-size:1.08rem;
+      letter-spacing:-.02em;
+    }
+
+    .steps{
+      display:grid;
+      gap:12px;
+    }
+
+    .step{
+      display:grid;
+      grid-template-columns:38px 1fr;
+      gap:12px;
+      align-items:flex-start;
+      padding:12px;
+      border-radius:18px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.05);
+    }
+
+    .step .n{
+      width:38px;height:38px;border-radius:999px;
+      display:grid;place-items:center;
+      background:linear-gradient(180deg,var(--green),var(--green-2));
+      color:#062514;
+      font-weight:900;
+      box-shadow:0 10px 24px rgba(12,163,86,.28);
+    }
+
+    .step b{
+      display:block;
+      margin-bottom:4px;
+      font-size:.98rem;
+    }
+
+    .step span{
+      color:var(--muted);
+      font-size:.94rem;
+      line-height:1.45;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:1.2fr .8fr;
+      gap:16px;
+      margin-top:18px;
+    }
+
+    .section-title{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin:0 0 14px;
+    }
+
+    .section-title h3{
+      margin:0;
+      font-size:1.08rem;
+      letter-spacing:-.02em;
+    }
+
+    .section-title .small{
+      color:var(--muted);
+      font-size:.9rem;
+    }
+
+    .module-grid{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:12px;
+    }
+
+    .module-card{
+      cursor:pointer;
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border-radius:20px;
+      padding:14px;
+      transition:.18s ease;
+      min-height:128px;
+    }
+
+    .module-card:hover{
+      transform:translateY(-1px);
+      border-color:rgba(22,196,106,.35);
+    }
+
+    .module-card.active{
+      border-color:rgba(22,196,106,.65);
+      box-shadow:0 0 0 1px rgba(22,196,106,.18) inset, 0 18px 34px rgba(12,163,86,.15);
+      background:linear-gradient(180deg, rgba(12,163,86,.14), rgba(255,255,255,.03));
+    }
+
+    .module-top{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:8px;
+    }
+
+    .module-code{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:56px;
+      height:30px;
+      padding:0 10px;
+      border-radius:999px;
+      background:rgba(242,201,76,.12);
+      color:var(--gold);
+      border:1px solid rgba(242,201,76,.18);
+      font-size:.82rem;
+      font-weight:800;
+      letter-spacing:.02em;
+    }
+
+    .module-type{
+      display:inline-flex;
+      align-items:center;
+      height:30px;
+      padding:0 10px;
+      border-radius:999px;
+      background:rgba(255,255,255,.05);
+      color:var(--muted);
+      border:1px solid rgba(255,255,255,.08);
+      font-size:.78rem;
+      font-weight:700;
+    }
+
+    .module-card h4{
+      margin:0 0 6px;
+      font-size:1rem;
+      letter-spacing:-.02em;
+    }
+
+    .module-card p{
+      margin:0;
+      color:var(--muted);
+      font-size:.9rem;
+      line-height:1.4;
+    }
+
+    .plan-row{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:12px;
+      margin-top:14px;
+    }
+
+    .plan-card{
+      cursor:pointer;
+      border:1px solid var(--line);
+      border-radius:20px;
+      padding:14px;
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      transition:.18s ease;
+    }
+
+    .plan-card.active{
+      border-color:rgba(242,201,76,.45);
+      background:linear-gradient(180deg, rgba(242,201,76,.12), rgba(255,255,255,.02));
+      box-shadow:0 0 0 1px rgba(242,201,76,.12) inset;
+    }
+
+    .plan-card .kicker{
+      color:var(--gold);
+      font-size:.82rem;
+      font-weight:800;
+      margin-bottom:6px;
+      text-transform:uppercase;
+      letter-spacing:.05em;
+    }
+
+    .plan-card .price{
+      font-size:1.35rem;
+      font-weight:900;
+      letter-spacing:-.03em;
+    }
+
+    .plan-card .desc{
+      margin-top:6px;
+      color:var(--muted);
+      font-size:.9rem;
+      line-height:1.4;
+    }
+
+    .form-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin-top:14px;
+    }
+
+    .field{
+      display:grid;
+      gap:8px;
+    }
+
+    .field label{
+      font-size:.9rem;
+      font-weight:700;
+      color:var(--text);
+    }
+
+    .input, .select{
+      width:100%;
+      height:52px;
+      border-radius:16px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      color:var(--text);
+      padding:0 14px;
+      outline:none;
+    }
+
+    .input::placeholder{color:rgba(255,255,255,.36)}
+    .input:focus, .select:focus{
+      border-color:rgba(22,196,106,.45);
+      box-shadow:0 0 0 4px rgba(12,163,86,.12);
+    }
+
+    .aside-card{
+      display:grid;
+      gap:14px;
+      position:sticky;
+      top:14px;
+    }
+
+    .summary{
+      display:grid;
+      gap:12px;
+    }
+
+    .summary-box{
+      border:1px solid var(--line);
+      border-radius:20px;
+      padding:14px;
+      background:rgba(255,255,255,.03);
+    }
+
+    .summary-line{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      padding:8px 0;
+      border-bottom:1px dashed rgba(255,255,255,.08);
+    }
+
+    .summary-line:last-child{border-bottom:none}
+    .summary-line span:first-child{color:var(--muted)}
+    .summary-line span:last-child{
+      text-align:right;
+      font-weight:800;
+    }
+
+    .total{
+      margin-top:6px;
+      padding-top:10px;
+      border-top:1px solid rgba(255,255,255,.08);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      font-size:1.06rem;
+      font-weight:900;
+    }
+
+    .pay-box{
+      border:1px solid rgba(242,201,76,.18);
+      border-radius:20px;
+      padding:14px;
+      background:linear-gradient(180deg, rgba(242,201,76,.08), rgba(255,255,255,.02));
+    }
+
+    .pay-kicker{
+      color:var(--gold);
+      font-size:.82rem;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.05em;
+      margin-bottom:6px;
+    }
+
+    .pay-main{
+      display:grid;
+      gap:6px;
+      margin-bottom:10px;
+    }
+
+    .pay-main b{
+      font-size:1.05rem;
+      letter-spacing:-.02em;
+    }
+
+    .pay-main span{
+      color:var(--muted);
+      line-height:1.45;
+      font-size:.92rem;
+    }
+
+    .big-number{
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:10px;
-      flex-wrap:wrap;
-      margin-bottom:12px;
-    }
-
-    .brandRow{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      min-width:0;
-    }
-
-    .logo{
-      width:42px;
-      height:42px;
-      border-radius:14px;
-      display:grid;
-      place-items:center;
-      font-family:var(--fontA);
-      font-weight:1000;
-      font-size:22px;
-      color:#fff;
-      border:1px solid rgba(244,223,181,.24);
-      background:linear-gradient(135deg, rgba(244,223,181,.18), rgba(195,90,125,.12));
-      box-shadow:0 10px 26px rgba(0,0,0,.22);
-      flex:0 0 auto;
-    }
-
-    .brandText{
-      min-width:0;
-    }
-
-    .brandTitle{
-      font-family:var(--fontA);
-      font-size:14px;
-      font-weight:1000;
-      letter-spacing:.4px;
-      line-height:1.1;
-    }
-
-    .brandSub{
-      margin-top:4px;
-      color:var(--muted);
-      font-size:11px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    .lang-switch{
-      display:flex;
-      gap:6px;
-      padding:4px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.03);
-    }
-
-    .lang-switch button{
-      border:none;
-      padding:8px 12px;
-      border-radius:999px;
-      cursor:pointer;
-      font-weight:1000;
-      font-size:12px;
-      background:transparent;
-      color:var(--text);
-      font-family:var(--fontA);
-    }
-
-    .lang-switch button.active{
-      background:linear-gradient(135deg, rgba(244,223,181,.20), rgba(195,90,125,.18));
-      color:#fff;
-    }
-
-    .menuBar{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      margin-bottom:14px;
-    }
-
-    .menuBtn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      min-height:40px;
-      padding:0 14px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.03);
-      color:var(--text);
-      font-size:12px;
-      font-weight:1000;
-      font-family:var(--fontA);
-    }
-
-    .menuBtn.gold{
-      border-color:rgba(244,223,181,.26);
-      background:rgba(244,223,181,.06);
-      color:var(--champ);
-    }
-
-    .hero{
-      border:1px solid rgba(244,223,181,.12);
-      background:
-        radial-gradient(450px 240px at 0% 0%, rgba(244,223,181,.08), transparent 60%),
-        radial-gradient(450px 240px at 100% 100%, rgba(195,90,125,.08), transparent 60%),
-        linear-gradient(180deg, rgba(244,223,181,.05), rgba(195,90,125,.04)),
-        rgba(0,0,0,.08);
-      border-radius:20px;
-      padding:16px;
-    }
-
-    .heroPill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:7px 11px;
-      border-radius:999px;
-      border:1px solid rgba(244,223,181,.24);
-      background:rgba(244,223,181,.06);
-      color:var(--champ);
-      font-size:12px;
-      white-space:nowrap;
+      padding:12px 14px;
+      border-radius:16px;
+      background:rgba(0,0,0,.18);
+      border:1px solid rgba(255,255,255,.08);
       font-weight:900;
-      margin-bottom:12px;
-    }
-
-    h1{
-      margin:0;
-      font-family:var(--fontA);
-      font-size:28px;
-      line-height:1.08;
-      font-weight:1000;
-      letter-spacing:.2px;
-      max-width:12ch;
-    }
-
-    .gold{
-      color:var(--champ);
-    }
-
-    .sub{
+      font-size:1rem;
       margin-top:10px;
-      color:var(--muted);
-      line-height:1.5;
-      font-size:14px;
-      max-width:620px;
     }
 
-    .sub strong{
-      color:#fff;
-    }
-
-    .heroChips{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      margin-top:14px;
-    }
-
-    .chip{
-      display:inline-flex;
-      align-items:center;
-      gap:7px;
-      padding:8px 10px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.03);
-      font-size:11px;
-      font-weight:1000;
-      color:#fff;
-    }
-
-    .heroActions{
-      display:flex;
+    .btn-row{
+      display:grid;
       gap:10px;
-      flex-wrap:wrap;
       margin-top:14px;
     }
 
     .btn{
+      border:none;
+      height:52px;
+      border-radius:16px;
+      padding:0 16px;
+      font-weight:900;
+      cursor:pointer;
+      transition:.18s ease;
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      gap:8px;
-      min-height:48px;
-      padding:0 16px;
-      border-radius:16px;
-      border:1px solid var(--line);
-      cursor:pointer;
-      font-weight:1100;
-      font-family:var(--fontA);
-      font-size:14px;
-      color:var(--text);
-      background:rgba(255,255,255,.03);
-    }
-
-    .btn.ok{
-      border-color:rgba(34,197,94,.35);
-      background:rgba(34,197,94,.08);
-    }
-
-    .btn.gold{
-      border-color:rgba(244,223,181,.34);
-      background:rgba(244,223,181,.08);
-      color:#fff3cf;
-    }
-
-    .hr{
-      height:1px;
-      background:var(--line);
-      margin:14px 0;
-    }
-
-    .sectionTitle{
-      font-size:12px;
-      text-transform:uppercase;
-      letter-spacing:.8px;
-      color:var(--champ);
-      font-weight:1200;
-      margin-bottom:10px;
-      display:flex;
-      align-items:center;
-      gap:8px;
-      font-family:var(--fontA);
-    }
-
-    .sectionTitle::after{
-      content:"";
-      flex:1;
-      height:1px;
-      background:rgba(244,223,181,.16);
-    }
-
-    .moduleRail{
-      display:flex;
-      gap:10px;
-      overflow-x:auto;
-      padding-bottom:4px;
-      scroll-snap-type:x proximity;
-      -webkit-overflow-scrolling:touch;
-    }
-
-    .moduleRail::-webkit-scrollbar{
-      height:6px;
-    }
-
-    .moduleRail::-webkit-scrollbar-thumb{
-      background:rgba(255,255,255,.14);
-      border-radius:999px;
-    }
-
-    .moduleBtn{
-      min-width:138px;
-      border:1px solid rgba(244,223,181,.16);
-      background:
-        linear-gradient(180deg, rgba(244,223,181,.06), rgba(195,90,125,.05)),
-        rgba(255,255,255,.02);
-      color:var(--text);
-      border-radius:18px;
-      padding:14px 12px;
-      text-align:left;
-      cursor:pointer;
-      scroll-snap-align:start;
-      transition:transform .08s ease, border-color .18s ease, box-shadow .18s ease;
-      font-family:var(--fontB);
-    }
-
-    .moduleBtn:active{ transform:translateY(1px); }
-
-    .moduleBtn.active{
-      border-color:rgba(244,223,181,.45);
-      box-shadow:0 10px 28px rgba(244,223,181,.08);
-    }
-
-    .moduleBtn.loco{
-      border-color:rgba(244,223,181,.34);
-      background:
-        radial-gradient(120px 70px at 20% 0%, rgba(244,223,181,.16), transparent 60%),
-        radial-gradient(140px 90px at 100% 100%, rgba(195,90,125,.16), transparent 60%),
-        linear-gradient(180deg, rgba(244,223,181,.08), rgba(195,90,125,.07)),
-        rgba(255,255,255,.03);
-      box-shadow:0 12px 30px rgba(244,223,181,.08);
-    }
-
-    .moduleEmoji{
-      font-size:20px;
-      display:block;
-      margin-bottom:6px;
-    }
-
-    .moduleName{
-      font-size:13px;
-      font-weight:1100;
-    }
-
-    .moduleHint{
-      margin-top:4px;
-      font-size:11px;
-      color:var(--muted);
-      line-height:1.3;
-    }
-
-    .locoBadge{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      margin-top:6px;
-      padding:5px 9px;
-      border-radius:999px;
-      font-size:10px;
-      font-weight:1100;
-      letter-spacing:.3px;
-      color:#fff3cf;
-      border:1px solid rgba(244,223,181,.28);
-      background:rgba(244,223,181,.08);
-    }
-
-    .focusCard{
-      border:1px solid rgba(244,223,181,.16);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02)),
-        rgba(0,0,0,.10);
-      border-radius:20px;
-      padding:16px;
-    }
-
-    .focusTop{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:12px;
-      flex-wrap:wrap;
-    }
-
-    .focusLeft{
-      display:flex;
-      align-items:flex-start;
-      gap:12px;
-      min-width:0;
-    }
-
-    .focusIcon{
-      width:52px;
-      height:52px;
-      border-radius:16px;
-      display:grid;
-      place-items:center;
-      font-size:26px;
-      border:1px solid rgba(244,223,181,.18);
-      background:rgba(244,223,181,.06);
-      flex:0 0 auto;
-    }
-
-    .focusLabel{
-      font-family:var(--fontA);
-      font-size:20px;
-      font-weight:1000;
-      line-height:1.1;
-    }
-
-    .focusHint{
-      margin-top:5px;
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.45;
-    }
-
-    .focusBadge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 11px;
-      border-radius:999px;
-      border:1px solid rgba(244,223,181,.22);
-      background:rgba(244,223,181,.06);
-      color:#fff3cf;
-      font-size:11px;
-      font-weight:1000;
-      white-space:nowrap;
-    }
-
-    .focusText{
-      margin-top:14px;
-      color:#f0ece3;
-      line-height:1.55;
-      font-size:14px;
-    }
-
-    .focusActions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:14px;
-    }
-
-    .visionBox,
-    .closingBox{
-      border:1px solid var(--line);
-      border-radius:18px;
-      background:rgba(255,255,255,.03);
-      padding:14px;
-    }
-
-    .visionText,
-    .closingText{
-      color:var(--muted);
-      line-height:1.55;
-      font-size:14px;
-    }
-
-    .visionText strong,
-    .closingText strong{
-      color:#fff;
-    }
-
-    .footer{
-      margin-top:14px;
-      color:var(--muted);
-      font-size:12px;
-      line-height:1.55;
       text-align:center;
     }
 
-    .footer strong{
-      color:#fff;
+    .btn:hover{transform:translateY(-1px)}
+    .btn-primary{
+      background:linear-gradient(180deg, var(--green-2), var(--green));
+      color:#062514;
+      box-shadow:0 16px 30px rgba(12,163,86,.25);
     }
 
-    .stickyBar{
-      position:fixed;
-      left:0; right:0; bottom:0;
-      z-index:20;
-      padding:10px 12px calc(10px + env(safe-area-inset-bottom));
-      background:linear-gradient(180deg, rgba(11,22,18,.04), rgba(11,22,18,.96) 35%);
-      backdrop-filter:blur(10px);
+    .btn-secondary{
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      border:1px solid rgba(255,255,255,.1);
     }
 
-    .stickyInner{
-      max-width:920px;
-      margin:0 auto;
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:space-between;
-      border:1px solid rgba(244,223,181,.16);
-      background:rgba(18,33,27,.96);
-      border-radius:18px;
-      padding:10px;
-      box-shadow:0 14px 40px rgba(0,0,0,.32);
+    .btn-gold{
+      background:linear-gradient(180deg, #ffd86b, var(--gold));
+      color:#2d2202;
+      box-shadow:0 16px 30px rgba(242,201,76,.18);
     }
 
-    .stickyInfo{
-      min-width:0;
-      flex:1;
-    }
-
-    .stickyTitle{
-      font-size:12px;
+    .note{
       color:var(--muted);
-      margin-bottom:4px;
+      font-size:.9rem;
+      line-height:1.5;
     }
 
-    .stickyValue{
-      font-size:14px;
-      font-weight:1100;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
+    .foot{
+      margin-top:18px;
+      color:var(--muted);
+      font-size:.88rem;
+      text-align:center;
+      line-height:1.5;
     }
 
-    .stickyActions{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
+    .tiny{
+      font-size:.82rem;
+      color:var(--muted);
     }
 
-    .stickyActions .btn{
-      min-height:44px;
-      padding:0 14px;
+    .status{
+      margin-top:10px;
+      min-height:22px;
+      font-size:.93rem;
+      font-weight:700;
     }
 
-    @media (max-width:640px){
-      h1{ font-size:24px; }
-      .brandSub{ max-width:160px; }
-      .stickyActions{
-        width:100%;
+    .status.ok{color:#8ef0b4}
+    .status.warn{color:#ffd56e}
+    .status.bad{color:#ff9e9e}
+
+    @media (max-width: 920px){
+      .hero-grid, .grid{
+        grid-template-columns:1fr;
       }
-      .stickyActions .btn{
-        flex:1;
+      .aside-card{
+        position:static;
       }
+    }
+
+    @media (max-width: 680px){
+      .module-grid,
+      .plan-row,
+      .form-grid{
+        grid-template-columns:1fr;
+      }
+
+      .wrap{padding:14px 12px 34px}
+      .hero{padding:18px}
+      .panel{padding:15px}
+      h1{font-size:2rem}
     }
   </style>
 </head>
-
 <body>
   <div class="wrap">
-    <div class="card">
-
-      <div class="topbar">
-        <a class="brandRow" href="https://digiylyfe.com/" aria-label="Accueil DIGIYLYFE">
-          <div class="logo">∞</div>
-          <div class="brandText">
-            <div class="brandTitle">DIGIYLYFE</div>
-            <div class="brandSub">L'Afrique enracinée, connectée au monde</div>
-          </div>
-        </a>
-
-        <div class="lang-switch" aria-label="Choix de langue">
-          <button id="lang-fr" class="active" type="button">FR</button>
-          <button id="lang-wo" type="button">WO</button>
-        </div>
+    <section class="hero">
+      <div class="badge-row">
+        <div class="badge">♾️ DIGIY PAY</div>
+        <div class="badge">0% commission</div>
+        <div class="badge">Activation simple</div>
       </div>
 
-      <div class="menuBar">
-        <a class="menuBtn gold" href="https://digiylyfe.com/" target="_blank" rel="noopener">Accueil</a>
-        <a class="menuBtn" href="https://articles.digiylyfe.com/" target="_blank" rel="noopener">Articles</a>
-        <a class="menuBtn" href="https://beauville.github.io/galerie-chauffeurs/" target="_blank" rel="noopener">Galerie Chauffeurs</a>
-        <a class="menuBtn" href="https://knowledge.digiylyfe.com/widget/" target="_blank" rel="noopener">Assistant IA</a>
-      </div>
+      <h1>Commencer à payer</h1>
+      <p>
+        On va au direct, frérot. Tu choisis ton module, ta formule, ton numéro.
+        Ensuite tu lances la demande d’activation proprement, sans tunnel tordu, sans théâtre de plateforme.
+      </p>
 
-      <section class="hero" id="hero">
-        <div class="heroPill">DIGIYLYFE ∞ · premium · mobile-first · terrain</div>
-
-        <h1>
-          Tout ton business
-          <span class="gold">dans ta main</span>
-        </h1>
-
-        <p class="sub">
-          DIGIYLYFE rassemble des outils clairs pour la mobilité, la location, la restauration,
-          la caisse, le commerce, les artisans et le fret.
-          Une logique simple :
-          <strong>0% commission</strong>, paiement direct au pro, expérience propre sur téléphone.
-        </p>
-
-        <div class="heroChips">
-          <span class="chip">0% commission</span>
-          <span class="chip">Paiement direct</span>
-          <span class="chip">Modules clairs</span>
-          <span class="chip">Afrique enracinée</span>
-        </div>
-
-        <div class="heroActions">
-          <a class="btn gold" id="heroOpenBtn" href="https://explore.digiylyfe.com/" target="_blank" rel="noopener">🧭 Ouvrir le module</a>
-          <a class="btn ok" href="#modules">🚀 Voir les modules</a>
-        </div>
-      </section>
-
-      <div class="hr"></div>
-
-      <section id="modules">
-        <div class="sectionTitle">Menu modules</div>
-        <div class="moduleRail" id="moduleRail"></div>
-      </section>
-
-      <div class="hr"></div>
-
-      <section>
-        <div class="sectionTitle">Focus module</div>
-
-        <div class="focusCard">
-          <div class="focusTop">
-            <div class="focusLeft">
-              <div class="focusIcon" id="focusIcon">🧭</div>
+      <div class="hero-grid">
+        <div class="panel">
+          <h2>Comment ça marche</h2>
+          <div class="steps">
+            <div class="step">
+              <div class="n">1</div>
               <div>
-                <div class="focusLabel" id="focusLabel">EXPLORE</div>
-                <div class="focusHint" id="focusHint">Locomotive • Agence & tourisme</div>
+                <b>Choisis ton module</b>
+                <span>LOC, DRIVER, RESA, RESTO, MARKET, JOBS… on active ce qu’il te faut, pas plus.</span>
               </div>
             </div>
-
-            <div class="focusBadge" id="focusBadge">👑 Module locomotive</div>
-          </div>
-
-          <div class="focusText" id="focusText">
-            DIGIY EXPLORE ouvre la marche. C’est la vitrine locomotive pour mettre en avant l’agence,
-            les expériences, les circuits, les lieux et la force du territoire sans noyer le visiteur.
-          </div>
-
-          <div class="focusActions">
-            <a class="btn gold" id="focusOpen" href="https://explore.digiylyfe.com/" target="_blank" rel="noopener">Ouvrir le module</a>
-            <a class="btn" href="https://digiylyfe.com/" target="_blank" rel="noopener">Voir la suite DIGIY</a>
-          </div>
-        </div>
-      </section>
-
-      <div class="hr"></div>
-
-      <section id="vision">
-        <div class="sectionTitle">Vision DIGIY</div>
-        <div class="visionBox">
-          <div class="visionText">
-            DIGIYLYFE construit des outils simples, puissants et respectueux du terrain.
-            Ici, le numérique ne remplace pas l’humain :
-            <strong>il l’équipe, il le rend visible, il protège sa valeur.</strong>
-            L’idée n’est pas de montrer tout d’un coup.
-            L’idée, c’est qu’un visiteur comprenne vite, respire, clique, avance.
+            <div class="step">
+              <div class="n">2</div>
+              <div>
+                <b>Choisis ta formule</b>
+                <span>Mensuel ou annuel selon ton rythme. Tu restes libre, propre, lisible.</span>
+              </div>
+            </div>
+            <div class="step">
+              <div class="n">3</div>
+              <div>
+                <b>Envoie ta demande</b>
+                <span>Le message WhatsApp part déjà rempli. Tu gagnes du temps, tu évites les erreurs.</span>
+              </div>
+            </div>
           </div>
         </div>
-      </section>
 
-      <div class="hr"></div>
-
-      <section id="contact">
-        <div class="sectionTitle">Entrée DIGIY</div>
-        <div class="closingBox">
-          <div class="closingText">
-            Une seule vitrine, plusieurs métiers, une même dignité.
-            DIGIYLYFE met en avant des modules propres, lisibles et prêts pour le commerce réel.
-            <strong>Tu choisis une porte, tu avances sans confusion.</strong>
-          </div>
-
-          <div class="heroActions" style="margin-top:14px;">
-            <a class="btn ok" id="mainEnterBtn" href="https://explore.digiylyfe.com/" target="_blank" rel="noopener">➡️ Entrer dans le module sélectionné</a>
-            <a class="btn" href="https://knowledge.digiylyfe.com/widget/" target="_blank" rel="noopener">🧠 Ouvrir l’assistant</a>
+        <div class="panel">
+          <h2>Ce que tu actives ici</h2>
+          <div class="steps">
+            <div class="step">
+              <div class="n">✓</div>
+              <div>
+                <b>Modules PRO</b>
+                <span>Accès professionnel, cockpit, PIN, logique abonnement propre DIGIY.</span>
+              </div>
+            </div>
+            <div class="step">
+              <div class="n">⚡</div>
+              <div>
+                <b>Paiement direct</b>
+                <span>Simple, local, terrain. Pas de commission tordue qui mange le commerçant.</span>
+              </div>
+            </div>
+            <div class="step">
+              <div class="n">🛡</div>
+              <div>
+                <b>Activation claire</b>
+                <span>Résumé avant envoi, référence générée, numéro prêt à copier.</span>
+              </div>
+            </div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <div class="footer">
-        <strong>DIGIYLYFE ∞</strong><br/>
-        0% commission · paiement direct au pro · présentation plus calme · made for the terrain
+    <section class="grid">
+      <div class="panel">
+        <div class="section-title">
+          <h3>Choisis ton module</h3>
+          <div class="small">Version PRO</div>
+        </div>
+
+        <div id="moduleGrid" class="module-grid"></div>
+
+        <div class="section-title" style="margin-top:18px">
+          <h3>Choisis ta formule</h3>
+          <div class="small">Montant auto</div>
+        </div>
+
+        <div id="planRow" class="plan-row"></div>
+
+        <div class="section-title" style="margin-top:18px">
+          <h3>Informations</h3>
+          <div class="small">Pré-remplies si URL</div>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="phone">Téléphone</label>
+            <input id="phone" class="input" type="tel" inputmode="numeric" placeholder="221771234567" />
+          </div>
+
+          <div class="field">
+            <label for="paymentMethod">Mode de paiement</label>
+            <select id="paymentMethod" class="select">
+              <option value="WAVE">Wave</option>
+              <option value="OM">Orange Money</option>
+              <option value="AUTRE">Autre</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="fullname">Nom / activité</label>
+            <input id="fullname" class="input" type="text" placeholder="Ex: Astou Boutique / Jean Baptiste" />
+          </div>
+
+          <div class="field">
+            <label for="city">Ville / zone</label>
+            <input id="city" class="input" type="text" placeholder="Ex: Saly, Mbour, Dakar" />
+          </div>
+        </div>
+
+        <div class="field" style="margin-top:12px">
+          <label for="note">Message complémentaire</label>
+          <input id="note" class="input" type="text" placeholder="Ex: Je veux activer mon module aujourd’hui" />
+        </div>
+
+        <div class="status" id="status"></div>
       </div>
 
-    </div>
-  </div>
+      <aside class="aside-card">
+        <div class="panel summary">
+          <div class="section-title" style="margin-bottom:2px">
+            <h3>Résumé</h3>
+            <div class="small" id="refBox">REF —</div>
+          </div>
 
-  <div class="stickyBar">
-    <div class="stickyInner">
-      <div class="stickyInfo">
-        <div class="stickyTitle">Module sélectionné</div>
-        <div class="stickyValue" id="stickyValue">EXPLORE • Locomotive • Agence & tourisme</div>
-      </div>
-      <div class="stickyActions">
-        <a class="btn" href="#modules">Modules</a>
-        <a class="btn gold" id="stickyOpenBtn" href="https://explore.digiylyfe.com/" target="_blank" rel="noopener">Ouvrir</a>
-      </div>
+          <div class="summary-box">
+            <div class="summary-line">
+              <span>Module</span>
+              <span id="sumModule">—</span>
+            </div>
+            <div class="summary-line">
+              <span>Formule</span>
+              <span id="sumPlan">—</span>
+            </div>
+            <div class="summary-line">
+              <span>Téléphone</span>
+              <span id="sumPhone">—</span>
+            </div>
+            <div class="summary-line">
+              <span>Paiement</span>
+              <span id="sumMethod">—</span>
+            </div>
+            <div class="total">
+              <span>Total</span>
+              <span id="sumTotal">—</span>
+            </div>
+          </div>
+
+          <div class="pay-box">
+            <div class="pay-kicker">Paiement direct</div>
+            <div class="pay-main">
+              <b id="payTitle">Envoie le montant puis confirme</b>
+              <span>
+                Après paiement, envoie la preuve ou ta demande d’activation via WhatsApp.
+                Le message ci-dessous part déjà structuré.
+              </span>
+            </div>
+
+            <div class="big-number">
+              <span id="paymentNumber">221771342889</span>
+              <button id="copyNumberBtn" class="btn btn-secondary" style="height:40px;padding:0 12px">Copier</button>
+            </div>
+
+            <div class="btn-row">
+              <button id="copyOrderBtn" class="btn btn-secondary">Copier le résumé</button>
+              <button id="waBtn" class="btn btn-primary">Envoyer sur WhatsApp</button>
+              <button id="resetBtn" class="btn btn-gold">Réinitialiser</button>
+            </div>
+          </div>
+
+          <div class="note">
+            Conseil terrain : garde toujours le même numéro pour l’abonnement et pour le futur accès PIN/slug.
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <div class="foot">
+      DIGIYLYFE — outils simples, puissants, enracinés terrain.  
+      <div class="tiny">Paiement direct • Activation claire • Modules PRO</div>
     </div>
   </div>
 
   <script>
-    (function(){
-      "use strict";
+    const SUPPORT_WHATSAPP = "221771342889";
+    const PAYMENT_NUMBER = "221771342889";
 
-      const MODULES = [
-        { module:"EXPLORE", icon:"🧭", label:"EXPLORE", hint:"Locomotive • Agence & tourisme", loco:true },
-        { module:"DRIVER", icon:"🚗", label:"DRIVER", hint:"Mobilité terrain" },
-        { module:"LOC", icon:"🏠", label:"LOC", hint:"Location premium" },
-        { module:"RESTO", icon:"🍽️", label:"RESTO", hint:"Restauration pro" },
-        { module:"RESA_TABLE", icon:"📅", label:"RÉSA", hint:"Réservation tables" },
-        { module:"POS", icon:"🧾", label:"POS", hint:"Caisse" },
-        { module:"MARKET", icon:"🛒", label:"MARKET", hint:"Vitrine commerce" },
-        { module:"BUILD", icon:"🏗️", label:"BUILD", hint:"Artisans & devis" },
-        { module:"FRET_PRO", icon:"🚚", label:"FRET PRO", hint:"Chauffeur" },
-        { module:"FRET_CLIENT_PRO", icon:"📦", label:"FRET CLIENT", hint:"Expéditeur" }
-      ];
+    const MODULES = [
+      {
+        code: "LOC",
+        title: "DIGIY LOC PRO",
+        type: "PRO",
+        desc: "Locations, hébergements, chambres, maisons.",
+        prices: { month: 5000, year: 50000 }
+      },
+      {
+        code: "DRIVER",
+        title: "DIGIY DRIVER PRO",
+        type: "PRO",
+        desc: "Mobilité, chauffeurs, trajets, demandes terrain.",
+        prices: { month: 5000, year: 50000 }
+      },
+      {
+        code: "RESA",
+        title: "DIGIY RESA PRO",
+        type: "PRO",
+        desc: "Réservations, planning, demandes clients.",
+        prices: { month: 5000, year: 50000 }
+      },
+      {
+        code: "RESTO",
+        title: "DIGIY RESTO PRO",
+        type: "PRO",
+        desc: "Carte, commandes, organisation restauration.",
+        prices: { month: 5000, year: 50000 }
+      },
+      {
+        code: "MARKET",
+        title: "DIGIY MARKET PRO",
+        type: "PRO",
+        desc: "Boutique, produits, publication commerciale.",
+        prices: { month: 5000, year: 50000 }
+      },
+      {
+        code: "JOBS",
+        title: "DIGIY JOBS PRO",
+        type: "PRO",
+        desc: "Offres, profils, mise en relation utile.",
+        prices: { month: 5000, year: 50000 }
+      }
+    ];
 
-      const MODULE_LINKS = {
-        EXPLORE: "https://explore.digiylyfe.com/",
-        DRIVER: "https://driver.digiylyfe.com/",
-        LOC: "https://loc.digiylyfe.com/",
-        RESTO: "https://resto.digiylyfe.com/",
-        RESA_TABLE: "https://resa.digiylyfe.com/",
-        POS: "https://pos.digiylyfe.com/",
-        MARKET: "https://market.digiylyfe.com/",
-        BUILD: "https://build.digiylyfe.com/",
-        FRET_PRO: "https://fret-pro.digiylyfe.com/",
-        FRET_CLIENT_PRO: "https://fret-client.digiylyfe.com/"
-      };
+    const PLANS = [
+      {
+        code: "month",
+        label: "Mensuel",
+        kicker: "Souple",
+        desc: "Tu avances pas à pas, proprement."
+      },
+      {
+        code: "year",
+        label: "Annuel",
+        kicker: "Vision",
+        desc: "Tu poses ton outil dans la durée."
+      }
+    ];
 
-      const MODULE_COPY = {
-        EXPLORE: {
-          text: "DIGIY EXPLORE ouvre la marche. C’est la vitrine locomotive pour mettre en avant l’agence, les expériences, les circuits, les lieux et la force du territoire sans noyer le visiteur.",
-          badge: "👑 Module locomotive"
-        },
-        DRIVER: {
-          text: "DIGIY DRIVER met la mobilité terrain au premier plan. Le client comprend vite, trouve vite, et entre en contact sans tourner dans un labyrinthe.",
-          badge: "🚗 Mobilité directe"
-        },
-        LOC: {
-          text: "DIGIY LOC présente des logements avec une image plus propre, plus premium et plus respirable. On retire le bruit, on garde la confiance et l’envie de réserver.",
-          badge: "🏠 Location premium"
-        },
-        RESTO: {
-          text: "DIGIY RESTO donne au restaurant une présence claire, chaleureuse et sérieuse. Le visiteur voit l’essentiel, sent l’ambiance, puis avance vers l’action.",
-          badge: "🍽️ Restauration pro"
-        },
-        RESA_TABLE: {
-          text: "DIGIY RÉSA simplifie la réservation de tables avec un parcours lisible. Peu de friction, peu de surcharge, juste ce qu’il faut pour réserver vite.",
-          badge: "📅 Réservation simple"
-        },
-        POS: {
-          text: "DIGIY POS met la caisse et la gestion dans une logique directe. Le ton reste propre, pro et mobile-first, sans jargon qui fatigue.",
-          badge: "🧾 Gestion claire"
-        },
-        MARKET: {
-          text: "DIGIY MARKET aide le commerce à se montrer sans se disperser. Une vitrine plus nette, plus marchande, plus facile à partager.",
-          badge: "🛒 Commerce visible"
-        },
-        BUILD: {
-          text: "DIGIY BUILD valorise les artisans, les devis et le savoir-faire. Le pro gagne en présence et le client comprend rapidement à qui il parle.",
-          badge: "🏗️ Artisans & devis"
-        },
-        FRET_PRO: {
-          text: "DIGIY FRET PRO donne au chauffeur une porte claire pour proposer ses services. On cherche l’efficacité terrain avant tout.",
-          badge: "🚚 Côté chauffeur"
-        },
-        FRET_CLIENT_PRO: {
-          text: "DIGIY FRET CLIENT structure l’entrée expéditeur. Besoin, contact, mouvement : le message reste propre et orienté action.",
-          badge: "📦 Côté expéditeur"
-        }
-      };
+    const $ = (sel, root = document) => root.querySelector(sel);
 
-      const rail = document.getElementById("moduleRail");
-      const focusIcon = document.getElementById("focusIcon");
-      const focusLabel = document.getElementById("focusLabel");
-      const focusHint = document.getElementById("focusHint");
-      const focusText = document.getElementById("focusText");
-      const focusBadge = document.getElementById("focusBadge");
-      const focusOpen = document.getElementById("focusOpen");
-      const stickyValue = document.getElementById("stickyValue");
-      const stickyOpenBtn = document.getElementById("stickyOpenBtn");
-      const mainEnterBtn = document.getElementById("mainEnterBtn");
-      const heroOpenBtn = document.getElementById("heroOpenBtn");
+    const state = {
+      module: "LOC",
+      plan: "month",
+      phone: "",
+      fullname: "",
+      city: "",
+      note: "",
+      paymentMethod: "WAVE",
+      amountOverride: null,
+      ref: ""
+    };
 
-      let currentModule = "EXPLORE";
+    const el = {
+      moduleGrid: $("#moduleGrid"),
+      planRow: $("#planRow"),
+      phone: $("#phone"),
+      fullname: $("#fullname"),
+      city: $("#city"),
+      note: $("#note"),
+      paymentMethod: $("#paymentMethod"),
+      sumModule: $("#sumModule"),
+      sumPlan: $("#sumPlan"),
+      sumPhone: $("#sumPhone"),
+      sumMethod: $("#sumMethod"),
+      sumTotal: $("#sumTotal"),
+      refBox: $("#refBox"),
+      status: $("#status"),
+      paymentNumber: $("#paymentNumber"),
+      copyNumberBtn: $("#copyNumberBtn"),
+      copyOrderBtn: $("#copyOrderBtn"),
+      waBtn: $("#waBtn"),
+      resetBtn: $("#resetBtn"),
+      payTitle: $("#payTitle")
+    };
 
-      function renderRail(){
-        rail.innerHTML = MODULES.map(item => `
-          <button
-            class="moduleBtn ${item.module === currentModule ? "active" : ""} ${item.loco ? "loco" : ""}"
-            type="button"
-            data-module="${item.module}">
-            <span class="moduleEmoji">${item.icon}</span>
-            <div class="moduleName">${item.label}</div>
-            <div class="moduleHint">${item.hint}</div>
-            ${item.loco ? `<div class="locoBadge">👑 LOCOMOTIVE</div>` : ``}
-          </button>
-        `).join("");
+    function money(n){
+      return new Intl.NumberFormat("fr-FR").format(Number(n || 0)) + " FCFA";
+    }
 
-        rail.querySelectorAll("[data-module]").forEach(btn => {
-          btn.addEventListener("click", () => {
-            currentModule = btn.getAttribute("data-module") || "EXPLORE";
-            renderRail();
-            renderFocus();
-          });
+    function sanitizePhone(v){
+      return String(v || "").replace(/[^\d]/g, "");
+    }
+
+    function getCurrentModule(){
+      return MODULES.find(m => m.code === state.module) || MODULES[0];
+    }
+
+    function getCurrentPlan(){
+      return PLANS.find(p => p.code === state.plan) || PLANS[0];
+    }
+
+    function getAmount(){
+      if (state.amountOverride && !Number.isNaN(Number(state.amountOverride))) {
+        return Number(state.amountOverride);
+      }
+      const mod = getCurrentModule();
+      return mod?.prices?.[state.plan] ?? 0;
+    }
+
+    function buildRef(){
+      const d = new Date();
+      const y = d.getFullYear().toString().slice(-2);
+      const mo = String(d.getMonth()+1).padStart(2,"0");
+      const da = String(d.getDate()).padStart(2,"0");
+      const hh = String(d.getHours()).padStart(2,"0");
+      const mi = String(d.getMinutes()).padStart(2,"0");
+      const suffix = sanitizePhone(state.phone).slice(-4) || "0000";
+      state.ref = `DG-${state.module}-${y}${mo}${da}-${hh}${mi}-${suffix}`;
+    }
+
+    function renderModules(){
+      el.moduleGrid.innerHTML = MODULES.map(m => `
+        <button class="module-card ${m.code === state.module ? "active" : ""}" data-module="${m.code}">
+          <div class="module-top">
+            <span class="module-code">${m.code}</span>
+            <span class="module-type">${m.type}</span>
+          </div>
+          <h4>${m.title}</h4>
+          <p>${m.desc}</p>
+        </button>
+      `).join("");
+
+      el.moduleGrid.querySelectorAll("[data-module]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          state.module = btn.dataset.module;
+          buildRef();
+          renderModules();
+          renderPlans();
+          updateSummary();
+          persist();
         });
+      });
+    }
+
+    function renderPlans(){
+      const mod = getCurrentModule();
+
+      el.planRow.innerHTML = PLANS.map(p => `
+        <button class="plan-card ${p.code === state.plan ? "active" : ""}" data-plan="${p.code}">
+          <div class="kicker">${p.kicker}</div>
+          <div class="price">${money(mod.prices[p.code] || 0)}</div>
+          <div class="desc"><b>${p.label}</b> — ${p.desc}</div>
+        </button>
+      `).join("");
+
+      el.planRow.querySelectorAll("[data-plan]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          state.plan = btn.dataset.plan;
+          buildRef();
+          renderPlans();
+          updateSummary();
+          persist();
+        });
+      });
+    }
+
+    function updateSummary(){
+      const mod = getCurrentModule();
+      const plan = getCurrentPlan();
+      const amount = getAmount();
+
+      el.sumModule.textContent = mod.title;
+      el.sumPlan.textContent = plan.label;
+      el.sumPhone.textContent = sanitizePhone(state.phone) || "—";
+      el.sumMethod.textContent = state.paymentMethod;
+      el.sumTotal.textContent = money(amount);
+      el.refBox.textContent = `REF ${state.ref || "—"}`;
+      el.paymentNumber.textContent = PAYMENT_NUMBER;
+      el.payTitle.textContent = `Paye ${money(amount)} puis confirme l’activation`;
+
+      const missing = [];
+      if (!sanitizePhone(state.phone)) missing.push("téléphone");
+      if (!state.module) missing.push("module");
+      if (!state.plan) missing.push("formule");
+
+      if (!missing.length){
+        setStatus("Résumé prêt. Tu peux copier ou envoyer sur WhatsApp.", "ok");
+      } else {
+        setStatus("Complète : " + missing.join(", ") + ".", "warn");
       }
+    }
 
-      function renderFocus(){
-        const item = MODULES.find(x => x.module === currentModule) || MODULES[0];
-        const copy = MODULE_COPY[item.module] || { text:item.hint, badge:"DIGIY" };
-        const href = MODULE_LINKS[item.module] || "https://digiylyfe.com/";
+    function setStatus(msg, type = ""){
+      el.status.className = "status" + (type ? " " + type : "");
+      el.status.textContent = msg;
+    }
 
-        focusIcon.textContent = item.icon;
-        focusLabel.textContent = item.label;
-        focusHint.textContent = item.hint;
-        focusText.textContent = copy.text;
-        focusBadge.textContent = copy.badge;
+    function buildMessage(){
+      const mod = getCurrentModule();
+      const plan = getCurrentPlan();
+      const amount = getAmount();
+      const phone = sanitizePhone(state.phone) || "NON RENSEIGNÉ";
+      const fullname = (state.fullname || "").trim() || "Non renseigné";
+      const city = (state.city || "").trim() || "Non renseigné";
+      const note = (state.note || "").trim() || "Aucune";
 
-        focusOpen.href = href;
-        stickyOpenBtn.href = href;
-        mainEnterBtn.href = href;
-        heroOpenBtn.href = href;
+      return [
+        "Bonjour DIGIY,",
+        "",
+        "Je souhaite commencer à payer / activer mon module.",
+        "",
+        `Référence : ${state.ref}`,
+        `Module : ${mod.title}`,
+        `Code module : ${mod.code}`,
+        `Formule : ${plan.label}`,
+        `Montant : ${money(amount)}`,
+        `Mode de paiement : ${state.paymentMethod}`,
+        `Téléphone : ${phone}`,
+        `Nom / activité : ${fullname}`,
+        `Ville / zone : ${city}`,
+        `Note : ${note}`,
+        "",
+        "Merci de me confirmer l’activation après paiement."
+      ].join("\n");
+    }
 
-        stickyValue.textContent = `${item.label} • ${item.hint}`;
+    async function copyText(text, okMsg){
+      try{
+        await navigator.clipboard.writeText(text);
+        setStatus(okMsg, "ok");
+      }catch{
+        setStatus("Impossible de copier automatiquement sur cet appareil.", "bad");
       }
+    }
 
-      const langFr = document.getElementById("lang-fr");
-      const langWo = document.getElementById("lang-wo");
-      const savedLang = localStorage.getItem("digiy_lang") || "fr";
+    function openWhatsApp(){
+      const msg = buildMessage();
+      const url = `https://wa.me/${SUPPORT_WHATSAPP}?text=${encodeURIComponent(msg)}`;
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
 
-      function setLang(lang){
-        localStorage.setItem("digiy_lang", lang);
-        langFr.classList.toggle("active", lang === "fr");
-        langWo.classList.toggle("active", lang === "wo");
+    function persist(){
+      const payload = {
+        module: state.module,
+        plan: state.plan,
+        phone: state.phone,
+        fullname: state.fullname,
+        city: state.city,
+        note: state.note,
+        paymentMethod: state.paymentMethod,
+        amountOverride: state.amountOverride
+      };
+      localStorage.setItem("DIGIY_PAY_START_FORM", JSON.stringify(payload));
+    }
+
+    function restore(){
+      try{
+        const raw = localStorage.getItem("DIGIY_PAY_START_FORM");
+        if (!raw) return;
+        const saved = JSON.parse(raw);
+        if (saved && typeof saved === "object"){
+          state.module = saved.module || state.module;
+          state.plan = saved.plan || state.plan;
+          state.phone = saved.phone || "";
+          state.fullname = saved.fullname || "";
+          state.city = saved.city || "";
+          state.note = saved.note || "";
+          state.paymentMethod = saved.paymentMethod || "WAVE";
+          state.amountOverride = saved.amountOverride ?? null;
+        }
+      }catch{}
+    }
+
+    function applyQueryParams(){
+      const q = new URLSearchParams(location.search);
+
+      const moduleParam = (q.get("module") || "").toUpperCase();
+      const planParam = (q.get("plan") || "").toLowerCase();
+      const phoneParam = sanitizePhone(q.get("phone") || "");
+      const fullnameParam = q.get("name") || "";
+      const cityParam = q.get("city") || "";
+      const noteParam = q.get("note") || "";
+      const amountParam = q.get("amount");
+
+      if (MODULES.some(m => m.code === moduleParam)) state.module = moduleParam;
+      if (PLANS.some(p => p.code === planParam)) state.plan = planParam;
+      if (phoneParam) state.phone = phoneParam;
+      if (fullnameParam) state.fullname = fullnameParam;
+      if (cityParam) state.city = cityParam;
+      if (noteParam) state.note = noteParam;
+      if (amountParam && !Number.isNaN(Number(amountParam))) {
+        state.amountOverride = Number(amountParam);
       }
+    }
 
-      langFr.addEventListener("click", () => setLang("fr"));
-      langWo.addEventListener("click", () => setLang("wo"));
+    function bind(){
+      el.phone.addEventListener("input", e => {
+        state.phone = sanitizePhone(e.target.value);
+        e.target.value = state.phone;
+        buildRef();
+        updateSummary();
+        persist();
+      });
 
-      setLang(savedLang);
-      renderRail();
-      renderFocus();
-    })();
+      el.fullname.addEventListener("input", e => {
+        state.fullname = e.target.value;
+        updateSummary();
+        persist();
+      });
+
+      el.city.addEventListener("input", e => {
+        state.city = e.target.value;
+        updateSummary();
+        persist();
+      });
+
+      el.note.addEventListener("input", e => {
+        state.note = e.target.value;
+        updateSummary();
+        persist();
+      });
+
+      el.paymentMethod.addEventListener("change", e => {
+        state.paymentMethod = e.target.value;
+        updateSummary();
+        persist();
+      });
+
+      el.copyNumberBtn.addEventListener("click", () => {
+        copyText(PAYMENT_NUMBER, "Numéro de paiement copié.");
+      });
+
+      el.copyOrderBtn.addEventListener("click", () => {
+        copyText(buildMessage(), "Résumé copié.");
+      });
+
+      el.waBtn.addEventListener("click", () => {
+        if (!sanitizePhone(state.phone)) {
+          setStatus("Ajoute le téléphone avant d’envoyer.", "warn");
+          el.phone.focus();
+          return;
+        }
+        openWhatsApp();
+      });
+
+      el.resetBtn.addEventListener("click", () => {
+        localStorage.removeItem("DIGIY_PAY_START_FORM");
+        state.module = "LOC";
+        state.plan = "month";
+        state.phone = "";
+        state.fullname = "";
+        state.city = "";
+        state.note = "";
+        state.paymentMethod = "WAVE";
+        state.amountOverride = null;
+        hydrateFields();
+        buildRef();
+        renderModules();
+        renderPlans();
+        updateSummary();
+        setStatus("Formulaire réinitialisé.", "ok");
+      });
+    }
+
+    function hydrateFields(){
+      el.phone.value = state.phone || "";
+      el.fullname.value = state.fullname || "";
+      el.city.value = state.city || "";
+      el.note.value = state.note || "";
+      el.paymentMethod.value = state.paymentMethod || "WAVE";
+    }
+
+    function init(){
+      restore();
+      applyQueryParams();
+      buildRef();
+      hydrateFields();
+      renderModules();
+      renderPlans();
+      bind();
+      updateSummary();
+    }
+
+    init();
   </script>
 </body>
 </html>
