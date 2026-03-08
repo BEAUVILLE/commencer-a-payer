@@ -14,7 +14,6 @@
       --text:#eafff1; --muted:rgba(234,255,241,.75);
       --ok:#22c55e; --warn:#f59e0b; --bad:#ef4444; --gold:#facc15;
       --radius:18px; --shadow:0 18px 50px rgba(0,0,0,.35);
-      --kb:#0a3a2a;
     }
     *{box-sizing:border-box}
     body{ margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial; background:var(--bg); color:var(--text); }
@@ -128,22 +127,6 @@
     .priceAmt{ font-size:13px; font-weight:1100; color: var(--gold); white-space:nowrap; }
     .priceDesc{ margin-top:6px; font-size:11px; color:var(--muted); line-height:1.35; }
     .hintLine{ margin-top:10px; font-size:12px; color:var(--muted); }
-
-    .uploadBox{
-      border:1px dashed rgba(255,255,255,.20);
-      border-radius:16px;
-      padding:12px;
-      background:rgba(0,0,0,.10);
-      margin:12px 0;
-    }
-    .uploadBox input[type="file"]{
-      width:100%;
-      padding:10px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(0,0,0,.12);
-      color:var(--text);
-    }
 
     .digiy-input{
       width:100%;
@@ -276,11 +259,11 @@
           <button id="lang-fr" class="active" type="button">FR</button>
           <button id="lang-wo" type="button">WO</button>
         </div>
-        <span class="tag" data-i18n="tag_digiy">DIGIY PAY</span>
+        <span class="tag">DIGIY PAY</span>
       </div>
 
-      <h1 data-i18n="page_title">ACTIVER MON MODULE — DIGIY</h1>
-      <p class="small" data-i18n="subtitle">Paiement direct · 0% commission · Activation sécurisée</p>
+      <h1>ACTIVER MON MODULE — DIGIY</h1>
+      <p class="small">Paiement direct · 0% commission · Activation sécurisée</p>
 
       <div class="hr"></div>
 
@@ -322,7 +305,7 @@
             <button type="button" data-q="Quel code choisir pour DRIVER ?">🚗 S'inscrire DRIVER</button>
             <button type="button" data-q="Explique les tarifs LOC (2A à 2E).">🏠 Tarifs LOC</button>
             <button type="button" data-q="Pourquoi DIGIY est à 0% commission ?">💰 0% Commission</button>
-            <button type="button" data" data-q="C’est quoi le slug et à quoi ça sert ?">🔗 Le slug</button>
+            <button type="button" data-q="C’est quoi le slug et à quoi ça sert ?">🔗 Le slug</button>
           </div>
 
           <div class="kbAns" id="kbAns"></div>
@@ -343,7 +326,7 @@
           <div>✨ Ton entreprise mérite d’être vue (pas juste “présente”).</div>
           <span class="vipStamp" id="vipStamp">⭐ Client DIGIY</span>
         </div>
-        <ul class="vipPerks" id="vipPerks">
+        <ul class="vipPerks">
           <li>Tu payes <strong>direct</strong> : pas de commission qui mange tes bénéfices.</li>
           <li>Tu reçois un <strong>cockpit pro</strong> (slug) pour partager ton lien facilement.</li>
           <li>Avec BOOST : tu passes en <strong>mise en avant</strong> (plus visible, plus crédible).</li>
@@ -357,7 +340,7 @@
 
       <div class="box" id="orderBox">
         <h2 style="margin:0;font-size:16px;font-weight:1100;">🧾 Récap paiement</h2>
-        <p class="small">Vérifie ce que tu payes avant de confirmer.</p>
+        <p class="small">Vérifie ce que tu payes avant de continuer.</p>
         <div class="hr"></div>
 
         <div class="row">
@@ -375,11 +358,11 @@
 
         <div class="row">
           <div>
-            <div style="font-weight:1100;">Montant</div>
+            <div style="font-weight:1100;">Montant total</div>
             <div class="mono" style="font-weight:1000;" id="orderAmount">—</div>
           </div>
           <div>
-            <div style="font-weight:1100;">Référence</div>
+            <div style="font-weight:1100;">Référence logique</div>
             <div class="mono" style="font-weight:1000;" id="orderRef">—</div>
           </div>
         </div>
@@ -427,7 +410,7 @@
         <div class="section-sep">✨ CODE E · BOOST</div>
         <div class="priceGrid" id="grid_boost"></div>
 
-        <div class="hintLine" id="pricingHint">📞 Commander par téléphone (juste le code) : <strong>+221 77 134 28 89</strong></div>
+        <div class="hintLine">📞 Commander par téléphone (juste le code) : <strong>+221 77 134 28 89</strong></div>
       </div>
 
       <div class="hr"></div>
@@ -446,8 +429,8 @@
       <div class="hr"></div>
 
       <div class="box" id="manualBox">
-        <h2 style="margin:0;font-size:16px;font-weight:1100;">💳 Paiement manuel (Wave)</h2>
-        <p class="small">Paye sur Wave, puis envoie le reçu (upload) ou WhatsApp. On active ensuite.</p>
+        <h2 style="margin:0;font-size:16px;font-weight:1100;">💳 Préparer le paiement Wave</h2>
+        <p class="small">Choisis ton pack ici, puis continue vers le tunnel de paiement sécurisé.</p>
 
         <div class="hr"></div>
 
@@ -458,7 +441,7 @@
           </div>
           <div>
             <div style="font-weight:1100;">Numéro Wave</div>
-            <div class="mono" style="font-weight:1000;" id="waveTo">+221 77 134 28 89</div>
+            <div class="mono" style="font-weight:1000;">+221 77 134 28 89</div>
           </div>
         </div>
 
@@ -473,13 +456,13 @@
             <div>
               <div style="font-weight:1100;">Téléphone (digits uniquement)</div>
               <input type="tel" id="payPhone" class="digiy-input" placeholder="Ex: 221771234567" inputmode="numeric"/>
-              <div class="small muted" style="margin-top:6px;">Conseil : mets 221 + ton numéro (sans espaces, sans +).</div>
+              <div class="small" style="margin-top:6px;">Conseil : mets 221 + ton numéro (sans espaces, sans +).</div>
             </div>
 
             <div>
               <div style="font-weight:1100;">Slug (nom public)</div>
               <input type="text" id="paySlug" class="digiy-input" placeholder="Ex: chez-astou-saly (ou laisse vide)"/>
-              <div class="small muted" style="margin-top:6px;">Le slug sert à ouvrir ton cockpit : <span class="mono">?slug=...</span></div>
+              <div class="small" style="margin-top:6px;">Le slug sert à ouvrir ton cockpit : <span class="mono">?slug=...</span></div>
               <div id="slugAuto" class="small" style="margin-top:6px; color:rgba(234,255,241,.85);"></div>
             </div>
           </div>
@@ -487,28 +470,18 @@
 
         <div class="hr"></div>
 
-        <div class="uploadBox">
-          <div style="font-weight:1100;margin-bottom:6px;">📸 Envoyer la preuve Wave (upload)</div>
-          <p class="small" style="margin-top:0;">Sélectionne la capture (reçu Wave) → envoyer.</p>
-          <input type="file" id="proofFile" accept="image/*" />
-          <div class="hr"></div>
-          <button class="btn ok" id="btnSendProof" type="button">📤 Envoyer preuve Wave</button>
-          <p class="small" id="payMsg" style="margin-top:10px;"></p>
-        </div>
-
-        <div class="hr"></div>
-
         <ol class="steps">
           <li>Choisis ton module (et BOOST si tu veux)</li>
-          <li>Fais le transfert Wave (montant total affiché)</li>
-          <li>Envoie le reçu (upload ci-dessus) ou WhatsApp</li>
-          <li>Activation après validation</li>
+          <li>Renseigne ton téléphone et ton slug</li>
+          <li>Continue vers la page de paiement</li>
+          <li>Paye Wave et envoie le reçu dans le dossier ABOS</li>
+          <li>Attends la validation et l’activation</li>
         </ol>
 
         <div class="hr"></div>
 
         <div class="row">
-          <button class="btn gold" id="btnWaConfirm">💬 Confirmer WhatsApp (avec reçu)</button>
+          <button class="btn ok" id="btnGoPayer">➡️ Continuer vers paiement</button>
           <button class="btn bad" id="btnSupport">🛟 Support WhatsApp</button>
         </div>
         <p class="small" id="manualHint" style="margin-top:10px;"></p>
@@ -525,6 +498,8 @@
     const SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
     const SUPABASE_ANON_KEY =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc3Ftd2pqdHNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA";
+
+    const ABOS_PAYER_URL = "https://beauville.github.io/abos/payer.html";
 
     window.DIGIY_SUPABASE_URL = SUPABASE_URL;
     window.DIGIY_SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
@@ -701,7 +676,7 @@
       status.className = "pill";
       out.textContent =
         "⚠️ Assistant indisponible.\n" +
-        "Choisis ton code, paye Wave, envoie le reçu.\n" +
+        "Choisis ton code, puis continue vers le paiement.\n" +
         "Sinon clique Support WhatsApp.";
       console.error("KB error:", lastErr);
     }
@@ -756,7 +731,6 @@
       const u = new URL(location.href);
 
       if(baseModule) u.searchParams.set("base_module", baseModule); else u.searchParams.delete("base_module");
-
       if(basePlan)   u.searchParams.set("plan", basePlan); else u.searchParams.delete("plan");
       if(baseAmount) u.searchParams.set("amount", String(baseAmount)); else u.searchParams.delete("amount");
       if(baseCode)   u.searchParams.set("code", baseCode); else u.searchParams.delete("code");
@@ -790,22 +764,6 @@
 
       updateVipBox();
     }
-
-    window.DIGIY_PAY_STATE = {
-      getOrder: () => {
-        const t = totalAmount();
-        return {
-          module: (baseModule || accessModule || ""),
-          plan: (basePlan || ""),
-          amount: t,
-          code: (baseCode || ""),
-          boost_code: (boostCode || ""),
-          boost_amount_xof: Number(boostAmount || 0),
-          phone: userPhoneDigits || null,
-          slug: userSlug || null
-        };
-      }
-    };
 
     const PRICE_GROUPS = {
       driver: [
@@ -922,7 +880,7 @@
                 boostPlan = "";
                 boostAmount = 0;
                 boostCode = "";
-                setStatus("✨ BOOST retiré. Tu peux payer le module seul.", "warn", "MODULE");
+                setStatus("✨ BOOST retiré. Tu peux continuer avec le module seul.", "warn", "MODULE");
               } else {
                 boostPlan = pPlan;
                 boostAmount = pAmt;
@@ -934,7 +892,7 @@
               basePlan = pPlan;
               baseAmount = pAmt;
               baseCode = pCode;
-              setStatus("💳 Module " + pCode + " sélectionné — tu peux ajouter un BOOST (optionnel).", "warn", "CODE " + pCode);
+              setStatus("💳 Module " + pCode + " sélectionné — tu peux ajouter un BOOST.", "warn", "CODE " + pCode);
             }
 
             syncSelectionToUrl();
@@ -1014,14 +972,36 @@
 
     syncInputsToUrlAndState();
 
+    function buildPayerUrl(){
+      const u = new URL(ABOS_PAYER_URL);
+
+      u.searchParams.set("module", baseModule || accessModule || "");
+      u.searchParams.set("base_module", baseModule || accessModule || "");
+      u.searchParams.set("plan", basePlan || "");
+      u.searchParams.set("amount", String(totalAmount() || 0));
+      u.searchParams.set("code", baseCode || "");
+
+      if(boostPlan) u.searchParams.set("boost", boostPlan);
+      if(boostCode) u.searchParams.set("boost_code", boostCode);
+      if(boostAmount) u.searchParams.set("boost_amount", String(boostAmount));
+
+      if(userPhoneDigits) u.searchParams.set("phone", userPhoneDigits);
+      if(userSlug) u.searchParams.set("slug", userSlug);
+
+      if(ret) u.searchParams.set("return", ret);
+      if(from_) u.searchParams.set("from", from_);
+
+      return u.toString();
+    }
+
     if(!token){
       $("tokenBox").classList.add("hide");
-      setStatus(baseModule ? "💳 Module prêt. Tu peux ajouter un BOOST ou payer Wave." : "💳 Paiement Wave · Étape 1 : Choisis ton module", "warn", "MANUEL");
-      $("manualHint").textContent = "Sélectionne un module. Ensuite (optionnel) ajoute un BOOST pour être mis en avant.";
+      setStatus(baseModule ? "💳 Module prêt. Tu peux continuer vers le paiement." : "💳 Étape 1 : choisis ton module", "warn", "MANUEL");
+      $("manualHint").textContent = "Choisis un module, ajoute un BOOST si besoin, puis continue vers le dossier ABOS pour payer et envoyer le reçu.";
     } else {
       setStatus("🔐 Lien sécurisé détecté. Clique pour activer.", "ok", "TOKEN");
       $("tokenHint").textContent = "Token détecté. Activation en 1 clic.";
-      $("manualHint").textContent = "Tu peux aussi utiliser le mode manuel si besoin, mais le lien sécurisé est prioritaire.";
+      $("manualHint").textContent = "Tu peux aussi utiliser le tunnel ABOS si besoin, mais le lien sécurisé est prioritaire.";
     }
 
     async function activateToken(){
@@ -1066,16 +1046,15 @@
       }
     }
 
-    $("btnActivateToken").addEventListener("click", activateToken);
-    if(auto && token) setTimeout(activateToken, 400);
-
-    $("btnWaConfirm").addEventListener("click", function(){
+    function continueToPayer(){
       if(!baseAmount || !basePlan || !baseModule){
-        setStatus("⚠️ Étape 1 : Choisis ton module dans la grille d'abord.", "warn", "MODULE");
+        setStatus("⚠️ Étape 1 : choisis ton module dans la grille d'abord.", "warn", "MODULE");
         return;
       }
+
       if(!userPhoneDigits || userPhoneDigits.length < 9){
         setStatus("⚠️ Téléphone obligatoire (digits uniquement).", "warn", "PHONE");
+        payPhoneEl?.focus();
         return;
       }
 
@@ -1086,32 +1065,15 @@
         syncInputsToUrlAndState();
       }
 
-      const t = totalAmount();
+      const url = buildPayerUrl();
+      setStatus("➡️ Redirection vers le tunnel de paiement…", "ok", "ABOS");
+      location.href = url;
+    }
 
-      let msg = "DIGIY — Confirmation paiement Wave\n\n";
-      msg += "Bénéficiaire: JB BEAUVILLE\n";
-      msg += "Wave: " + WAVE_TO + "\n\n";
-      msg += "Téléphone: " + displayPhoneDigitsAsPlus(userPhoneDigits) + "\n";
+    $("btnActivateToken").addEventListener("click", activateToken);
+    $("btnGoPayer").addEventListener("click", continueToPayer);
 
-      msg += "Module: " + (baseModule || "-") + "\n";
-      msg += "Code: " + (baseCode || "-") + "\n";
-      msg += "Plan module: " + (basePlan || "-") + "\n";
-      msg += "Montant module: " + (baseAmount || 0) + " FCFA\n";
-
-      if(boostCode){
-        msg += "\nBOOST: " + boostCode + "\n";
-        msg += "Plan boost: " + (boostPlan || "-") + "\n";
-        msg += "Montant boost: " + (boostAmount || 0) + " FCFA\n";
-      }
-
-      msg += "\n✅ Montant TOTAL: " + t + " FCFA\n";
-      msg += "Slug: " + userSlug + "\n";
-      if(token) msg += "Token: " + token + "\n";
-      msg += "\nJe joins le reçu Wave ici.\nMerci d'activer. — DIGIY";
-
-      wa(msg);
-      setStatus("✅ Message WhatsApp prêt. Ajoute le reçu.", "warn", "EN ATTENTE");
-    });
+    if(auto && token) setTimeout(activateToken, 400);
 
     $("btnSupport").addEventListener("click", function(){
       const t = totalAmount();
@@ -1121,12 +1083,10 @@
       if(baseModule) msg += "Module: " + baseModule + "\n";
       if(baseCode) msg += "Code: " + baseCode + "\n";
       if(basePlan) msg += "Plan: " + basePlan + "\n";
-      if(baseAmount) msg += "Montant: " + baseAmount + " FCFA\n";
-
+      if(baseAmount) msg += "Montant module: " + baseAmount + " FCFA\n";
       if(boostCode){
         msg += "BOOST: " + boostCode + " (" + boostAmount + " FCFA)\n";
       }
-
       if(t) msg += "TOTAL: " + t + " FCFA\n";
       if(userSlug) msg += "Slug: " + userSlug + "\n";
       msg += "\nJ'ai besoin d'aide. — DIGIY";
@@ -1135,11 +1095,8 @@
       setStatus("💬 Support WhatsApp…", "warn", "INFO");
     });
 
-    if(from_) $("manualHint").textContent = "Après activation, retourne sur ton module.";
-
+    if(from_) $("manualHint").textContent = "Après paiement et validation, tu retourneras sur ton module.";
   })();
   </script>
-
-  <script src="./pay-proof.js?v=3"></script>
 </body>
 </html>
