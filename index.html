@@ -1,1132 +1,1102 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Commencer à payer — DIGIY PAY</title>
-  <meta name="theme-color" content="#0b3d2e" />
-  <meta name="description" content="Active ton module DIGIY simplement. Choisis ton module, ton plan, ton numéro, puis lance ta demande d’activation." />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <title>ACTIVER MON MODULE — DIGIYLYFE</title>
+  <meta name="theme-color" content="#16a34a"/>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     :root{
-      --bg:#071b14;
-      --bg-soft:#0b241b;
-      --card:#0e2f23;
-      --card-2:#123828;
-      --line:rgba(255,255,255,.09);
-      --text:#f5fff8;
-      --muted:rgba(245,255,248,.72);
-
-      /* Vert Sénégal plus vivant */
-      --green:#0ca356;
-      --green-2:#16c46a;
-      --gold:#f2c94c;
-      --red:#d94444;
-
-      --ok:#22c55e;
-      --warn:#f59e0b;
-      --danger:#ef4444;
-
-      --radius:22px;
-      --shadow:0 18px 55px rgba(0,0,0,.38);
-      --max:1100px;
+      --bg:#061b14; --card:#0b2a1f; --line:rgba(255,255,255,.14);
+      --text:#eafff1; --muted:rgba(234,255,241,.75);
+      --ok:#22c55e; --warn:#f59e0b; --bad:#ef4444; --gold:#facc15;
+      --radius:18px; --shadow:0 18px 50px rgba(0,0,0,.35);
     }
-
     *{box-sizing:border-box}
-    html,body{margin:0;padding:0}
-    body{
-      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      background:
-        radial-gradient(circle at top right, rgba(22,196,106,.16), transparent 30%),
-        radial-gradient(circle at top left, rgba(242,201,76,.12), transparent 22%),
-        linear-gradient(180deg, #071b14 0%, #08160f 100%);
-      color:var(--text);
-      min-height:100vh;
-    }
-
-    a{color:inherit;text-decoration:none}
-    button,input,select{font:inherit}
-
-    .wrap{
-      width:min(100%, var(--max));
-      margin:0 auto;
-      padding:20px 16px 48px;
-    }
-
-    .hero{
-      position:relative;
-      overflow:hidden;
-      background:
-        linear-gradient(135deg, rgba(12,163,86,.18), rgba(242,201,76,.08)),
-        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
-      border:1px solid var(--line);
-      border-radius:30px;
-      box-shadow:var(--shadow);
-      padding:22px;
-    }
-
-    .hero::after{
-      content:"";
-      position:absolute;
-      inset:auto -50px -50px auto;
-      width:180px;height:180px;border-radius:50%;
-      background:radial-gradient(circle, rgba(12,163,86,.28), transparent 70%);
-      pointer-events:none;
-    }
-
-    .badge-row{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-bottom:14px;
-    }
-
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 12px;
-      border:1px solid rgba(255,255,255,.1);
-      border-radius:999px;
-      background:rgba(255,255,255,.04);
-      color:var(--text);
-      font-size:.9rem;
-      font-weight:700;
-    }
-
-    h1{
-      margin:0 0 10px;
-      font-size:clamp(2rem, 5vw, 3.4rem);
-      line-height:1.02;
-      letter-spacing:-.03em;
-    }
-
-    .hero p{
-      margin:0;
-      color:var(--muted);
-      font-size:1.02rem;
-      line-height:1.55;
-      max-width:760px;
-    }
-
-    .hero-grid{
-      margin-top:22px;
-      display:grid;
-      grid-template-columns:1.35fr .95fr;
-      gap:16px;
-    }
-
-    .panel{
-      background:linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.02));
-      border:1px solid var(--line);
-      border-radius:24px;
-      padding:18px;
-      box-shadow:var(--shadow);
-    }
-
-    .panel h2{
-      margin:0 0 12px;
-      font-size:1.08rem;
-      letter-spacing:-.02em;
-    }
-
-    .steps{
-      display:grid;
-      gap:12px;
-    }
-
-    .step{
-      display:grid;
-      grid-template-columns:38px 1fr;
-      gap:12px;
-      align-items:flex-start;
-      padding:12px;
-      border-radius:18px;
-      background:rgba(255,255,255,.03);
-      border:1px solid rgba(255,255,255,.05);
-    }
-
-    .step .n{
-      width:38px;height:38px;border-radius:999px;
-      display:grid;place-items:center;
-      background:linear-gradient(180deg,var(--green),var(--green-2));
-      color:#062514;
-      font-weight:900;
-      box-shadow:0 10px 24px rgba(12,163,86,.28);
-    }
-
-    .step b{
-      display:block;
-      margin-bottom:4px;
-      font-size:.98rem;
-    }
-
-    .step span{
-      color:var(--muted);
-      font-size:.94rem;
-      line-height:1.45;
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns:1.2fr .8fr;
-      gap:16px;
-      margin-top:18px;
-    }
-
-    .section-title{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      margin:0 0 14px;
-    }
-
-    .section-title h3{
-      margin:0;
-      font-size:1.08rem;
-      letter-spacing:-.02em;
-    }
-
-    .section-title .small{
-      color:var(--muted);
-      font-size:.9rem;
-    }
-
-    .module-grid{
-      display:grid;
-      grid-template-columns:repeat(2, minmax(0,1fr));
-      gap:12px;
-    }
-
-    .module-card{
-      cursor:pointer;
-      border:1px solid var(--line);
-      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-      border-radius:20px;
-      padding:14px;
-      transition:.18s ease;
-      min-height:128px;
-    }
-
-    .module-card:hover{
-      transform:translateY(-1px);
-      border-color:rgba(22,196,106,.35);
-    }
-
-    .module-card.active{
-      border-color:rgba(22,196,106,.65);
-      box-shadow:0 0 0 1px rgba(22,196,106,.18) inset, 0 18px 34px rgba(12,163,86,.15);
-      background:linear-gradient(180deg, rgba(12,163,86,.14), rgba(255,255,255,.03));
-    }
-
-    .module-top{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:12px;
-      margin-bottom:8px;
-    }
-
-    .module-code{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-width:56px;
-      height:30px;
-      padding:0 10px;
-      border-radius:999px;
-      background:rgba(242,201,76,.12);
-      color:var(--gold);
-      border:1px solid rgba(242,201,76,.18);
-      font-size:.82rem;
-      font-weight:800;
-      letter-spacing:.02em;
-    }
-
-    .module-type{
-      display:inline-flex;
-      align-items:center;
-      height:30px;
-      padding:0 10px;
-      border-radius:999px;
-      background:rgba(255,255,255,.05);
-      color:var(--muted);
-      border:1px solid rgba(255,255,255,.08);
-      font-size:.78rem;
-      font-weight:700;
-    }
-
-    .module-card h4{
-      margin:0 0 6px;
-      font-size:1rem;
-      letter-spacing:-.02em;
-    }
-
-    .module-card p{
-      margin:0;
-      color:var(--muted);
-      font-size:.9rem;
-      line-height:1.4;
-    }
-
-    .plan-row{
-      display:grid;
-      grid-template-columns:repeat(2, minmax(0,1fr));
-      gap:12px;
-      margin-top:14px;
-    }
-
-    .plan-card{
-      cursor:pointer;
-      border:1px solid var(--line);
-      border-radius:20px;
-      padding:14px;
-      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-      transition:.18s ease;
-    }
-
-    .plan-card.active{
-      border-color:rgba(242,201,76,.45);
-      background:linear-gradient(180deg, rgba(242,201,76,.12), rgba(255,255,255,.02));
-      box-shadow:0 0 0 1px rgba(242,201,76,.12) inset;
-    }
-
-    .plan-card .kicker{
-      color:var(--gold);
-      font-size:.82rem;
-      font-weight:800;
-      margin-bottom:6px;
-      text-transform:uppercase;
-      letter-spacing:.05em;
-    }
-
-    .plan-card .price{
-      font-size:1.35rem;
-      font-weight:900;
-      letter-spacing:-.03em;
-    }
-
-    .plan-card .desc{
-      margin-top:6px;
-      color:var(--muted);
-      font-size:.9rem;
-      line-height:1.4;
-    }
-
-    .form-grid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:12px;
-      margin-top:14px;
-    }
-
-    .field{
-      display:grid;
-      gap:8px;
-    }
-
-    .field label{
-      font-size:.9rem;
-      font-weight:700;
-      color:var(--text);
-    }
-
-    .input, .select{
-      width:100%;
-      height:52px;
-      border-radius:16px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.04);
-      color:var(--text);
-      padding:0 14px;
-      outline:none;
-    }
-
-    .input::placeholder{color:rgba(255,255,255,.36)}
-    .input:focus, .select:focus{
-      border-color:rgba(22,196,106,.45);
-      box-shadow:0 0 0 4px rgba(12,163,86,.12);
-    }
-
-    .aside-card{
-      display:grid;
-      gap:14px;
-      position:sticky;
-      top:14px;
-    }
-
-    .summary{
-      display:grid;
-      gap:12px;
-    }
-
-    .summary-box{
-      border:1px solid var(--line);
-      border-radius:20px;
-      padding:14px;
-      background:rgba(255,255,255,.03);
-    }
-
-    .summary-line{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:12px;
-      padding:8px 0;
-      border-bottom:1px dashed rgba(255,255,255,.08);
-    }
-
-    .summary-line:last-child{border-bottom:none}
-    .summary-line span:first-child{color:var(--muted)}
-    .summary-line span:last-child{
-      text-align:right;
-      font-weight:800;
-    }
-
-    .total{
-      margin-top:6px;
-      padding-top:10px;
-      border-top:1px solid rgba(255,255,255,.08);
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-      font-size:1.06rem;
-      font-weight:900;
-    }
-
-    .pay-box{
-      border:1px solid rgba(242,201,76,.18);
-      border-radius:20px;
-      padding:14px;
-      background:linear-gradient(180deg, rgba(242,201,76,.08), rgba(255,255,255,.02));
-    }
-
-    .pay-kicker{
-      color:var(--gold);
-      font-size:.82rem;
-      font-weight:900;
-      text-transform:uppercase;
-      letter-spacing:.05em;
-      margin-bottom:6px;
-    }
-
-    .pay-main{
-      display:grid;
-      gap:6px;
-      margin-bottom:10px;
-    }
-
-    .pay-main b{
-      font-size:1.05rem;
-      letter-spacing:-.02em;
-    }
-
-    .pay-main span{
-      color:var(--muted);
-      line-height:1.45;
-      font-size:.92rem;
-    }
-
-    .big-number{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      padding:12px 14px;
-      border-radius:16px;
-      background:rgba(0,0,0,.18);
-      border:1px solid rgba(255,255,255,.08);
-      font-weight:900;
-      font-size:1rem;
-      margin-top:10px;
-    }
-
-    .btn-row{
-      display:grid;
-      gap:10px;
-      margin-top:14px;
-    }
-
-    .btn{
-      border:none;
-      height:52px;
-      border-radius:16px;
-      padding:0 16px;
-      font-weight:900;
-      cursor:pointer;
-      transition:.18s ease;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-    }
-
-    .btn:hover{transform:translateY(-1px)}
-    .btn-primary{
-      background:linear-gradient(180deg, var(--green-2), var(--green));
-      color:#062514;
-      box-shadow:0 16px 30px rgba(12,163,86,.25);
-    }
-
-    .btn-secondary{
-      background:rgba(255,255,255,.06);
-      color:var(--text);
-      border:1px solid rgba(255,255,255,.1);
-    }
-
-    .btn-gold{
-      background:linear-gradient(180deg, #ffd86b, var(--gold));
-      color:#2d2202;
-      box-shadow:0 16px 30px rgba(242,201,76,.18);
-    }
-
-    .note{
-      color:var(--muted);
-      font-size:.9rem;
-      line-height:1.5;
-    }
-
-    .foot{
-      margin-top:18px;
-      color:var(--muted);
-      font-size:.88rem;
-      text-align:center;
-      line-height:1.5;
-    }
-
-    .tiny{
-      font-size:.82rem;
-      color:var(--muted);
-    }
+    body{ margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial; background:var(--bg); color:var(--text); }
+    .wrap{ max-width:760px; margin:0 auto; padding:16px; }
+    .card{ background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow); }
+    h1{ margin:0; font-size:20px; font-weight:1100; }
+    p{ margin:8px 0 0; color:var(--muted); line-height:1.4; }
+    .hr{ height:1px; background:var(--line); margin:14px 0; }
 
     .status{
+      padding:12px; border-radius:16px; border:1px solid var(--line);
+      font-weight:1100; display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;
+    }
+    .status.ok{ border-color: rgba(34,197,94,.55); }
+    .status.warn{ border-color: rgba(245,158,11,.55); }
+    .status.bad{ border-color: rgba(239,68,68,.55); }
+
+    .tag{ font-size:12px; padding:6px 10px; border-radius:999px; border:1px solid var(--line); color:var(--muted); }
+    .tag.ok{ color: var(--ok); border-color: rgba(34,197,94,.45); }
+    .tag.warn{ color: var(--warn); border-color: rgba(245,158,11,.45); }
+    .tag.bad{ color: var(--bad); border-color: rgba(239,68,68,.45); }
+    .tag.gold{ color: var(--gold); border-color: rgba(250,204,21,.55); }
+
+    .btn{
+      width:100%; min-height:52px; border-radius:16px; cursor:pointer;
+      border:1px solid var(--line); background:transparent; color:var(--text);
+      padding:12px 14px; font-weight:1100;
+    }
+    .btn:disabled{ opacity:.55; cursor:not-allowed; }
+    .btn.ok{ border-color: rgba(34,197,94,.55); }
+    .btn.warn{ border-color: rgba(245,158,11,.55); }
+    .btn.bad{ border-color: rgba(239,68,68,.55); }
+    .btn.gold{ border-color: rgba(250,204,21,.65); }
+
+    .box{ border:1px solid var(--line); border-radius:16px; padding:14px; background:rgba(0,0,0,.12); }
+    .steps{ margin:0; padding-left:18px; color:var(--muted); }
+    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace; }
+    .row{ display:flex; gap:10px; flex-wrap:wrap; }
+    .row > *{ flex:1; min-width:220px; }
+    .small{ font-size:13px; color:var(--muted); line-height:1.35; }
+    .hide{ display:none; }
+
+    .topbar{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px; flex-wrap:wrap; margin-bottom:10px;
+    }
+    .lang-switch{
+      display:flex; gap:6px; padding:4px; border-radius:999px;
+      border:1px solid var(--line); background:rgba(0,0,0,.08);
+    }
+    .lang-switch button{
+      border:none; padding:7px 12px; border-radius:999px; cursor:pointer;
+      font-weight:1100; font-size:12px; background:transparent; color:var(--text);
+    }
+    .lang-switch button.active{ background:#0f172a; color:#fff; }
+
+    .section-sep{
+      margin:16px 0 8px;
+      font-size:11px; font-weight:1100; letter-spacing:.8px;
+      text-transform:uppercase; color:var(--gold);
+      display:flex; align-items:center; gap:8px;
+    }
+    .section-sep::after{
+      content:""; flex:1; height:1px; background:rgba(250,204,21,.18);
+    }
+
+    .priceGrid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill, minmax(220px,1fr));
+      gap:10px;
+      position: relative;
+      z-index: 2;
+    }
+    .priceBtn{
+      text-align:left;
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.10);
+      border-radius:16px;
+      padding:12px;
+      cursor:pointer;
+      color:var(--text);
+      transition:border-color .18s, transform .06s;
+      position: relative;
+      z-index: 2;
+    }
+    .priceBtn:hover{ border-color: rgba(250,204,21,.55); }
+    .priceBtn:active{ transform: translateY(1px); }
+    .priceBtn.active{
+      border-color: rgba(250,204,21,.85);
+      background:rgba(250,204,21,.06);
+      box-shadow: 0 10px 30px rgba(250,204,21,.08);
+    }
+    .priceBtn.boostActive{
+      border-color: rgba(34,197,94,.70);
+      background: rgba(34,197,94,.07);
+      box-shadow: 0 10px 30px rgba(34,197,94,.10);
+    }
+
+    .priceTop{
+      display:flex; justify-content:space-between; gap:10px; align-items:center;
+    }
+    .priceCode{
+      display:inline-flex; align-items:center; justify-content:center;
+      min-width:34px; height:34px; border-radius:8px;
+      background:linear-gradient(135deg,#667eea,#764ba2);
+      font-size:13px; font-weight:1100; color:#fff; flex-shrink:0;
+    }
+    .priceCode.gold{ background:linear-gradient(135deg,#facc15,#f59e0b); color:#0f172a; }
+    .priceCode.boost{ background:linear-gradient(135deg,#22c55e,#16a34a); color:#062014; }
+    .priceName{ font-size:13px; font-weight:1100; line-height:1.2; }
+    .priceAmt{ font-size:13px; font-weight:1100; color: var(--gold); white-space:nowrap; }
+    .priceDesc{ margin-top:6px; font-size:11px; color:var(--muted); line-height:1.35; }
+    .hintLine{ margin-top:10px; font-size:12px; color:var(--muted); }
+
+    .digiy-input{
+      width:100%;
+      padding:12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.12);
+      color:var(--text);
+      font-size:15px;
+    }
+
+    .kbWrap{
+      border:1px solid rgba(34,197,94,.30);
+      background: linear-gradient(180deg, rgba(34,197,94,.10), rgba(0,0,0,.08));
+      border-radius:18px;
+      padding:14px;
+      position: relative;
+      z-index: 1;
+    }
+    .kbTop{
+      display:flex; justify-content:space-between; gap:10px; align-items:flex-start; flex-wrap:wrap;
+    }
+    .kbTitle{
+      font-weight:1200;
+      display:flex; align-items:center; gap:10px;
+      line-height:1.2;
+    }
+    .kbBadge{
+      display:inline-flex; align-items:center; justify-content:center;
+      width:34px; height:34px; border-radius:10px;
+      background:rgba(34,197,94,.18);
+      border:1px solid rgba(34,197,94,.35);
+      font-weight:1200;
+    }
+    .kbSub{ margin-top:4px; color:var(--muted); font-size:12px; }
+    .kbMeta{
+      display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;
+    }
+    .pill{
+      font-size:11px; padding:6px 10px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.16);
+      color:var(--muted);
+      background:rgba(0,0,0,.10);
+      white-space:nowrap;
+    }
+    .pill.ok{ border-color: rgba(34,197,94,.35); color:#bfffe0; }
+
+    .kbChat{
+      margin-top:12px;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:16px;
+      padding:12px;
+      background:rgba(0,0,0,.10);
+    }
+    .kbInputRow{ display:flex; gap:8px; flex-wrap:wrap; }
+    .kbInputRow input{
+      flex:1; min-width:220px;
+      padding:12px; border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.12);
+      color:var(--text);
+      font-size:14px;
+    }
+    .kbInputRow button{
+      min-width:140px;
+      border-radius:14px;
+      border:1px solid rgba(34,197,94,.45);
+      background:rgba(34,197,94,.10);
+      color:var(--text);
+      padding:12px 14px;
+      font-weight:1100;
+      cursor:pointer;
+    }
+    .kbAns{
       margin-top:10px;
-      min-height:22px;
-      font-size:.93rem;
-      font-weight:700;
+      color:#dfffee;
+      line-height:1.45;
+      font-size:13px;
+      white-space:pre-wrap;
     }
-
-    .status.ok{color:#8ef0b4}
-    .status.warn{color:#ffd56e}
-    .status.bad{color:#ff9e9e}
-
-    @media (max-width: 920px){
-      .hero-grid, .grid{
-        grid-template-columns:1fr;
-      }
-      .aside-card{
-        position:static;
-      }
+    .kbQuick{
+      margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;
     }
+    .kbQuick button{
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(0,0,0,.10);
+      color:var(--text);
+      padding:9px 10px;
+      border-radius:999px;
+      font-size:12px;
+      cursor:pointer;
+    }
+    .kbQuick button:hover{ border-color: rgba(34,197,94,.40); }
 
-    @media (max-width: 680px){
-      .module-grid,
-      .plan-row,
-      .form-grid{
-        grid-template-columns:1fr;
-      }
-
-      .wrap{padding:14px 12px 34px}
-      .hero{padding:18px}
-      .panel{padding:15px}
-      h1{font-size:2rem}
+    .vipBox{
+      border:1px solid rgba(250,204,21,.28);
+      background: linear-gradient(180deg, rgba(250,204,21,.08), rgba(0,0,0,.08));
+      border-radius:18px;
+      padding:14px;
+    }
+    .vipTitle{
+      display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+      font-weight:1100;
+    }
+    .vipPerks{
+      margin:10px 0 0;
+      padding-left:18px;
+      color:var(--muted);
+      line-height:1.4;
+      font-size:13px;
+    }
+    .vipStamp{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:6px 10px; border-radius:999px;
+      border:1px solid rgba(34,197,94,.35);
+      background:rgba(34,197,94,.08);
+      color:#bfffe0;
+      font-size:12px;
+      font-weight:1100;
     }
   </style>
 </head>
+
 <body>
   <div class="wrap">
-    <section class="hero">
-      <div class="badge-row">
-        <div class="badge">♾️ DIGIY PAY</div>
-        <div class="badge">0% commission</div>
-        <div class="badge">Activation simple</div>
+    <div class="card">
+
+      <div class="topbar">
+        <div class="lang-switch" aria-label="Language switch">
+          <button id="lang-fr" class="active" type="button">FR</button>
+          <button id="lang-wo" type="button">WO</button>
+        </div>
+        <span class="tag">DIGIY PAY</span>
       </div>
 
-      <h1>Commencer à payer</h1>
-      <p>
-        On va au direct, frérot. Tu choisis ton module, ta formule, ton numéro.
-        Ensuite tu lances la demande d’activation proprement, sans tunnel tordu, sans théâtre de plateforme.
-      </p>
+      <h1>ACTIVER MON MODULE — DIGIY</h1>
+      <p class="small">Paiement direct · 0% commission · Activation sécurisée</p>
 
-      <div class="hero-grid">
-        <div class="panel">
-          <h2>Comment ça marche</h2>
-          <div class="steps">
-            <div class="step">
-              <div class="n">1</div>
+      <div class="hr"></div>
+
+      <div class="kbWrap" id="kbWrap">
+        <div class="kbTop">
+          <div>
+            <div class="kbTitle">
+              <span class="kbBadge">∞</span>
               <div>
-                <b>Choisis ton module</b>
-                <span>LOC, DRIVER, RESA, RESTO, MARKET, JOBS… on active ce qu’il te faut, pas plus.</span>
+                <div style="font-size:14px;">DIGIY KNOWLEDGE</div>
+                <div class="kbSub">
+                  Assistant professionnel intégré •
+                  DRIVER • LOC • RESTO • PAY • JOBS • MARKET • BUILD • EXPLORE • FRET
+                </div>
               </div>
             </div>
-            <div class="step">
-              <div class="n">2</div>
-              <div>
-                <b>Choisis ta formule</b>
-                <span>Mensuel ou annuel selon ton rythme. Tu restes libre, propre, lisible.</span>
-              </div>
+
+            <div class="kbSub" style="margin-top:8px;">
+              👋 Bonjour ! Pose-moi ta question sur DRIVER, LOC, RESTO, PAY, JOBS, MARKET, BUILD, EXPLORE ou FRET.
             </div>
-            <div class="step">
-              <div class="n">3</div>
-              <div>
-                <b>Envoie ta demande</b>
-                <span>Le message WhatsApp part déjà rempli. Tu gagnes du temps, tu évites les erreurs.</span>
-              </div>
-            </div>
+          </div>
+
+          <div class="kbMeta">
+            <span class="pill ok" id="kbStatus">En ligne</span>
+            <span class="pill">🇫🇷 Français</span>
+            <span class="pill">🇸🇳 Wolof</span>
+            <span class="pill">🇬🇧 English</span>
           </div>
         </div>
 
-        <div class="panel">
-          <h2>Ce que tu actives ici</h2>
-          <div class="steps">
-            <div class="step">
-              <div class="n">✓</div>
-              <div>
-                <b>Modules PRO</b>
-                <span>Accès professionnel, cockpit, PIN, logique abonnement propre DIGIY.</span>
-              </div>
-            </div>
-            <div class="step">
-              <div class="n">⚡</div>
-              <div>
-                <b>Paiement direct</b>
-                <span>Simple, local, terrain. Pas de commission tordue qui mange le commerçant.</span>
-              </div>
-            </div>
-            <div class="step">
-              <div class="n">🛡</div>
-              <div>
-                <b>Activation claire</b>
-                <span>Résumé avant envoi, référence générée, numéro prêt à copier.</span>
-              </div>
-            </div>
+        <div class="kbChat">
+          <div class="kbInputRow">
+            <input id="kbInput" type="text" placeholder="Ex: Comment payer Wave ? C’est quoi le slug ? Quel code LOC choisir ?" />
+            <button id="kbSend" type="button">Envoyer</button>
           </div>
+
+          <div class="kbQuick">
+            <button type="button" data-q="Explique DIGIY PAY en 2 lignes.">💳 DIGIY PAY</button>
+            <button type="button" data-q="Quel code choisir pour DRIVER ?">🚗 S'inscrire DRIVER</button>
+            <button type="button" data-q="Explique les tarifs LOC (2A à 2E).">🏠 Tarifs LOC</button>
+            <button type="button" data-q="Pourquoi DIGIY est à 0% commission ?">💰 0% Commission</button>
+            <button type="button" data-q="C’est quoi le slug et à quoi ça sert ?">🔗 Le slug</button>
+          </div>
+
+          <div class="kbAns" id="kbAns"></div>
         </div>
       </div>
-    </section>
 
-    <section class="grid">
-      <div class="panel">
-        <div class="section-title">
-          <h3>Choisis ton module</h3>
-          <div class="small">Version PRO</div>
-        </div>
+      <div class="hr"></div>
 
-        <div id="moduleGrid" class="module-grid"></div>
-
-        <div class="section-title" style="margin-top:18px">
-          <h3>Choisis ta formule</h3>
-          <div class="small">Montant auto</div>
-        </div>
-
-        <div id="planRow" class="plan-row"></div>
-
-        <div class="section-title" style="margin-top:18px">
-          <h3>Informations</h3>
-          <div class="small">Pré-remplies si URL</div>
-        </div>
-
-        <div class="form-grid">
-          <div class="field">
-            <label for="phone">Téléphone</label>
-            <input id="phone" class="input" type="tel" inputmode="numeric" placeholder="221771234567" />
-          </div>
-
-          <div class="field">
-            <label for="paymentMethod">Mode de paiement</label>
-            <select id="paymentMethod" class="select">
-              <option value="WAVE">Wave</option>
-              <option value="OM">Orange Money</option>
-              <option value="AUTRE">Autre</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label for="fullname">Nom / activité</label>
-            <input id="fullname" class="input" type="text" placeholder="Ex: Astou Boutique / Jean Baptiste" />
-          </div>
-
-          <div class="field">
-            <label for="city">Ville / zone</label>
-            <input id="city" class="input" type="text" placeholder="Ex: Saly, Mbour, Dakar" />
-          </div>
-        </div>
-
-        <div class="field" style="margin-top:12px">
-          <label for="note">Message complémentaire</label>
-          <input id="note" class="input" type="text" placeholder="Ex: Je veux activer mon module aujourd’hui" />
-        </div>
-
-        <div class="status" id="status"></div>
+      <div class="status warn" id="statusBox">
+        <div id="statusText">⏳ Préparation…</div>
+        <span class="tag warn" id="statusTag">EN COURS</span>
       </div>
 
-      <aside class="aside-card">
-        <div class="panel summary">
-          <div class="section-title" style="margin-bottom:2px">
-            <h3>Résumé</h3>
-            <div class="small" id="refBox">REF —</div>
+      <div class="hr"></div>
+
+      <div class="vipBox" id="vipBox">
+        <div class="vipTitle">
+          <div>✨ Ton entreprise mérite d’être vue (pas juste “présente”).</div>
+          <span class="vipStamp" id="vipStamp">⭐ Client DIGIY</span>
+        </div>
+        <ul class="vipPerks">
+          <li>Tu payes <strong>direct</strong> : pas de commission qui mange tes bénéfices.</li>
+          <li>Tu reçois un <strong>cockpit pro</strong> (slug) pour partager ton lien facilement.</li>
+          <li>Avec BOOST : tu passes en <strong>mise en avant</strong> (plus visible, plus crédible).</li>
+        </ul>
+        <p class="small" id="vipLine" style="margin-top:10px;">
+          Conseil : choisis ton module, puis ajoute un BOOST si tu veux accélérer.
+        </p>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="box" id="orderBox">
+        <h2 style="margin:0;font-size:16px;font-weight:1100;">🧾 Récap paiement</h2>
+        <p class="small">Vérifie ce que tu payes avant de continuer.</p>
+        <div class="hr"></div>
+
+        <div class="row">
+          <div>
+            <div style="font-weight:1100;">Produit / Module</div>
+            <div class="mono" style="font-weight:1000;" id="orderProduct">—</div>
           </div>
-
-          <div class="summary-box">
-            <div class="summary-line">
-              <span>Module</span>
-              <span id="sumModule">—</span>
-            </div>
-            <div class="summary-line">
-              <span>Formule</span>
-              <span id="sumPlan">—</span>
-            </div>
-            <div class="summary-line">
-              <span>Téléphone</span>
-              <span id="sumPhone">—</span>
-            </div>
-            <div class="summary-line">
-              <span>Paiement</span>
-              <span id="sumMethod">—</span>
-            </div>
-            <div class="total">
-              <span>Total</span>
-              <span id="sumTotal">—</span>
-            </div>
-          </div>
-
-          <div class="pay-box">
-            <div class="pay-kicker">Paiement direct</div>
-            <div class="pay-main">
-              <b id="payTitle">Envoie le montant puis confirme</b>
-              <span>
-                Après paiement, envoie la preuve ou ta demande d’activation via WhatsApp.
-                Le message ci-dessous part déjà structuré.
-              </span>
-            </div>
-
-            <div class="big-number">
-              <span id="paymentNumber">221771342889</span>
-              <button id="copyNumberBtn" class="btn btn-secondary" style="height:40px;padding:0 12px">Copier</button>
-            </div>
-
-            <div class="btn-row">
-              <button id="copyOrderBtn" class="btn btn-secondary">Copier le résumé</button>
-              <button id="waBtn" class="btn btn-primary">Envoyer sur WhatsApp</button>
-              <button id="resetBtn" class="btn btn-gold">Réinitialiser</button>
-            </div>
-          </div>
-
-          <div class="note">
-            Conseil terrain : garde toujours le même numéro pour l’abonnement et pour le futur accès PIN/slug.
+          <div>
+            <div style="font-weight:1100;">Plan</div>
+            <div class="mono" style="font-weight:1000;" id="orderPlan">—</div>
           </div>
         </div>
-      </aside>
-    </section>
 
-    <div class="foot">
-      DIGIYLYFE — outils simples, puissants, enracinés terrain.  
-      <div class="tiny">Paiement direct • Activation claire • Modules PRO</div>
+        <div class="hr"></div>
+
+        <div class="row">
+          <div>
+            <div style="font-weight:1100;">Montant total</div>
+            <div class="mono" style="font-weight:1000;" id="orderAmount">—</div>
+          </div>
+          <div>
+            <div style="font-weight:1100;">Référence logique</div>
+            <div class="mono" style="font-weight:1000;" id="orderRef">—</div>
+          </div>
+        </div>
+
+        <p class="small" id="orderHint" style="margin-top:10px;"></p>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="box" id="pricingBox">
+        <h2 style="margin:0;font-size:16px;font-weight:1100;">💰 Menu Codifié — Dis le CODE, choisis ton pack</h2>
+        <p class="small">1) Clique ton module → 2) (optionnel) ajoute un BOOST → total calculé automatiquement.</p>
+        <div class="hr"></div>
+
+        <div class="section-sep">🚗 CODE 1 · DIGIY DRIVER</div>
+        <div class="priceGrid" id="grid_driver"></div>
+
+        <div class="section-sep">🏠 CODE 2 · DIGIY LOC — Location</div>
+        <div class="priceGrid" id="grid_loc"></div>
+
+        <div class="section-sep">🍽️ CODE 3 · DIGIY RESTO PRO</div>
+        <div class="priceGrid" id="grid_resto"></div>
+
+        <div class="section-sep">📅 CODE 4 · DIGIY RÉSA</div>
+        <div class="priceGrid" id="grid_resa"></div>
+
+        <div class="section-sep">🧾 CODE 5 · DIGIY POS</div>
+        <div class="priceGrid" id="grid_pos"></div>
+
+        <div class="section-sep">🛒 CODE 6 · DIGIY MARKET</div>
+        <div class="priceGrid" id="grid_market"></div>
+
+        <div class="section-sep">🏗️ CODE 7 · DIGIY BUILD</div>
+        <div class="priceGrid" id="grid_build"></div>
+
+        <div class="section-sep">🧭 CODE 8 · DIGIY EXPLORE — Agence</div>
+        <div class="priceGrid" id="grid_explore"></div>
+
+        <div class="section-sep">🚚 CODE 9 · DIGIY FRET CHAUFFEUR</div>
+        <div class="priceGrid" id="grid_fret_chauf"></div>
+
+        <div class="section-sep">📦 CODE 10 · DIGIY FRET CLIENT</div>
+        <div class="priceGrid" id="grid_fret_client"></div>
+
+        <div class="section-sep">✨ CODE E · BOOST</div>
+        <div class="priceGrid" id="grid_boost"></div>
+
+        <div class="hintLine">📞 Commander par téléphone (juste le code) : <strong>+221 77 134 28 89</strong></div>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="box" id="tokenBox">
+        <h2 style="margin:0;font-size:16px;font-weight:1100;">🔐 Activation sécurisée</h2>
+        <p class="small">Si tu as reçu un lien DIGIY avec token, clique simplement.</p>
+        <div class="hr"></div>
+        <button class="btn ok" id="btnActivateToken">
+          ✅ Activer maintenant
+          <span id="spinnerToken" class="mono" style="display:none;margin-left:8px;">⏳</span>
+        </button>
+        <p class="small" id="tokenHint" style="margin-top:10px;"></p>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="box" id="manualBox">
+        <h2 style="margin:0;font-size:16px;font-weight:1100;">💳 Préparer le paiement Wave</h2>
+        <p class="small">Choisis ton pack ici, puis continue vers le tunnel de paiement sécurisé.</p>
+
+        <div class="hr"></div>
+
+        <div class="row">
+          <div>
+            <div style="font-weight:1100;">Bénéficiaire</div>
+            <div class="mono" style="font-weight:1000;">JB BEAUVILLE</div>
+          </div>
+          <div>
+            <div style="font-weight:1100;">Numéro Wave</div>
+            <div class="mono" style="font-weight:1000;">+221 77 134 28 89</div>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="box" style="margin:12px 0;">
+          <h2 style="margin:0;font-size:16px;font-weight:1100;">📱 Infos</h2>
+          <p class="small" style="margin-top:6px;">Téléphone obligatoire. Slug conseillé (si vide, DIGIY le génère automatiquement).</p>
+          <div class="hr"></div>
+
+          <div class="row">
+            <div>
+              <div style="font-weight:1100;">Téléphone (digits uniquement)</div>
+              <input type="tel" id="payPhone" class="digiy-input" placeholder="Ex: 221771234567" inputmode="numeric"/>
+              <div class="small" style="margin-top:6px;">Conseil : mets 221 + ton numéro (sans espaces, sans +).</div>
+            </div>
+
+            <div>
+              <div style="font-weight:1100;">Slug (nom public)</div>
+              <input type="text" id="paySlug" class="digiy-input" placeholder="Ex: chez-astou-saly (ou laisse vide)"/>
+              <div class="small" style="margin-top:6px;">Le slug sert à ouvrir ton cockpit : <span class="mono">?slug=...</span></div>
+              <div id="slugAuto" class="small" style="margin-top:6px; color:rgba(234,255,241,.85);"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+
+        <ol class="steps">
+          <li>Choisis ton module (et BOOST si tu veux)</li>
+          <li>Renseigne ton téléphone et ton slug</li>
+          <li>Continue vers la page de paiement</li>
+          <li>Paye Wave et envoie le reçu dans le dossier ABOS</li>
+          <li>Attends la validation et l’activation</li>
+        </ol>
+
+        <div class="hr"></div>
+
+        <div class="row">
+          <button class="btn ok" id="btnGoPayer">➡️ Continuer vers paiement</button>
+          <button class="btn bad" id="btnSupport">🛟 Support WhatsApp</button>
+        </div>
+        <p class="small" id="manualHint" style="margin-top:10px;"></p>
+      </div>
+
+      <div class="hide" id="dbg"></div>
     </div>
   </div>
 
   <script>
-    const SUPPORT_WHATSAPP = "221771342889";
-    const PAYMENT_NUMBER = "221771342889";
+  (function(){
+    "use strict";
 
-    const MODULES = [
+    const SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
+    const SUPABASE_ANON_KEY =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc3Ftd2pqdHNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA";
+
+    const ABOS_PAYER_URL = "https://beauville.github.io/abos/payer.html";
+
+    window.DIGIY_SUPABASE_URL = SUPABASE_URL;
+    window.DIGIY_SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
+
+    if(!window.supabase) throw new Error("Supabase lib non chargée");
+
+    const sb = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_ANON_KEY,
       {
-        code: "LOC",
-        title: "DIGIY LOC PRO",
-        type: "PRO",
-        desc: "Locations, hébergements, chambres, maisons.",
-        prices: { month: 5000, year: 50000 }
-      },
-      {
-        code: "DRIVER",
-        title: "DIGIY DRIVER PRO",
-        type: "PRO",
-        desc: "Mobilité, chauffeurs, trajets, demandes terrain.",
-        prices: { month: 5000, year: 50000 }
-      },
-      {
-        code: "RESA",
-        title: "DIGIY RESA PRO",
-        type: "PRO",
-        desc: "Réservations, planning, demandes clients.",
-        prices: { month: 5000, year: 50000 }
-      },
-      {
-        code: "RESTO",
-        title: "DIGIY RESTO PRO",
-        type: "PRO",
-        desc: "Carte, commandes, organisation restauration.",
-        prices: { month: 5000, year: 50000 }
-      },
-      {
-        code: "MARKET",
-        title: "DIGIY MARKET PRO",
-        type: "PRO",
-        desc: "Boutique, produits, publication commerciale.",
-        prices: { month: 5000, year: 50000 }
-      },
-      {
-        code: "JOBS",
-        title: "DIGIY JOBS PRO",
-        type: "PRO",
-        desc: "Offres, profils, mise en relation utile.",
-        prices: { month: 5000, year: 50000 }
-      }
-    ];
-
-    const PLANS = [
-      {
-        code: "month",
-        label: "Mensuel",
-        kicker: "Souple",
-        desc: "Tu avances pas à pas, proprement."
-      },
-      {
-        code: "year",
-        label: "Annuel",
-        kicker: "Vision",
-        desc: "Tu poses ton outil dans la durée."
-      }
-    ];
-
-    const $ = (sel, root = document) => root.querySelector(sel);
-
-    const state = {
-      module: "LOC",
-      plan: "month",
-      phone: "",
-      fullname: "",
-      city: "",
-      note: "",
-      paymentMethod: "WAVE",
-      amountOverride: null,
-      ref: ""
-    };
-
-    const el = {
-      moduleGrid: $("#moduleGrid"),
-      planRow: $("#planRow"),
-      phone: $("#phone"),
-      fullname: $("#fullname"),
-      city: $("#city"),
-      note: $("#note"),
-      paymentMethod: $("#paymentMethod"),
-      sumModule: $("#sumModule"),
-      sumPlan: $("#sumPlan"),
-      sumPhone: $("#sumPhone"),
-      sumMethod: $("#sumMethod"),
-      sumTotal: $("#sumTotal"),
-      refBox: $("#refBox"),
-      status: $("#status"),
-      paymentNumber: $("#paymentNumber"),
-      copyNumberBtn: $("#copyNumberBtn"),
-      copyOrderBtn: $("#copyOrderBtn"),
-      waBtn: $("#waBtn"),
-      resetBtn: $("#resetBtn"),
-      payTitle: $("#payTitle")
-    };
-
-    function money(n){
-      return new Intl.NumberFormat("fr-FR").format(Number(n || 0)) + " FCFA";
-    }
-
-    function sanitizePhone(v){
-      return String(v || "").replace(/[^\d]/g, "");
-    }
-
-    function getCurrentModule(){
-      return MODULES.find(m => m.code === state.module) || MODULES[0];
-    }
-
-    function getCurrentPlan(){
-      return PLANS.find(p => p.code === state.plan) || PLANS[0];
-    }
-
-    function getAmount(){
-      if (state.amountOverride && !Number.isNaN(Number(state.amountOverride))) {
-        return Number(state.amountOverride);
-      }
-      const mod = getCurrentModule();
-      return mod?.prices?.[state.plan] ?? 0;
-    }
-
-    function buildRef(){
-      const d = new Date();
-      const y = d.getFullYear().toString().slice(-2);
-      const mo = String(d.getMonth()+1).padStart(2,"0");
-      const da = String(d.getDate()).padStart(2,"0");
-      const hh = String(d.getHours()).padStart(2,"0");
-      const mi = String(d.getMinutes()).padStart(2,"0");
-      const suffix = sanitizePhone(state.phone).slice(-4) || "0000";
-      state.ref = `DG-${state.module}-${y}${mo}${da}-${hh}${mi}-${suffix}`;
-    }
-
-    function renderModules(){
-      el.moduleGrid.innerHTML = MODULES.map(m => `
-        <button class="module-card ${m.code === state.module ? "active" : ""}" data-module="${m.code}">
-          <div class="module-top">
-            <span class="module-code">${m.code}</span>
-            <span class="module-type">${m.type}</span>
-          </div>
-          <h4>${m.title}</h4>
-          <p>${m.desc}</p>
-        </button>
-      `).join("");
-
-      el.moduleGrid.querySelectorAll("[data-module]").forEach(btn => {
-        btn.addEventListener("click", () => {
-          state.module = btn.dataset.module;
-          buildRef();
-          renderModules();
-          renderPlans();
-          updateSummary();
-          persist();
-        });
-      });
-    }
-
-    function renderPlans(){
-      const mod = getCurrentModule();
-
-      el.planRow.innerHTML = PLANS.map(p => `
-        <button class="plan-card ${p.code === state.plan ? "active" : ""}" data-plan="${p.code}">
-          <div class="kicker">${p.kicker}</div>
-          <div class="price">${money(mod.prices[p.code] || 0)}</div>
-          <div class="desc"><b>${p.label}</b> — ${p.desc}</div>
-        </button>
-      `).join("");
-
-      el.planRow.querySelectorAll("[data-plan]").forEach(btn => {
-        btn.addEventListener("click", () => {
-          state.plan = btn.dataset.plan;
-          buildRef();
-          renderPlans();
-          updateSummary();
-          persist();
-        });
-      });
-    }
-
-    function updateSummary(){
-      const mod = getCurrentModule();
-      const plan = getCurrentPlan();
-      const amount = getAmount();
-
-      el.sumModule.textContent = mod.title;
-      el.sumPlan.textContent = plan.label;
-      el.sumPhone.textContent = sanitizePhone(state.phone) || "—";
-      el.sumMethod.textContent = state.paymentMethod;
-      el.sumTotal.textContent = money(amount);
-      el.refBox.textContent = `REF ${state.ref || "—"}`;
-      el.paymentNumber.textContent = PAYMENT_NUMBER;
-      el.payTitle.textContent = `Paye ${money(amount)} puis confirme l’activation`;
-
-      const missing = [];
-      if (!sanitizePhone(state.phone)) missing.push("téléphone");
-      if (!state.module) missing.push("module");
-      if (!state.plan) missing.push("formule");
-
-      if (!missing.length){
-        setStatus("Résumé prêt. Tu peux copier ou envoyer sur WhatsApp.", "ok");
-      } else {
-        setStatus("Complète : " + missing.join(", ") + ".", "warn");
-      }
-    }
-
-    function setStatus(msg, type = ""){
-      el.status.className = "status" + (type ? " " + type : "");
-      el.status.textContent = msg;
-    }
-
-    function buildMessage(){
-      const mod = getCurrentModule();
-      const plan = getCurrentPlan();
-      const amount = getAmount();
-      const phone = sanitizePhone(state.phone) || "NON RENSEIGNÉ";
-      const fullname = (state.fullname || "").trim() || "Non renseigné";
-      const city = (state.city || "").trim() || "Non renseigné";
-      const note = (state.note || "").trim() || "Aucune";
-
-      return [
-        "Bonjour DIGIY,",
-        "",
-        "Je souhaite commencer à payer / activer mon module.",
-        "",
-        `Référence : ${state.ref}`,
-        `Module : ${mod.title}`,
-        `Code module : ${mod.code}`,
-        `Formule : ${plan.label}`,
-        `Montant : ${money(amount)}`,
-        `Mode de paiement : ${state.paymentMethod}`,
-        `Téléphone : ${phone}`,
-        `Nom / activité : ${fullname}`,
-        `Ville / zone : ${city}`,
-        `Note : ${note}`,
-        "",
-        "Merci de me confirmer l’activation après paiement."
-      ].join("\n");
-    }
-
-    async function copyText(text, okMsg){
-      try{
-        await navigator.clipboard.writeText(text);
-        setStatus(okMsg, "ok");
-      }catch{
-        setStatus("Impossible de copier automatiquement sur cet appareil.", "bad");
-      }
-    }
-
-    function openWhatsApp(){
-      const msg = buildMessage();
-      const url = `https://wa.me/${SUPPORT_WHATSAPP}?text=${encodeURIComponent(msg)}`;
-      window.open(url, "_blank", "noopener,noreferrer");
-    }
-
-    function persist(){
-      const payload = {
-        module: state.module,
-        plan: state.plan,
-        phone: state.phone,
-        fullname: state.fullname,
-        city: state.city,
-        note: state.note,
-        paymentMethod: state.paymentMethod,
-        amountOverride: state.amountOverride
-      };
-      localStorage.setItem("DIGIY_PAY_START_FORM", JSON.stringify(payload));
-    }
-
-    function restore(){
-      try{
-        const raw = localStorage.getItem("DIGIY_PAY_START_FORM");
-        if (!raw) return;
-        const saved = JSON.parse(raw);
-        if (saved && typeof saved === "object"){
-          state.module = saved.module || state.module;
-          state.plan = saved.plan || state.plan;
-          state.phone = saved.phone || "";
-          state.fullname = saved.fullname || "";
-          state.city = saved.city || "";
-          state.note = saved.note || "";
-          state.paymentMethod = saved.paymentMethod || "WAVE";
-          state.amountOverride = saved.amountOverride ?? null;
+        auth: {
+          persistSession: false,
+          autoRefreshToken: false,
+          detectSessionInUrl: false,
+          storage: { getItem: () => null, setItem: () => {}, removeItem: () => {} }
         }
-      }catch{}
-    }
-
-    function applyQueryParams(){
-      const q = new URLSearchParams(location.search);
-
-      const moduleParam = (q.get("module") || "").toUpperCase();
-      const planParam = (q.get("plan") || "").toLowerCase();
-      const phoneParam = sanitizePhone(q.get("phone") || "");
-      const fullnameParam = q.get("name") || "";
-      const cityParam = q.get("city") || "";
-      const noteParam = q.get("note") || "";
-      const amountParam = q.get("amount");
-
-      if (MODULES.some(m => m.code === moduleParam)) state.module = moduleParam;
-      if (PLANS.some(p => p.code === planParam)) state.plan = planParam;
-      if (phoneParam) state.phone = phoneParam;
-      if (fullnameParam) state.fullname = fullnameParam;
-      if (cityParam) state.city = cityParam;
-      if (noteParam) state.note = noteParam;
-      if (amountParam && !Number.isNaN(Number(amountParam))) {
-        state.amountOverride = Number(amountParam);
       }
+    );
+    window.sb = sb;
+
+    const SUPPORT_WA = "+221771342889";
+    const WAVE_TO    = "+221771342889";
+
+    const $ = (id) => document.getElementById(id);
+    const qp = new URLSearchParams(location.search);
+
+    function setStatus(text, tone, tag){
+      const box = $("statusBox");
+      box.className = "status " + (tone || "warn");
+      $("statusText").textContent = text || "";
+      const tg = $("statusTag");
+      tg.className = "tag " + (tone || "warn");
+      tg.textContent = tag || "—";
     }
 
-    function bind(){
-      el.phone.addEventListener("input", e => {
-        state.phone = sanitizePhone(e.target.value);
-        e.target.value = state.phone;
-        buildRef();
-        updateSummary();
-        persist();
-      });
+    function wa(msg){
+      const num = SUPPORT_WA.replace(/\+/g,"");
+      location.href = "https://wa.me/" + num + "?text=" + encodeURIComponent(msg);
+    }
 
-      el.fullname.addEventListener("input", e => {
-        state.fullname = e.target.value;
-        updateSummary();
-        persist();
-      });
+    function normPhone(p){ return String(p||"").trim().replace(/[^\d]/g,""); }
 
-      el.city.addEventListener("input", e => {
-        state.city = e.target.value;
-        updateSummary();
-        persist();
-      });
+    function normSlug(s){
+      return String(s||"")
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g,"-")
+        .replace(/[^a-z0-9-]/g,"")
+        .replace(/-+/g,"-")
+        .replace(/^-|-$/g,"");
+    }
 
-      el.note.addEventListener("input", e => {
-        state.note = e.target.value;
-        updateSummary();
-        persist();
-      });
+    function genSlug(prefix){
+      const p = normSlug(prefix || "digiy") || "digiy";
+      const rand = Math.random().toString(16).slice(2, 10);
+      return `${p}-${rand}`;
+    }
 
-      el.paymentMethod.addEventListener("change", e => {
-        state.paymentMethod = e.target.value;
-        updateSummary();
-        persist();
-      });
+    function displayPhoneDigitsAsPlus(phoneDigits){
+      const d = String(phoneDigits||"").replace(/[^\d]/g,"");
+      if(!d) return "";
+      if(d.startsWith("221")) return "+" + d;
+      return d;
+    }
 
-      el.copyNumberBtn.addEventListener("click", () => {
-        copyText(PAYMENT_NUMBER, "Numéro de paiement copié.");
-      });
+    function prettyFCFA(n){
+      const x = String(n||"").replace(/[^\d]/g,"");
+      if(!x || x === "0") return "";
+      return Number(x).toLocaleString("fr-FR") + " FCFA";
+    }
 
-      el.copyOrderBtn.addEventListener("click", () => {
-        copyText(buildMessage(), "Résumé copié.");
-      });
+    const token  = (qp.get("token")  || "").trim();
+    const ret    = (qp.get("return") || "").trim();
+    const auto   = (qp.get("auto")   === "1");
+    const from_  = (qp.get("from")   || "").trim();
 
-      el.waBtn.addEventListener("click", () => {
-        if (!sanitizePhone(state.phone)) {
-          setStatus("Ajoute le téléphone avant d’envoyer.", "warn");
-          el.phone.focus();
+    const rawAccess = (qp.get("module") || "").trim().toUpperCase();
+    const MODULE_ALIAS = {
+      CAISSE: "POS",
+      POS: "POS",
+      DRIVER: "DRIVER",
+      LOC: "LOC",
+      RESTO: "RESTO",
+      RESA: "RESA_TABLE",
+      RESA_TABLE: "RESA_TABLE",
+      MARKET: "MARKET",
+      BUILD: "BUILD",
+      EXPLORE: "EXPLORE",
+      FRET_PRO: "FRET_PRO",
+      FRET_CHAUF: "FRET_PRO",
+      FRET_CLIENT: "FRET_CLIENT_PRO",
+      FRET_CLIENT_PRO: "FRET_CLIENT_PRO"
+    };
+    const accessModule = MODULE_ALIAS[rawAccess] || rawAccess || "";
+
+    let userPhoneDigits = normPhone(qp.get("phone") || "");
+    let userSlug        = normSlug(qp.get("slug") || "");
+
+    let baseModule = (qp.get("base_module") || "").trim().toUpperCase();
+    let basePlan   = (qp.get("plan") || "").trim();
+    let baseAmount = Number((qp.get("amount") || "").toString().replace(/[^\d]/g,"") || 0);
+    let baseCode   = (qp.get("code") || "").trim();
+
+    let boostPlan   = (qp.get("boost") || "").trim();
+    let boostAmount = Number((qp.get("boost_amount") || "").toString().replace(/[^\d]/g,"") || 0);
+    let boostCode   = (qp.get("boost_code") || "").trim();
+
+    function inferModuleForSlug(){
+      return (baseModule || accessModule || "LOC").trim().toUpperCase();
+    }
+    function subscriptionSlug(module, phoneDigits){
+      return `${String(module||"LOC").toLowerCase()}-${String(phoneDigits||"").replace(/\D/g,"")}`;
+    }
+    function buildReturnUrlWithSlug(retUrl, module, phoneDigits){
+      const u = new URL(retUrl, location.origin);
+      if(!u.searchParams.get("slug")){
+        u.searchParams.set("slug", subscriptionSlug(module, phoneDigits));
+      }
+      return u.toString();
+    }
+
+    let CURRENT_LANG = localStorage.getItem("digiy_lang") || "fr";
+
+    function applyLangButtons(){
+      $("lang-fr").classList.toggle("active", CURRENT_LANG === "fr");
+      $("lang-wo").classList.toggle("active", CURRENT_LANG === "wo");
+    }
+    $("lang-fr").addEventListener("click", ()=>{
+      CURRENT_LANG = "fr";
+      localStorage.setItem("digiy_lang","fr");
+      applyLangButtons();
+    });
+    $("lang-wo").addEventListener("click", ()=>{
+      CURRENT_LANG = "wo";
+      localStorage.setItem("digiy_lang","wo");
+      applyLangButtons();
+    });
+    applyLangButtons();
+
+    const KB_ENDPOINTS = ["https://ai.digiylyfe.com/chat"];
+
+    async function kbAsk(question){
+      const out = $("kbAns");
+      const status = $("kbStatus");
+      if(!out || !status) return;
+
+      const q = String(question || "").trim();
+      if(!q) return;
+
+      out.textContent = "⏳ Je réfléchis…";
+      status.textContent = "En ligne";
+      status.className = "pill ok";
+
+      let lastErr = null;
+
+      for(const url of KB_ENDPOINTS){
+        try{
+          const res = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message: q })
+          });
+          const data = await res.json().catch(()=>null);
+          if(!res.ok) throw new Error(data?.error || ("HTTP " + res.status));
+          if(!data?.ok) throw new Error(data?.error || "unknown");
+          out.textContent = data.answer || "✅";
           return;
+        }catch(e){
+          lastErr = e;
         }
-        openWhatsApp();
+      }
+
+      status.textContent = "Hors ligne";
+      status.className = "pill";
+      out.textContent =
+        "⚠️ Assistant indisponible.\n" +
+        "Choisis ton code, puis continue vers le paiement.\n" +
+        "Sinon clique Support WhatsApp.";
+      console.error("KB error:", lastErr);
+    }
+
+    $("kbSend").addEventListener("click", ()=>{
+      kbAsk($("kbInput").value);
+    });
+
+    $("kbInput").addEventListener("keydown", (e)=>{
+      if(e.key === "Enter") kbAsk($("kbInput").value);
+    });
+
+    document.querySelectorAll(".kbQuick button[data-q]").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        const q = btn.getAttribute("data-q") || "";
+        $("kbInput").value = q;
+        kbAsk(q);
       });
+    });
 
-      el.resetBtn.addEventListener("click", () => {
-        localStorage.removeItem("DIGIY_PAY_START_FORM");
-        state.module = "LOC";
-        state.plan = "month";
-        state.phone = "";
-        state.fullname = "";
-        state.city = "";
-        state.note = "";
-        state.paymentMethod = "WAVE";
-        state.amountOverride = null;
-        hydrateFields();
-        buildRef();
-        renderModules();
-        renderPlans();
-        updateSummary();
-        setStatus("Formulaire réinitialisé.", "ok");
+    setTimeout(()=>kbAsk("Explique DIGIY PAY en 2 lignes."), 250);
+
+    function totalAmount(){ return (Number(baseAmount||0) + Number(boostAmount||0)); }
+
+    function productLabel(){
+      const base = baseCode ? ("Code " + baseCode) : (basePlan || accessModule || "DIGIY");
+      const boost = boostCode ? (" + BOOST " + boostCode) : "";
+      return "DIGIY · " + base + boost;
+    }
+
+    function updateVipBox(){
+      const stamp = $("vipStamp");
+      const line = $("vipLine");
+      if(!stamp || !line) return;
+
+      if(boostCode){
+        stamp.textContent = "👑 Client BOOST — Prioritaire";
+        stamp.style.borderColor = "rgba(250,204,21,.55)";
+        stamp.style.background = "rgba(250,204,21,.08)";
+        stamp.style.color = "#fff6c8";
+        line.innerHTML = "✅ BOOST activé : tu passes en <strong>mise en avant</strong>. On te traite comme un client prioritaire.";
+      }else{
+        stamp.textContent = "⭐ Client DIGIY";
+        stamp.style.borderColor = "rgba(34,197,94,.35)";
+        stamp.style.background = "rgba(34,197,94,.08)";
+        stamp.style.color = "#bfffe0";
+        line.textContent = "Conseil : choisis ton module, puis ajoute un BOOST si tu veux accélérer.";
+      }
+    }
+
+    function syncSelectionToUrl(){
+      const u = new URL(location.href);
+
+      if(baseModule) u.searchParams.set("base_module", baseModule); else u.searchParams.delete("base_module");
+      if(basePlan)   u.searchParams.set("plan", basePlan); else u.searchParams.delete("plan");
+      if(baseAmount) u.searchParams.set("amount", String(baseAmount)); else u.searchParams.delete("amount");
+      if(baseCode)   u.searchParams.set("code", baseCode); else u.searchParams.delete("code");
+
+      if(boostPlan)   u.searchParams.set("boost", boostPlan); else u.searchParams.delete("boost");
+      if(boostAmount) u.searchParams.set("boost_amount", String(boostAmount)); else u.searchParams.delete("boost_amount");
+      if(boostCode)   u.searchParams.set("boost_code", boostCode); else u.searchParams.delete("boost_code");
+
+      history.replaceState(null, "", u.toString());
+    }
+
+    function renderOrder(){
+      const t = totalAmount();
+
+      $("orderProduct").textContent = productLabel();
+      $("orderPlan").textContent = basePlan ? basePlan : (accessModule || "—");
+      $("orderAmount").textContent = t ? (Number(t).toLocaleString("fr-FR") + " FCFA") : "—";
+
+      const ref =
+        (baseModule || accessModule || "DIGIY") + "-" +
+        (baseCode || "X") + "-" +
+        (userPhoneDigits ? userPhoneDigits.slice(-6) : "000000");
+      $("orderRef").textContent = ref;
+
+      const hint = [];
+      if(!basePlan || !baseAmount) hint.push("👉 Choisis ton module dans la grille.");
+      if(boostCode) hint.push("✅ BOOST ajouté : " + boostCode);
+      if(!userPhoneDigits) hint.push("📱 Mets ton téléphone (digits).");
+      if(!userSlug) hint.push("🔗 Slug conseillé (ou laisse vide = auto).");
+      $("orderHint").textContent = hint.join("  •  ");
+
+      updateVipBox();
+    }
+
+    const PRICE_GROUPS = {
+      driver: [
+        { code:"1",  module:"DRIVER", plan:"standard", amount:12900, label:"🚗 DRIVER", desc:"GPS temps réel · Courses · Wave & OM" }
+      ],
+      loc: [
+        { code:"2A", module:"LOC", plan:"LOC_2A", amount:12900,  label:"🥉 LOC 1-5 logements",  desc:"Pack essentiel propriétaire" },
+        { code:"2B", module:"LOC", plan:"LOC_2B", amount:25000,  label:"🥈 LOC 6-9 logements",  desc:"Gestionnaire intermédiaire" },
+        { code:"2C", module:"LOC", plan:"LOC_2C", amount:45000,  label:"🥇 LOC 10-20 logements", desc:"Gestionnaire confirmé" },
+        { code:"2D", module:"LOC", plan:"LOC_2D", amount:60000,  label:"💎 LOC 21-30 logements", desc:"Grand propriétaire" },
+        { code:"2E", module:"LOC", plan:"LOC_2E", amount:90000,  label:"👑 LOC 30+ logements",   desc:"Parc immobilier premium" }
+      ],
+      resto: [
+        { code:"3A", module:"RESTO", plan:"RESTO_3A", amount:19900, label:"🥉 RESTO ESSENTIEL", desc:"2 licences · 15 tables" },
+        { code:"3B", module:"RESTO", plan:"RESTO_3B", amount:39900, label:"🥈 RESTO STANDARD",  desc:"4 licences · 30 tables" },
+        { code:"3C", module:"RESTO", plan:"RESTO_3C", amount:59900, label:"🥇 RESTO PRO",       desc:"6 licences · 45 tables" }
+      ],
+      resa: [
+        { code:"4A", module:"RESA_TABLE", plan:"RESA_4A", amount:12900, label:"🥉 RÉSA 1-5 tables",  desc:"Petite salle" },
+        { code:"4B", module:"RESA_TABLE", plan:"RESA_4B", amount:25000, label:"🥈 RÉSA 6-9 tables",  desc:"Moyenne salle" },
+        { code:"4C", module:"RESA_TABLE", plan:"RESA_4C", amount:45000, label:"🥇 RÉSA 10-20 tables", desc:"Grande salle" },
+        { code:"4D", module:"RESA_TABLE", plan:"RESA_4D", amount:60000, label:"💎 RÉSA 21-30 tables", desc:"Salle événementielle" },
+        { code:"4E", module:"RESA_TABLE", plan:"RESA_4E", amount:90000, label:"👑 RÉSA 30+ tables",  desc:"Site multi-salles" }
+      ],
+      pos: [
+        { code:"5",  module:"POS", plan:"standard", amount:12900, label:"🧾 POS STANDARD", desc:"Caisse · Stock · Multi-users" }
+      ],
+      market: [
+        { code:"6",  module:"MARKET", plan:"standard", amount:12900, label:"🛒 MARKET", desc:"Vitrine + Fiche pro + WhatsApp" }
+      ],
+      build: [
+        { code:"7",  module:"BUILD", plan:"standard", amount:12900, label:"🏗️ BUILD", desc:"Artisans · Devis · Portfolio" }
+      ],
+      explore: [
+        { code:"8A", module:"EXPLORE", plan:"EXPLORE_8A", amount:30000,  label:"🟢 EXPLORE ESSENTIEL", desc:"Visibilité locale agence" },
+        { code:"8B", module:"EXPLORE", plan:"EXPLORE_8B", amount:60000,  label:"🔵 EXPLORE PRO",       desc:"Visibilité régionale agence" },
+        { code:"8C", module:"EXPLORE", plan:"EXPLORE_8C", amount:120000, label:"🟣 EXPLORE PREMIUM",   desc:"Visibilité internationale" },
+        { code:"8D", module:"EXPLORE", plan:"EXPLORE_8D", amount:150000, label:"🎫 EXPLORE SETUP",     desc:"Droit d'entrée one-shot · Onboarding", isOneShot:true }
+      ],
+      fret_chauf: [
+        { code:"9A", module:"FRET_PRO", plan:"FRET_CHAUF_9A", amount:25000,  label:"🥉 FRET LOCAL <50km", desc:"Zone locale chauffeur" },
+        { code:"9B", module:"FRET_PRO", plan:"FRET_CHAUF_9B", amount:60000,  label:"🥈 FRET RÉGIONAL 50-200km", desc:"Région chauffeur" },
+        { code:"9C", module:"FRET_PRO", plan:"FRET_CHAUF_9C", amount:120000, label:"🥇 FRET NATIONAL 200km+", desc:"National chauffeur" },
+        { code:"9D", module:"FRET_PRO", plan:"FRET_CHAUF_9D", amount:200000, label:"👑 FRET INTERNATIONAL CEDEAO", desc:"CEDEAO chauffeur" }
+      ],
+      fret_client: [
+        { code:"10A", module:"FRET_CLIENT_PRO", plan:"FRET_CLI_10A", amount:9900,   label:"🥉 FRET CLIENT LOCAL", desc:"Expéditeur zone locale" },
+        { code:"10B", module:"FRET_CLIENT_PRO", plan:"FRET_CLI_10B", amount:25000,  label:"🥈 FRET CLIENT RÉGIONAL", desc:"Expéditeur régional" },
+        { code:"10C", module:"FRET_CLIENT_PRO", plan:"FRET_CLI_10C", amount:60000,  label:"🥇 FRET CLIENT NATIONAL", desc:"Expéditeur national" },
+        { code:"10D", module:"FRET_CLIENT_PRO", plan:"FRET_CLI_10D", amount:120000, label:"👑 FRET CLIENT INTERNATIONAL", desc:"Expéditeur CEDEAO" }
+      ],
+      boost: [
+        { code:"E1", module:"BOOST", plan:"BOOST_E1", amount:5000,  label:"E1 · BOOST LOCAL",    desc:"Badge + vitrine locale + WhatsApp", isGold:true },
+        { code:"E2", module:"BOOST", plan:"BOOST_E2", amount:10000, label:"E2 · BOOST STANDARD", desc:"Mise en avant + visibilité", isGold:true },
+        { code:"E3", module:"BOOST", plan:"BOOST_E3", amount:20000, label:"E3 · BOOST PREMIUM",  desc:"Priorité + max visibilité", isGold:true }
+      ]
+    };
+
+    function renderGrids(){
+      const groups = {
+        driver:      "grid_driver",
+        loc:         "grid_loc",
+        resto:       "grid_resto",
+        resa:        "grid_resa",
+        pos:         "grid_pos",
+        market:      "grid_market",
+        build:       "grid_build",
+        explore:     "grid_explore",
+        fret_chauf:  "grid_fret_chauf",
+        fret_client: "grid_fret_client",
+        boost:       "grid_boost"
+      };
+
+      for(const [groupKey, gridId] of Object.entries(groups)){
+        const grid = $(gridId);
+        if(!grid) continue;
+        const items = PRICE_GROUPS[groupKey] || [];
+
+        grid.innerHTML = items.map(p => {
+          const isBoost = String(p.code||"").startsWith("E");
+          const isActiveBase = (!isBoost && basePlan && basePlan === p.plan && baseModule === p.module);
+          const isActiveBoost = (isBoost && boostPlan && boostPlan === p.plan);
+
+          const amtText = p.amount > 0 ? prettyFCFA(p.amount) : "Sur devis";
+          const codeClass = isBoost ? "priceCode boost" : (p.isGold ? "priceCode gold" : "priceCode");
+          const oneShotBadge = p.isOneShot ? '<span style="font-size:10px;color:var(--warn);margin-left:6px;">ONE-SHOT</span>' : "";
+          const activeClass = isActiveBase ? "active" : (isActiveBoost ? "boostActive" : "");
+
+          return `
+            <button class="priceBtn ${activeClass}" type="button"
+              data-module="${p.module}" data-plan="${p.plan}" data-amount="${p.amount}" data-code="${p.code}">
+              <div class="priceTop">
+                <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0;">
+                  <div class="${codeClass}">${p.code}</div>
+                  <div class="priceName">${p.label}${oneShotBadge}</div>
+                </div>
+                <div class="priceAmt">${amtText}</div>
+              </div>
+              <div class="priceDesc">${p.desc}</div>
+            </button>
+          `;
+        }).join("");
+
+        grid.querySelectorAll(".priceBtn").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const pModule = (btn.getAttribute("data-module") || "").trim().toUpperCase();
+            const pPlan   = (btn.getAttribute("data-plan")   || "").trim();
+            const pAmt    = Number(btn.getAttribute("data-amount") || 0);
+            const pCode   = (btn.getAttribute("data-code")   || "").trim();
+            const isBoost = pCode.startsWith("E");
+
+            if(isBoost){
+              if(boostCode === pCode){
+                boostPlan = "";
+                boostAmount = 0;
+                boostCode = "";
+                setStatus("✨ BOOST retiré. Tu peux continuer avec le module seul.", "warn", "MODULE");
+              } else {
+                boostPlan = pPlan;
+                boostAmount = pAmt;
+                boostCode = pCode;
+                setStatus("👑 BOOST " + pCode + " ajouté — tu passes en mise en avant.", "ok", "BOOST " + pCode);
+              }
+            } else {
+              baseModule = pModule;
+              basePlan = pPlan;
+              baseAmount = pAmt;
+              baseCode = pCode;
+              setStatus("💳 Module " + pCode + " sélectionné — tu peux ajouter un BOOST.", "warn", "CODE " + pCode);
+            }
+
+            syncSelectionToUrl();
+            renderGrids();
+            renderOrder();
+          });
+        });
+      }
+    }
+
+    const AUTO_DEFAULTS = {
+      DRIVER:          { module:"DRIVER",          plan:"standard",        amount:12900,  code:"1"  },
+      LOC:             { module:"LOC",             plan:"LOC_2A",          amount:12900,  code:"2A" },
+      RESTO:           { module:"RESTO",           plan:"RESTO_3A",        amount:19900,  code:"3A" },
+      RESA_TABLE:      { module:"RESA_TABLE",      plan:"RESA_4A",         amount:12900,  code:"4A" },
+      POS:             { module:"POS",             plan:"standard",        amount:12900,  code:"5"  },
+      MARKET:          { module:"MARKET",          plan:"standard",        amount:12900,  code:"6"  },
+      BUILD:           { module:"BUILD",           plan:"standard",        amount:12900,  code:"7"  },
+      EXPLORE:         { module:"EXPLORE",         plan:"EXPLORE_8A",      amount:30000,  code:"8A" },
+      FRET_PRO:        { module:"FRET_PRO",        plan:"FRET_CHAUF_9A",   amount:25000,  code:"9A" },
+      FRET_CLIENT_PRO: { module:"FRET_CLIENT_PRO", plan:"FRET_CLI_10A",    amount:9900,   code:"10A" }
+    };
+
+    function autoSelectFromUrl(){
+      if(baseModule) return;
+      if(!accessModule) return;
+
+      const def = AUTO_DEFAULTS[accessModule];
+      if(!def) return;
+
+      baseModule = def.module;
+      basePlan   = basePlan || def.plan;
+      baseAmount = baseAmount || def.amount;
+      baseCode   = baseCode || def.code;
+
+      syncSelectionToUrl();
+      setStatus(`💳 Module ${baseCode} sélectionné — tu peux ajouter un BOOST.`, "warn", `CODE ${baseCode}`);
+    }
+
+    renderGrids();
+    autoSelectFromUrl();
+    renderGrids();
+    renderOrder();
+
+    const payPhoneEl = $("payPhone");
+    const paySlugEl  = $("paySlug");
+    const slugAutoEl = $("slugAuto");
+
+    function syncInputsToUrlAndState(){
+      userPhoneDigits = normPhone(payPhoneEl?.value || userPhoneDigits || "");
+      userSlug        = normSlug(paySlugEl?.value  || userSlug        || "");
+
+      const u = new URL(location.href);
+      if(userPhoneDigits) u.searchParams.set("phone", userPhoneDigits);
+      else u.searchParams.delete("phone");
+
+      if(userSlug) u.searchParams.set("slug", userSlug);
+      else u.searchParams.delete("slug");
+
+      history.replaceState(null, "", u.toString());
+      renderOrder();
+    }
+
+    if(payPhoneEl){
+      if(userPhoneDigits) payPhoneEl.value = userPhoneDigits;
+      payPhoneEl.addEventListener("input", syncInputsToUrlAndState);
+    }
+
+    if(paySlugEl){
+      if(userSlug) paySlugEl.value = userSlug;
+      paySlugEl.addEventListener("input", ()=>{
+        paySlugEl.value = normSlug(paySlugEl.value);
+        if(slugAutoEl && paySlugEl.value) slugAutoEl.textContent = "";
+        syncInputsToUrlAndState();
       });
     }
 
-    function hydrateFields(){
-      el.phone.value = state.phone || "";
-      el.fullname.value = state.fullname || "";
-      el.city.value = state.city || "";
-      el.note.value = state.note || "";
-      el.paymentMethod.value = state.paymentMethod || "WAVE";
+    syncInputsToUrlAndState();
+
+    function buildPayerUrl(){
+      const u = new URL(ABOS_PAYER_URL);
+
+      u.searchParams.set("module", baseModule || accessModule || "");
+      u.searchParams.set("base_module", baseModule || accessModule || "");
+      u.searchParams.set("plan", basePlan || "");
+      u.searchParams.set("amount", String(totalAmount() || 0));
+      u.searchParams.set("code", baseCode || "");
+
+      if(boostPlan) u.searchParams.set("boost", boostPlan);
+      if(boostCode) u.searchParams.set("boost_code", boostCode);
+      if(boostAmount) u.searchParams.set("boost_amount", String(boostAmount));
+
+      if(userPhoneDigits) u.searchParams.set("phone", userPhoneDigits);
+      if(userSlug) u.searchParams.set("slug", userSlug);
+
+      if(ret) u.searchParams.set("return", ret);
+      if(from_) u.searchParams.set("from", from_);
+
+      return u.toString();
     }
 
-    function init(){
-      restore();
-      applyQueryParams();
-      buildRef();
-      hydrateFields();
-      renderModules();
-      renderPlans();
-      bind();
-      updateSummary();
+    if(!token){
+      $("tokenBox").classList.add("hide");
+      setStatus(baseModule ? "💳 Module prêt. Tu peux continuer vers le paiement." : "💳 Étape 1 : choisis ton module", "warn", "MANUEL");
+      $("manualHint").textContent = "Choisis un module, ajoute un BOOST si besoin, puis continue vers le dossier ABOS pour payer et envoyer le reçu.";
+    } else {
+      setStatus("🔐 Lien sécurisé détecté. Clique pour activer.", "ok", "TOKEN");
+      $("tokenHint").textContent = "Token détecté. Activation en 1 clic.";
+      $("manualHint").textContent = "Tu peux aussi utiliser le tunnel ABOS si besoin, mais le lien sécurisé est prioritaire.";
     }
 
-    init();
+    async function activateToken(){
+      if(!token){ alert("Token manquant."); return; }
+      $("btnActivateToken").disabled = true;
+      $("spinnerToken").style.display = "inline-block";
+      setStatus("⏳ Activation en cours…", "warn", "EN COURS");
+      try{
+        const { data, error } = window.sb
+          ? await window.sb.rpc("digiy_pay_activate_token", { p_token: token })
+          : { data:null, error:{message:"sb missing"} };
+
+        if(error) throw error;
+        if(!data?.ok) throw new Error(data?.reason || "activation_failed");
+
+        setStatus("🟢 Activé ! Tu peux continuer.", "ok", "ACTIF");
+
+        if(ret){
+          const m = inferModuleForSlug();
+          const p = normPhone(qp.get("phone") || userPhoneDigits || "");
+
+          const u = new URL(ret, location.origin);
+          u.searchParams.set("from", "digiy-pay-token");
+
+          if(p){
+            location.href = buildReturnUrlWithSlug(u.toString(), m, p);
+          } else {
+            $("tokenHint").innerHTML =
+              "✅ Activation OK.<br>" +
+              "⚠️ Il manque le <b>téléphone</b> pour construire le slug.<br>" +
+              "Ouvre ton PRO avec : <span class='mono'>?slug=" + subscriptionSlug(m,"221XXXXXXXXX") + "</span>";
+          }
+        } else {
+          $("tokenHint").textContent = "Activation OK. Tu peux fermer cette page.";
+        }
+      } catch(e){
+        setStatus("🔴 Activation impossible. Contacte le support.", "bad", "ERREUR");
+        $("tokenHint").textContent = String(e.message || e);
+      } finally {
+        $("spinnerToken").style.display = "none";
+        $("btnActivateToken").disabled = false;
+      }
+    }
+
+    function continueToPayer(){
+      if(!baseAmount || !basePlan || !baseModule){
+        setStatus("⚠️ Étape 1 : choisis ton module dans la grille d'abord.", "warn", "MODULE");
+        return;
+      }
+
+      if(!userPhoneDigits || userPhoneDigits.length < 9){
+        setStatus("⚠️ Téléphone obligatoire (digits uniquement).", "warn", "PHONE");
+        payPhoneEl?.focus();
+        return;
+      }
+
+      if(!userSlug || userSlug.length < 3){
+        userSlug = genSlug(baseModule || basePlan || "digiy");
+        if(paySlugEl) paySlugEl.value = userSlug;
+        if(slugAutoEl) slugAutoEl.textContent = "Slug auto : " + userSlug;
+        syncInputsToUrlAndState();
+      }
+
+      const url = buildPayerUrl();
+      setStatus("➡️ Redirection vers le tunnel de paiement…", "ok", "ABOS");
+      location.href = url;
+    }
+
+    $("btnActivateToken").addEventListener("click", activateToken);
+    $("btnGoPayer").addEventListener("click", continueToPayer);
+
+    if(auto && token) setTimeout(activateToken, 400);
+
+    $("btnSupport").addEventListener("click", function(){
+      const t = totalAmount();
+
+      let msg = "DIGIY — Support Paiement\n\n";
+      if(userPhoneDigits) msg += "Téléphone: " + displayPhoneDigitsAsPlus(userPhoneDigits) + "\n";
+      if(baseModule) msg += "Module: " + baseModule + "\n";
+      if(baseCode) msg += "Code: " + baseCode + "\n";
+      if(basePlan) msg += "Plan: " + basePlan + "\n";
+      if(baseAmount) msg += "Montant module: " + baseAmount + " FCFA\n";
+      if(boostCode){
+        msg += "BOOST: " + boostCode + " (" + boostAmount + " FCFA)\n";
+      }
+      if(t) msg += "TOTAL: " + t + " FCFA\n";
+      if(userSlug) msg += "Slug: " + userSlug + "\n";
+      msg += "\nJ'ai besoin d'aide. — DIGIY";
+
+      wa(msg);
+      setStatus("💬 Support WhatsApp…", "warn", "INFO");
+    });
+
+    if(from_) $("manualHint").textContent = "Après paiement et validation, tu retourneras sur ton module.";
+  })();
   </script>
 </body>
 </html>
