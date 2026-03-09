@@ -152,6 +152,23 @@
     font-size:14px;
   }
 
+  .small{
+    font-size:13px;
+    color:var(--muted);
+    line-height:1.45;
+  }
+
+  .smallMuted{
+    font-size:12px;
+    color:var(--muted);
+    line-height:1.35;
+    margin-bottom:10px;
+  }
+
+  .mono{
+    font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+  }
+
   .hr{
     height:1px;
     background:var(--line);
@@ -307,6 +324,45 @@
     flex:1;
     height:1px;
     background:rgba(244,223,181,.16);
+  }
+
+  .railHead{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:10px;
+    flex-wrap:wrap;
+  }
+
+  .railNav{
+    display:flex;
+    gap:8px;
+    align-items:center;
+  }
+
+  .railArrow{
+    width:40px;
+    height:40px;
+    border-radius:999px;
+    border:1px solid var(--line);
+    background:rgba(255,255,255,.04);
+    color:var(--text);
+    font-size:18px;
+    font-weight:1200;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  .railArrow:hover{
+    border-color:rgba(244,223,181,.38);
+    background:rgba(244,223,181,.08);
+  }
+
+  .railArrow:active{
+    transform:translateY(1px);
   }
 
   .moduleRail,
@@ -466,6 +522,23 @@
     line-height:1.4;
   }
 
+  .transversalBox{
+    border:1px solid rgba(244,223,181,.22);
+    background:
+      radial-gradient(360px 160px at 0% 0%, rgba(244,223,181,.10), transparent 60%),
+      radial-gradient(360px 180px at 100% 100%, rgba(0,166,81,.12), transparent 60%),
+      rgba(255,255,255,.03);
+    border-radius:20px;
+    padding:14px;
+  }
+
+  .transversalActions{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:12px;
+  }
+
   .recapGrid{
     display:grid;
     grid-template-columns:1fr 1fr;
@@ -475,7 +548,8 @@
     .recapGrid{ grid-template-columns:1fr; }
   }
 
-  .miniBox{
+  .miniBox,
+  .box{
     border:1px solid var(--line);
     background:rgba(255,255,255,.03);
     border-radius:16px;
@@ -540,6 +614,10 @@
     color:var(--text);
     padding:12px 14px;
     font-weight:1100;
+    text-decoration:none;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
   }
   .btn:disabled{ opacity:.55; cursor:not-allowed; }
   .btn.ok{
@@ -634,6 +712,19 @@
 
       <div class="hr"></div>
 
+      <div class="transversalBox">
+        <div class="sectionTitle" style="margin-top:0;">MON ARGENT by DIGIY</div>
+        <div class="small" style="margin-bottom:8px;">
+          Wallet DIGIY public et sécurisé. Utilisation simple côté public, administration protégée côté pro.
+        </div>
+        <div class="transversalActions">
+          <a class="btn gold" href="https://pay.digiylyfe.com/">💳 Ouvrir MON ARGENT</a>
+          <a class="btn ok" href="https://pay.digiylyfe.com/admin.html">🔐 Accès MON ARGENT PRO</a>
+        </div>
+      </div>
+
+      <div class="hr"></div>
+
       <div class="status warn" id="statusBox">
         <div id="statusText">⏳ Préparation…</div>
         <span class="tag warn" id="statusTag">EN COURS</span>
@@ -677,13 +768,26 @@
 
       <div class="hr"></div>
 
-      <div class="sectionTitle">1 · Choisis ton module</div>
+      <div class="railHead">
+        <div class="sectionTitle" style="margin-bottom:0;">1 · Choisis ton module</div>
+        <div class="railNav">
+          <button class="railArrow" type="button" data-rail="moduleRail" data-dir="left" aria-label="Modules précédents">‹</button>
+          <button class="railArrow" type="button" data-rail="moduleRail" data-dir="right" aria-label="Modules suivants">›</button>
+        </div>
+      </div>
+      <div class="smallMuted">MON ARGENT by DIGIY est géré à part, en transversale wallet sécurisée.</div>
       <div class="moduleRail" id="moduleRail"></div>
 
       <div class="hr"></div>
 
       <div id="plansBlock">
-        <div class="sectionTitle">2 · Choisis ton pack</div>
+        <div class="railHead">
+          <div class="sectionTitle" style="margin-bottom:0;">2 · Choisis ton pack</div>
+          <div class="railNav">
+            <button class="railArrow" type="button" data-rail="planRail" data-dir="left" aria-label="Packs précédents">‹</button>
+            <button class="railArrow" type="button" data-rail="planRail" data-dir="right" aria-label="Packs suivants">›</button>
+          </div>
+        </div>
         <div class="small" id="plansHint" style="margin-bottom:10px;">Sélectionne d’abord un module.</div>
         <div class="planRail" id="planRail"></div>
       </div>
@@ -691,7 +795,13 @@
       <div class="hr"></div>
 
       <div id="boostBlock">
-        <div class="sectionTitle">3 · Ajoute un boost (optionnel)</div>
+        <div class="railHead">
+          <div class="sectionTitle" style="margin-bottom:0;">3 · Ajoute un boost (optionnel)</div>
+          <div class="railNav">
+            <button class="railArrow" type="button" data-rail="boostRail" data-dir="left" aria-label="Boosts précédents">‹</button>
+            <button class="railArrow" type="button" data-rail="boostRail" data-dir="right" aria-label="Boosts suivants">›</button>
+          </div>
+        </div>
         <div class="small" style="margin-bottom:10px;">Champagne et fraise : un petit plus de visibilité, sans alourdir le parcours.</div>
         <div class="boostRail" id="boostRail"></div>
       </div>
@@ -989,6 +1099,30 @@
         kbAsk(q);
       });
     });
+
+    function scrollRailById(railId, dir){
+      const rail = $(railId);
+      if(!rail) return;
+
+      const step = Math.max(180, Math.floor(rail.clientWidth * 0.72));
+      rail.scrollBy({
+        left: dir === "right" ? step : -step,
+        behavior: "smooth"
+      });
+    }
+
+    function bindRailArrows(){
+      document.querySelectorAll(".railArrow[data-rail]").forEach(btn=>{
+        if(btn.dataset.bound === "1") return;
+        btn.dataset.bound = "1";
+
+        btn.addEventListener("click", ()=>{
+          const railId = btn.getAttribute("data-rail") || "";
+          const dir = btn.getAttribute("data-dir") || "right";
+          scrollRailById(railId, dir);
+        });
+      });
+    }
 
     const MODULES = [
       { module:"EXPLORE", icon:"🧭", label:"EXPLORE", hint:"Locomotive • Agence & tourisme", loco:true },
@@ -1419,6 +1553,7 @@
     }
 
     renderAll();
+    bindRailArrows();
 
     if(!token){
       $("tokenBox").classList.add("hide");
