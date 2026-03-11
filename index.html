@@ -686,11 +686,59 @@
     padding:10px 14px;
   }
 
+  .floating-site-btn{
+    position:fixed;
+    top:calc(12px + env(safe-area-inset-top, 0px));
+    right:12px;
+    z-index:60;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    min-height:46px;
+    padding:12px 14px;
+    border-radius:999px;
+    border:1px solid rgba(244,223,181,.30);
+    background:rgba(8,19,13,.82);
+    backdrop-filter:blur(10px);
+    color:var(--text);
+    text-decoration:none;
+    font-size:13px;
+    font-weight:1100;
+    box-shadow:0 12px 30px rgba(0,0,0,.28);
+  }
+
+  .floating-site-btn:hover{
+    border-color:rgba(244,223,181,.46);
+    background:rgba(12,31,21,.92);
+  }
+
+  .floating-site-btn:active{
+    transform:translateY(1px);
+  }
+
   .hide{ display:none !important; }
+
+  @media (max-width:640px){
+    .floating-site-btn{
+      top:calc(10px + env(safe-area-inset-top, 0px));
+      right:10px;
+      padding:11px 12px;
+      font-size:12px;
+      min-height:42px;
+    }
+  }
 </style>
 </head>
 
 <body>
+  <a
+    class="floating-site-btn"
+    href="https://digiylyfe.com/"
+    aria-label="Retour au site DIGIYLYFE"
+    title="Retour au site"
+  >← Retour au site</a>
+
   <div class="wrap">
     <div class="card">
 
