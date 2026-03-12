@@ -1749,7 +1749,12 @@
     }
 
     $("btnActivateToken").addEventListener("click", activateToken);
-
+function renderAll(){
+  renderModuleRail();
+  renderPlanRail();
+  renderBoostRail();
+  renderRecap();
+}    
     async function init(){
       bindRailArrows();
       syncInputsToState();
