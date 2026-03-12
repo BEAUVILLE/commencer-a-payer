@@ -20,7 +20,6 @@
     --champ:#f4dfb5;
     --champ-2:#d8b56a;
 
-    /* Sénégal */
     --senegal:#00853f;
     --senegal-2:#00a651;
     --senegal-soft:rgba(0,133,63,.12);
@@ -223,6 +222,19 @@
     line-height:1.45;
   }
 
+  .truthBox{
+    border:1px solid rgba(244,223,181,.22);
+    background:
+      radial-gradient(360px 160px at 0% 0%, rgba(244,223,181,.10), transparent 60%),
+      radial-gradient(360px 180px at 100% 100%, rgba(0,166,81,.12), transparent 60%),
+      rgba(255,255,255,.03);
+    border-radius:18px;
+    padding:12px 14px;
+    font-size:13px;
+    line-height:1.5;
+    color:#fff5de;
+  }
+
   details.fold{
     border:1px solid var(--line);
     border-radius:18px;
@@ -388,7 +400,7 @@
   }
 
   .moduleBtn{
-    min-width:130px;
+    min-width:140px;
     border:1px solid rgba(0,166,81,.18);
     background:
       linear-gradient(180deg, rgba(0,166,81,.10), rgba(255,255,255,.03)),
@@ -728,7 +740,7 @@
       min-height:42px;
     }
   }
-</style>
+  </style>
 </head>
 
 <body>
@@ -754,8 +766,17 @@
         <h1>ACTIVER MON MODULE — DIGIY</h1>
         <p class="sub">
           Choisis ton module, ton pack, ajoute un boost si tu veux, puis continue vers le paiement.
-          On garde la force DIGIY, sans la grande autoroute du scroll.
+          Avec DIGIY, tu prends à la fois <b>ton outil de travail</b> et <b>ta présence dans l’écosystème</b>.
         </p>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="truthBox">
+        <b>Prix affiché = client autonome.</b><br>
+        Si tu transmets tes informations à distance et valides le bon à tirer, le prix affiché est le prix appliqué.<br>
+        Si DIGIY doit intervenir pour la <b>mise en service</b>, l’<b>installation</b> ou le <b>paramétrage accompagné</b>,
+        des frais de <b>28 000 à 35 000 FCFA</b> peuvent s’ajouter selon les cas, toujours annoncés avant validation finale.
       </div>
 
       <div class="hr"></div>
@@ -782,7 +803,8 @@
 
       <div class="flowBox">
         Lecture simple :
-        <span class="mono">choix module → choix pack → boost optionnel → téléphone/slug → paiement ABOS</span>
+        <span class="mono">choix module → choix pack → boost optionnel → téléphone/slug → paiement ABOS</span><br>
+        Et derrière : <span class="mono">outil métier + fiche pro / présence DIGIYLYFE</span>
       </div>
 
       <div class="hr"></div>
@@ -792,7 +814,7 @@
         <div class="foldBody">
           <div class="kbTop">
             <div class="small">
-              Assistant professionnel intégré • DRIVER • LOC • RESTO • PAY • JOBS • MARKET • BUILD • EXPLORE • FRET
+              Assistant professionnel intégré • DRIVER • LOC • RÉSA • PAY • MARKET • MULTI-SERVICE • EXPLORE • CAISSE BOUTIQUE
             </div>
             <span class="pill ok" id="kbStatus">En ligne</span>
           </div>
@@ -804,8 +826,8 @@
 
           <div class="kbQuick">
             <button type="button" data-q="Explique DIGIY PAY en 2 lignes.">💳 DIGIY PAY</button>
-            <button type="button" data-q="Quel code choisir pour DRIVER ?">🚗 DRIVER</button>
-            <button type="button" data-q="Explique les tarifs LOC (2A à 2E).">🏠 LOC</button>
+            <button type="button" data-q="Quel code choisir pour DRIVER AMBASSADEUR ?">🚗 DRIVER</button>
+            <button type="button" data-q="Explique les tarifs LOC en unités (2A à 2E).">🏠 LOC</button>
             <button type="button" data-q="Explique les packs EXPLORE.">🧭 EXPLORE</button>
             <button type="button" data-q="C’est quoi le slug et à quoi ça sert ?">🔗 Le slug</button>
           </div>
@@ -850,7 +872,7 @@
             <button class="railArrow" type="button" data-rail="boostRail" data-dir="right" aria-label="Boosts suivants">›</button>
           </div>
         </div>
-        <div class="small" style="margin-bottom:10px;">Champagne et fraise : un petit plus de visibilité, sans alourdir le parcours.</div>
+        <div class="small" style="margin-bottom:10px;">Boost EXPLORE : un plus de visibilité dans l’écosystème DIGIYLYFE.</div>
         <div class="boostRail" id="boostRail"></div>
       </div>
 
@@ -905,6 +927,7 @@
           <li>Renseigne téléphone et slug</li>
           <li>Continue vers le paiement ABOS</li>
           <li>Paye Wave et envoie le reçu</li>
+          <li>DIGIY prépare et envoie le bon à tirer si nécessaire</li>
         </ol>
       </div>
 
@@ -1005,20 +1028,19 @@
     function normModule(v){
       const raw = String(v || "").trim().toUpperCase();
       const alias = {
-        CAISSE: "POS",
-        POS: "POS",
         DRIVER: "DRIVER",
         LOC: "LOC",
-        RESTO: "RESTO",
-        RESA: "RESA_TABLE",
-        RESA_TABLE: "RESA_TABLE",
+        RESA: "RESTO_RESA",
+        RESA_TABLE: "RESTO_RESA",
+        RESTO_RESA: "RESTO_RESA",
+        POS: "POS_PRO",
+        POS_PRO: "POS_PRO",
+        CAISSE: "POS_PRO",
+        CAISSE_BOUTIQUE: "POS_PRO",
         MARKET: "MARKET",
         BUILD: "BUILD",
-        EXPLORE: "EXPLORE",
-        FRET_PRO: "FRET_PRO",
-        FRET_CHAUF: "FRET_PRO",
-        FRET_CLIENT: "FRET_CLIENT_PRO",
-        FRET_CLIENT_PRO: "FRET_CLIENT_PRO"
+        MULTI_SERVICE: "BUILD",
+        EXPLORE: "EXPLORE"
       };
       return alias[raw] || raw || "";
     }
@@ -1036,9 +1058,24 @@
     }
 
     function prettyFCFA(n){
-      const x = String(n || "").replace(/[^\d]/g, "");
-      if(!x || x === "0") return "—";
-      return Number(x).toLocaleString("fr-FR") + " FCFA";
+      const x = Number(n || 0);
+      if(!isFinite(x) || x <= 0) return "—";
+      return x.toLocaleString("fr-FR") + " FCFA";
+    }
+
+    function lc(v){ return String(v || "").trim().toLowerCase(); }
+
+    function slugPrefixForModule(module){
+      const map = {
+        DRIVER: "driver",
+        LOC: "loc",
+        RESTO_RESA: "resa",
+        POS_PRO: "pos",
+        MARKET: "market",
+        BUILD: "build",
+        EXPLORE: "explore"
+      };
+      return map[String(module || "").toUpperCase()] || String(module || "digiy").toLowerCase();
     }
 
     const token  = (qp.get("token") || "").trim();
@@ -1052,11 +1089,12 @@
     let userPhoneDigits = normPhone(qp.get("phone") || "");
     let userSlug        = normSlug(qp.get("slug") || "");
 
-    let baseModule = normModule(qp.get("base_module") || "");
+    let baseModule = normModule(qp.get("base_module") || qp.get("module") || "");
     let basePlan   = (qp.get("plan") || "").trim();
     let baseAmount = Number((qp.get("amount") || "").toString().replace(/[^\d]/g, "") || 0);
     let baseCode   = (qp.get("code") || "").trim();
 
+    let boostModule = "EXPLORE_BOOST";
     let boostPlan   = (qp.get("boost") || "").trim();
     let boostAmount = Number((qp.get("boost_amount") || "").toString().replace(/[^\d]/g, "") || 0);
     let boostCode   = (qp.get("boost_code") || "").trim();
@@ -1066,7 +1104,7 @@
     }
 
     function subscriptionSlug(module, phoneDigits){
-      return `${String(module || "LOC").toLowerCase()}-${String(phoneDigits || "").replace(/\D/g, "")}`;
+      return `${slugPrefixForModule(module)}-${String(phoneDigits || "").replace(/\D/g, "")}`;
     }
 
     function buildReturnUrlWithSlug(retUrl, module, phoneDigits){
@@ -1151,7 +1189,6 @@
     function scrollRailById(railId, dir){
       const rail = $(railId);
       if(!rail) return;
-
       const step = Math.max(180, Math.floor(rail.clientWidth * 0.72));
       rail.scrollBy({
         left: dir === "right" ? step : -step,
@@ -1172,90 +1209,168 @@
       });
     }
 
-    const MODULES = [
-      { module:"EXPLORE", icon:"🧭", label:"EXPLORE", hint:"Locomotive • Agence & tourisme", loco:true },
-
-      { module:"DRIVER", icon:"🚗", label:"DRIVER", hint:"Mobilité terrain" },
-      { module:"LOC", icon:"🏠", label:"LOC", hint:"Location premium" },
-      { module:"RESTO", icon:"🍽️", label:"RESTO", hint:"Restauration pro" },
-      { module:"RESA_TABLE", icon:"📅", label:"RÉSA", hint:"Réservation tables" },
-      { module:"POS", icon:"🧾", label:"POS", hint:"Caisse" },
-      { module:"MARKET", icon:"🛒", label:"MARKET", hint:"Vitrine commerce" },
-      { module:"BUILD", icon:"🏗️", label:"BUILD", hint:"Artisans & devis" },
-      { module:"FRET_PRO", icon:"🚚", label:"FRET PRO", hint:"Chauffeur" },
-      { module:"FRET_CLIENT_PRO", icon:"📦", label:"FRET CLIENT", hint:"Expéditeur" }
+    const MODULE_ORDER = [
+      { module:"EXPLORE",    icon:"🧭", label:"EXPLORE",             hint:"Agence & tourisme • présence premium", loco:true },
+      { module:"DRIVER",     icon:"🚗", label:"DRIVER AMBASSADEUR",  hint:"Fiche chauffeur • demandes directes" },
+      { module:"LOC",        icon:"🏠", label:"LOC",                 hint:"Location • unités • présence activité" },
+      { module:"RESTO_RESA", icon:"📅", label:"RÉSA",                hint:"Réservations • planning • rappels" },
+      { module:"POS_PRO",    icon:"🧾", label:"CAISSE BOUTIQUE",     hint:"Caisse • ventes • stock • commerce" },
+      { module:"MARKET",     icon:"🛒", label:"MARKET",              hint:"Boutique en ligne • présence commerce" },
+      { module:"BUILD",      icon:"🏗️", label:"MULTI-SERVICE",      hint:"Artisans • dépannage • devis" }
     ];
 
-    const PLANS_BY_MODULE = {
-      DRIVER: [
-        { code:"1", module:"DRIVER", plan:"standard", amount:12900, label:"DRIVER", desc:"GPS temps réel · Courses · Wave & OM" }
-      ],
-      LOC: [
-        { code:"2A", module:"LOC", plan:"LOC_2A", amount:12900, label:"LOC 1-5 logements", desc:"Pack essentiel propriétaire" },
-        { code:"2B", module:"LOC", plan:"LOC_2B", amount:25000, label:"LOC 6-9 logements", desc:"Gestionnaire intermédiaire" },
-        { code:"2C", module:"LOC", plan:"LOC_2C", amount:45000, label:"LOC 10-20 logements", desc:"Gestionnaire confirmé" },
-        { code:"2D", module:"LOC", plan:"LOC_2D", amount:60000, label:"LOC 21-30 logements", desc:"Grand propriétaire" },
-        { code:"2E", module:"LOC", plan:"LOC_2E", amount:90000, label:"LOC 30+ logements", desc:"Parc immobilier premium" }
-      ],
-      RESTO: [
-        { code:"3A", module:"RESTO", plan:"RESTO_3A", amount:19900, label:"RESTO ESSENTIEL", desc:"2 licences · 15 tables" },
-        { code:"3B", module:"RESTO", plan:"RESTO_3B", amount:39900, label:"RESTO STANDARD", desc:"4 licences · 30 tables" },
-        { code:"3C", module:"RESTO", plan:"RESTO_3C", amount:59900, label:"RESTO PRO", desc:"6 licences · 45 tables" }
-      ],
-      RESA_TABLE: [
-        { code:"4A", module:"RESA_TABLE", plan:"RESA_4A", amount:12900, label:"RÉSA 1-5 tables", desc:"Petite salle" },
-        { code:"4B", module:"RESA_TABLE", plan:"RESA_4B", amount:25000, label:"RÉSA 6-9 tables", desc:"Moyenne salle" },
-        { code:"4C", module:"RESA_TABLE", plan:"RESA_4C", amount:45000, label:"RÉSA 10-20 tables", desc:"Grande salle" },
-        { code:"4D", module:"RESA_TABLE", plan:"RESA_4D", amount:60000, label:"RÉSA 21-30 tables", desc:"Salle événementielle" },
-        { code:"4E", module:"RESA_TABLE", plan:"RESA_4E", amount:90000, label:"RÉSA 30+ tables", desc:"Site multi-salles" }
-      ],
-      POS: [
-        { code:"5", module:"POS", plan:"standard", amount:12900, label:"POS STANDARD", desc:"Caisse · Stock · Multi-users" }
-      ],
-      MARKET: [
-        { code:"6", module:"MARKET", plan:"standard", amount:12900, label:"MARKET", desc:"Vitrine + Fiche pro + WhatsApp" }
-      ],
-      BUILD: [
-        { code:"7", module:"BUILD", plan:"standard", amount:12900, label:"BUILD", desc:"Artisans · Devis · Portfolio" }
-      ],
-      EXPLORE: [
-        { code:"8A", module:"EXPLORE", plan:"EXPLORE_8A", amount:30000, label:"EXPLORE ESSENTIEL", desc:"Visibilité locale agence" },
-        { code:"8B", module:"EXPLORE", plan:"EXPLORE_8B", amount:60000, label:"EXPLORE PRO", desc:"Visibilité régionale agence" },
-        { code:"8C", module:"EXPLORE", plan:"EXPLORE_8C", amount:120000, label:"EXPLORE PREMIUM", desc:"Visibilité internationale" },
-        { code:"8D", module:"EXPLORE", plan:"EXPLORE_8D", amount:150000, label:"EXPLORE SETUP", desc:"Droit d'entrée one-shot · onboarding" }
-      ],
-      FRET_PRO: [
-        { code:"9A", module:"FRET_PRO", plan:"FRET_CHAUF_9A", amount:25000, label:"FRET LOCAL <50km", desc:"Zone locale chauffeur" },
-        { code:"9B", module:"FRET_PRO", plan:"FRET_CHAUF_9B", amount:60000, label:"FRET RÉGIONAL 50-200km", desc:"Région chauffeur" },
-        { code:"9C", module:"FRET_PRO", plan:"FRET_CHAUF_9C", amount:120000, label:"FRET NATIONAL 200km+", desc:"National chauffeur" },
-        { code:"9D", module:"FRET_PRO", plan:"FRET_CHAUF_9D", amount:200000, label:"FRET INTERNATIONAL CEDEAO", desc:"CEDEAO chauffeur" }
-      ],
-      FRET_CLIENT_PRO: [
-        { code:"10A", module:"FRET_CLIENT_PRO", plan:"FRET_CLI_10A", amount:9900, label:"FRET CLIENT LOCAL", desc:"Expéditeur zone locale" },
-        { code:"10B", module:"FRET_CLIENT_PRO", plan:"FRET_CLI_10B", amount:25000, label:"FRET CLIENT RÉGIONAL", desc:"Expéditeur régional" },
-        { code:"10C", module:"FRET_CLIENT_PRO", plan:"FRET_CLI_10C", amount:60000, label:"FRET CLIENT NATIONAL", desc:"Expéditeur national" },
-        { code:"10D", module:"FRET_CLIENT_PRO", plan:"FRET_CLI_10D", amount:120000, label:"FRET CLIENT INTERNATIONAL", desc:"Expéditeur CEDEAO" }
-      ]
+    const MODULE_LABELS = Object.fromEntries(MODULE_ORDER.map(x => [x.module, x.label]));
+
+    const PLAN_META = {
+      DRIVER: {
+        standard: { code:"1", label:"DRIVER AMBASSADEUR" }
+      },
+      LOC: {
+        "2a": { code:"2A", label:"LOC — Essentiel" },
+        "2b": { code:"2B", label:"LOC — Standard" },
+        "2c": { code:"2C", label:"LOC — Pro" },
+        "2d": { code:"2D", label:"LOC — Business" },
+        "2e": { code:"2E", label:"LOC — Agence" }
+      },
+      RESTO_RESA: {
+        "4a": { code:"4A", label:"RÉSA — 4A" },
+        "4b": { code:"4B", label:"RÉSA — 4B" },
+        "4c": { code:"4C", label:"RÉSA — 4C" },
+        "4d": { code:"4D", label:"RÉSA — 4D" },
+        "4e": { code:"4E", label:"RÉSA — 4E" }
+      },
+      POS_PRO: {
+        standard: { code:"5", label:"CAISSE BOUTIQUE" }
+      },
+      MARKET: {
+        standard: { code:"6", label:"MARKET" }
+      },
+      BUILD: {
+        standard: { code:"7", label:"MULTI-SERVICE" }
+      },
+      EXPLORE: {
+        "8a": { code:"8A", label:"EXPLORE — Essentiel" },
+        "8b": { code:"8B", label:"EXPLORE — Pro" },
+        "8c": { code:"8C", label:"EXPLORE — Premium" },
+        "8d": { code:"8D", label:"EXPLORE — Droit d’entrée" }
+      },
+      EXPLORE_BOOST: {
+        local:    { code:"E1", label:"BOOST LOCAL" },
+        standard: { code:"E2", label:"BOOST STANDARD" },
+        premium:  { code:"E3", label:"BOOST PREMIUM" }
+      }
     };
 
-    const BOOST_PLANS = [
-      { code:"E1", module:"BOOST", plan:"BOOST_E1", amount:5000, label:"BOOST LOCAL", desc:"Badge + vitrine locale + WhatsApp" },
-      { code:"E2", module:"BOOST", plan:"BOOST_E2", amount:10000, label:"BOOST STANDARD", desc:"Mise en avant + visibilité" },
-      { code:"E3", module:"BOOST", plan:"BOOST_E3", amount:20000, label:"BOOST PREMIUM", desc:"Priorité + max visibilité" }
-    ];
-
-    const AUTO_DEFAULTS = {
-      DRIVER:          { module:"DRIVER",          plan:"standard",      amount:12900,  code:"1"  },
-      LOC:             { module:"LOC",             plan:"LOC_2A",        amount:12900,  code:"2A" },
-      RESTO:           { module:"RESTO",           plan:"RESTO_3A",      amount:19900,  code:"3A" },
-      RESA_TABLE:      { module:"RESA_TABLE",      plan:"RESA_4A",       amount:12900,  code:"4A" },
-      POS:             { module:"POS",             plan:"standard",      amount:12900,  code:"5"  },
-      MARKET:          { module:"MARKET",          plan:"standard",      amount:12900,  code:"6"  },
-      BUILD:           { module:"BUILD",           plan:"standard",      amount:12900,  code:"7"  },
-      EXPLORE:         { module:"EXPLORE",         plan:"EXPLORE_8A",    amount:30000,  code:"8A" },
-      FRET_PRO:        { module:"FRET_PRO",        plan:"FRET_CHAUF_9A", amount:25000,  code:"9A" },
-      FRET_CLIENT_PRO: { module:"FRET_CLIENT_PRO", plan:"FRET_CLI_10A",  amount:9900,   code:"10A" }
+    const PLAN_ORDER = {
+      DRIVER: ["standard"],
+      LOC: ["2a","2b","2c","2d","2e"],
+      RESTO_RESA: ["4a","4b","4c","4d","4e"],
+      POS_PRO: ["standard"],
+      MARKET: ["standard"],
+      BUILD: ["standard"],
+      EXPLORE: ["8a","8b","8c","8d"],
+      EXPLORE_BOOST: ["local","standard","premium"]
     };
+
+    let MODULES = [];
+    let PLANS_BY_MODULE = {};
+    let BOOST_PLANS = [];
+
+    function buildFallbackPricing(){
+      const fallbackRows = [
+        { module:"DRIVER", plan_code:"standard", price_month_fcfa:19900, description:"Driver Ambassadeur • fiche pro • demandes directes • présence dans l'écosystème DIGIYLYFE" },
+
+        { module:"LOC", plan_code:"2a", price_month_fcfa:26000, description:"Essentiel • 1 à 5 unités" },
+        { module:"LOC", plan_code:"2b", price_month_fcfa:35000, description:"Standard • 6 à 9 unités" },
+        { module:"LOC", plan_code:"2c", price_month_fcfa:50000, description:"Pro • 10 à 20 unités" },
+        { module:"LOC", plan_code:"2d", price_month_fcfa:70000, description:"Business • 21 à 30 unités" },
+        { module:"LOC", plan_code:"2e", price_month_fcfa:100000, description:"Agence • Plus de 30 unités" },
+
+        { module:"RESTO_RESA", plan_code:"4a", price_month_fcfa:12900, description:"Réservations • planning • rappels • présence activité dans l'écosystème" },
+        { module:"RESTO_RESA", plan_code:"4b", price_month_fcfa:25000, description:"Réservations • planning • rappels • présence activité dans l'écosystème" },
+        { module:"RESTO_RESA", plan_code:"4c", price_month_fcfa:45000, description:"Réservations • planning • rappels • présence activité dans l'écosystème" },
+        { module:"RESTO_RESA", plan_code:"4d", price_month_fcfa:60000, description:"Réservations • planning • rappels • présence activité dans l'écosystème" },
+        { module:"RESTO_RESA", plan_code:"4e", price_month_fcfa:90000, description:"Réservations • planning • rappels • présence activité dans l'écosystème" },
+
+        { module:"POS_PRO", plan_code:"standard", price_month_fcfa:19900, description:"Caisse boutique • ventes • stock • présence commerce dans la Super App" },
+        { module:"MARKET", plan_code:"standard", price_month_fcfa:19900, description:"Boutique en ligne • catalogue • commandes • présence dans la Super App" },
+        { module:"BUILD", plan_code:"standard", price_month_fcfa:12900, description:"Multi-service • artisans • dépannage • devis • présence pro dans l'écosystème" },
+
+        { module:"EXPLORE", plan_code:"8a", price_month_fcfa:30000, description:"Agence tourisme • visibilité internationale • présence affirmée dans l'écosystème" },
+        { module:"EXPLORE", plan_code:"8b", price_month_fcfa:60000, description:"Agence tourisme • visibilité internationale • présence affirmée dans l'écosystème" },
+        { module:"EXPLORE", plan_code:"8c", price_month_fcfa:120000, description:"Agence tourisme • visibilité internationale • présence affirmée dans l'écosystème" },
+        { module:"EXPLORE", plan_code:"8d", price_month_fcfa:150000, description:"Droit d'entrée • setup et onboarding agence" },
+
+        { module:"EXPLORE_BOOST", plan_code:"local", price_month_fcfa:5000, description:"Boost local • client autonome = prix affiché • mise en service DIGIY en supplément si nécessaire" },
+        { module:"EXPLORE_BOOST", plan_code:"standard", price_month_fcfa:10000, description:"Boost standard • client autonome = prix affiché • mise en service DIGIY en supplément si nécessaire" },
+        { module:"EXPLORE_BOOST", plan_code:"premium", price_month_fcfa:20000, description:"Boost premium • client autonome = prix affiché • mise en service DIGIY en supplément si nécessaire" }
+      ];
+      applyPricingRows(fallbackRows);
+    }
+
+    function applyPricingRows(rows){
+      const grouped = {};
+      const boosts = [];
+
+      for(const moduleMeta of MODULE_ORDER){
+        grouped[moduleMeta.module] = [];
+      }
+
+      for(const row of rows || []){
+        const module = String(row.module || "").toUpperCase();
+        const planCode = lc(row.plan_code);
+        const meta = PLAN_META[module]?.[planCode];
+        if(!meta) continue;
+
+        const item = {
+          code: meta.code,
+          module,
+          plan: planCode,
+          amount: Number(row.price_month_fcfa || 0),
+          label: meta.label,
+          desc: String(row.description || "").trim() || meta.label
+        };
+
+        if(module === "EXPLORE_BOOST"){
+          boosts.push(item);
+        } else if(grouped[module]){
+          grouped[module].push(item);
+        }
+      }
+
+      for(const mod of Object.keys(grouped)){
+        const order = PLAN_ORDER[mod] || [];
+        grouped[mod].sort((a,b) => order.indexOf(a.plan) - order.indexOf(b.plan));
+      }
+
+      boosts.sort((a,b) => (PLAN_ORDER.EXPLORE_BOOST || []).indexOf(a.plan) - (PLAN_ORDER.EXPLORE_BOOST || []).indexOf(b.plan));
+
+      PLANS_BY_MODULE = grouped;
+      BOOST_PLANS = boosts;
+
+      MODULES = MODULE_ORDER.filter(mod => (PLANS_BY_MODULE[mod.module] || []).length > 0);
+    }
+
+    async function loadPricingFromDB(){
+      try{
+        const wantedModules = ["DRIVER","LOC","RESTO_RESA","POS_PRO","MARKET","BUILD","EXPLORE","EXPLORE_BOOST"];
+        const { data, error } = await sb
+          .from("digiy_pricing_plans")
+          .select("module, plan_code, price_month_fcfa, description, is_active")
+          .in("module", wantedModules)
+          .eq("is_active", true);
+
+        if(error) throw error;
+        if(!Array.isArray(data) || !data.length) throw new Error("no_active_pricing");
+
+        applyPricingRows(data);
+        setStatus("🟢 Tarifs alignés depuis DIGIY PAY.", "ok", "PRICING");
+      }catch(err){
+        console.error("pricing fallback:", err);
+        buildFallbackPricing();
+        setStatus("⚠️ Tarifs fallback chargés. Vérifie puis continue.", "warn", "FALLBACK");
+      }
+    }
 
     function totalAmount(){
       return Number(baseAmount || 0) + Number(boostAmount || 0);
@@ -1269,6 +1384,7 @@
       if(baseAmount) u.searchParams.set("amount", String(baseAmount)); else u.searchParams.delete("amount");
       if(baseCode)   u.searchParams.set("code", baseCode); else u.searchParams.delete("code");
 
+      if(boostModule) u.searchParams.set("boost_module", boostModule); else u.searchParams.delete("boost_module");
       if(boostPlan)   u.searchParams.set("boost", boostPlan); else u.searchParams.delete("boost");
       if(boostAmount) u.searchParams.set("boost_amount", String(boostAmount)); else u.searchParams.delete("boost_amount");
       if(boostCode)   u.searchParams.set("boost_code", boostCode); else u.searchParams.delete("boost_code");
@@ -1277,6 +1393,64 @@
       if(userSlug) u.searchParams.set("slug", userSlug); else u.searchParams.delete("slug");
 
       history.replaceState(null, "", u.toString());
+    }
+
+    function firstPlanForModule(module){
+      const items = PLANS_BY_MODULE[module] || [];
+      return items.length ? items[0] : null;
+    }
+
+    function ensureSelectionFromState(){
+      if(baseModule && !(PLANS_BY_MODULE[baseModule] || []).length){
+        baseModule = "";
+        basePlan = "";
+        baseAmount = 0;
+        baseCode = "";
+      }
+
+      if(baseModule && basePlan){
+        const items = PLANS_BY_MODULE[baseModule] || [];
+        const found = items.find(x => lc(x.plan) === lc(basePlan));
+        if(found){
+          basePlan = found.plan;
+          baseAmount = found.amount;
+          baseCode = found.code;
+        } else {
+          const first = firstPlanForModule(baseModule);
+          if(first){
+            basePlan = first.plan;
+            baseAmount = first.amount;
+            baseCode = first.code;
+          }
+        }
+      }
+
+      if(!baseModule){
+        const requested = accessModule || normModule(qp.get("base_module") || "");
+        const candidate = (requested && (PLANS_BY_MODULE[requested] || []).length) ? requested : (MODULES[0]?.module || "");
+        if(candidate){
+          const first = firstPlanForModule(candidate);
+          if(first){
+            baseModule = first.module;
+            basePlan = first.plan;
+            baseAmount = first.amount;
+            baseCode = first.code;
+          }
+        }
+      }
+
+      if(boostPlan){
+        const foundBoost = BOOST_PLANS.find(x => lc(x.plan) === lc(boostPlan) || lc(x.code) === lc(boostCode));
+        if(foundBoost){
+          boostPlan = foundBoost.plan;
+          boostCode = foundBoost.code;
+          boostAmount = foundBoost.amount;
+        } else {
+          boostPlan = "";
+          boostCode = "";
+          boostAmount = 0;
+        }
+      }
     }
 
     function renderModuleRail(){
@@ -1292,18 +1466,13 @@
       document.querySelectorAll(".moduleBtn[data-module]").forEach(btn=>{
         btn.addEventListener("click", ()=>{
           const mod = normModule(btn.getAttribute("data-module") || "");
-          baseModule = mod;
+          const first = firstPlanForModule(mod);
+          if(!first) return;
 
-          const def = AUTO_DEFAULTS[mod];
-          if(def){
-            basePlan = def.plan;
-            baseAmount = def.amount;
-            baseCode = def.code;
-          } else {
-            basePlan = "";
-            baseAmount = 0;
-            baseCode = "";
-          }
+          baseModule = first.module;
+          basePlan = first.plan;
+          baseAmount = first.amount;
+          baseCode = first.code;
 
           boostPlan = "";
           boostAmount = 0;
@@ -1311,7 +1480,7 @@
 
           syncSelectionToUrl();
           renderAll();
-          setStatus(`💳 ${mod} sélectionné — choisis ton pack.`, "warn", "MODULE");
+          setStatus(`💳 ${MODULE_LABELS[mod] || mod} sélectionné — choisis ton pack.`, "warn", "MODULE");
         });
       });
     }
@@ -1327,10 +1496,10 @@
       }
 
       const items = PLANS_BY_MODULE[baseModule] || [];
-      hint.textContent = `Module actif : ${baseModule}`;
+      hint.textContent = `Module actif : ${MODULE_LABELS[baseModule] || baseModule}`;
 
       rail.innerHTML = items.map(p => `
-        <button class="planCard ${basePlan === p.plan ? 'active' : ''}" type="button" data-plan="${p.plan}">
+        <button class="planCard ${lc(basePlan) === lc(p.plan) ? 'active' : ''}" type="button" data-plan="${p.plan}">
           <div class="planTop">
             <div style="display:flex;gap:10px;align-items:flex-start;min-width:0;">
               <div class="codeBadge">${p.code}</div>
@@ -1346,7 +1515,7 @@
 
       rail.querySelectorAll(".planCard[data-plan]").forEach(btn=>{
         btn.addEventListener("click", ()=>{
-          const item = items.find(x => x.plan === btn.getAttribute("data-plan"));
+          const item = items.find(x => lc(x.plan) === lc(btn.getAttribute("data-plan")));
           if(!item) return;
 
           baseModule = item.module;
@@ -1365,7 +1534,7 @@
       const block = $("boostBlock");
       const rail = $("boostRail");
 
-      if(!basePlan || !baseAmount){
+      if(!basePlan || !baseAmount || !BOOST_PLANS.length){
         block.classList.add("hide");
         rail.innerHTML = "";
         return;
@@ -1374,7 +1543,7 @@
       block.classList.remove("hide");
 
       rail.innerHTML = BOOST_PLANS.map(b => `
-        <button class="boostCard ${boostCode === b.code ? 'active' : ''}" type="button" data-boost="${b.code}">
+        <button class="boostCard ${lc(boostCode) === lc(b.code) ? 'active' : ''}" type="button" data-boost="${b.code}">
           <div class="planTop">
             <div style="display:flex;gap:10px;align-items:flex-start;min-width:0;">
               <div class="codeBadge berry">${b.code}</div>
@@ -1391,19 +1560,20 @@
       rail.querySelectorAll(".boostCard[data-boost]").forEach(btn=>{
         btn.addEventListener("click", ()=>{
           const code = btn.getAttribute("data-boost");
-          const item = BOOST_PLANS.find(x => x.code === code);
+          const item = BOOST_PLANS.find(x => lc(x.code) === lc(code));
           if(!item) return;
 
-          if(boostCode === item.code){
+          if(lc(boostCode) === lc(item.code)){
             boostPlan = "";
             boostAmount = 0;
             boostCode = "";
             setStatus("✨ Boost retiré. Tu peux continuer avec le module seul.", "warn", "MODULE");
           } else {
+            boostModule = "EXPLORE_BOOST";
             boostPlan = item.plan;
             boostAmount = item.amount;
             boostCode = item.code;
-            setStatus(`👑 Boost ${item.code} ajouté — tu passes en mise en avant.`, "ok", `BOOST ${item.code}`);
+            setStatus(`👑 Boost ${item.code} ajouté — visibilité renforcée.`, "ok", `BOOST ${item.code}`);
           }
 
           syncSelectionToUrl();
@@ -1413,12 +1583,13 @@
     }
 
     function renderRecap(){
-      const product = baseModule ? `${baseModule} • ${basePlan || "—"}` : "—";
+      const moduleLabel = MODULE_LABELS[baseModule] || baseModule || "—";
+      const product = baseModule ? `${moduleLabel} • ${baseCode || basePlan || "—"}` : "—";
       $("recapProduct").textContent = product;
       $("recapAmount").textContent = prettyFCFA(totalAmount());
       $("recapCode").textContent = (baseCode || "—") + (boostCode ? ` + ${boostCode}` : "");
       $("recapRef").textContent =
-        (baseModule || accessModule || "DIGIY") + "-" +
+        (slugPrefixForModule(baseModule || accessModule || "DIGIY")).toUpperCase() + "-" +
         (baseCode || "X") + "-" +
         (userPhoneDigits ? userPhoneDigits.slice(-6) : "000000");
 
@@ -1441,7 +1612,7 @@
       const slugAuto = $("slugAuto");
       if(slugAuto){
         const line = [];
-        if(baseModule) line.push("Module: " + baseModule);
+        if(baseModule) line.push("Module: " + (MODULE_LABELS[baseModule] || baseModule));
         if(basePlan) line.push("Plan: " + basePlan);
         if(baseCode) line.push("Code: " + baseCode);
         if(boostCode) line.push("Boost: " + boostCode);
@@ -1469,7 +1640,9 @@
       u.searchParams.set("plan", basePlan || "");
       u.searchParams.set("amount", String(totalAmount() || 0));
       u.searchParams.set("code", baseCode || "");
+      u.searchParams.set("public_label", MODULE_LABELS[baseModule] || baseModule || "");
 
+      if(boostModule) u.searchParams.set("boost_module", boostModule);
       if(boostPlan) u.searchParams.set("boost", boostPlan);
       if(boostCode) u.searchParams.set("boost_code", boostCode);
       if(boostAmount) u.searchParams.set("boost_amount", String(boostAmount));
@@ -1496,7 +1669,7 @@
       }
 
       if(!userSlug || userSlug.length < 3){
-        userSlug = genSlug(baseModule || basePlan || "digiy");
+        userSlug = genSlug(slugPrefixForModule(baseModule || basePlan || "digiy"));
         if(paySlugEl) paySlugEl.value = userSlug;
         syncInputsToState();
       }
@@ -1510,7 +1683,7 @@
       const t = totalAmount();
       let msg = "DIGIY — Support Paiement\n\n";
       if(userPhoneDigits) msg += "Téléphone: " + displayPhoneDigitsAsPlus(userPhoneDigits) + "\n";
-      if(baseModule) msg += "Module: " + baseModule + "\n";
+      if(baseModule) msg += "Module: " + (MODULE_LABELS[baseModule] || baseModule) + "\n";
       if(baseCode) msg += "Code: " + baseCode + "\n";
       if(basePlan) msg += "Plan: " + basePlan + "\n";
       if(baseAmount) msg += "Montant module: " + baseAmount + " FCFA\n";
@@ -1577,49 +1750,34 @@
 
     $("btnActivateToken").addEventListener("click", activateToken);
 
-    function autoSelectFromUrl(){
-      if(baseModule) return;
-      const candidate = accessModule;
-      if(!candidate) return;
-      const def = AUTO_DEFAULTS[candidate];
-      if(!def) return;
+    async function init(){
+      bindRailArrows();
+      syncInputsToState();
+      await loadPricingFromDB();
+      ensureSelectionFromState();
+      syncSelectionToUrl();
+      renderAll();
 
-      baseModule = def.module;
-      basePlan = basePlan || def.plan;
-      baseAmount = baseAmount || def.amount;
-      baseCode = baseCode || def.code;
+      if(!token){
+        $("tokenBox").classList.add("hide");
+        $("manualHint").textContent =
+          "Choisis un module, ajoute un boost si besoin, puis continue vers le paiement ABOS. Prix affiché = client autonome.";
+      } else {
+        $("tokenBox").classList.remove("hide");
+        setStatus("🔐 Lien sécurisé détecté. Clique pour activer.", "ok", "TOKEN");
+        $("tokenHint").textContent = "Token détecté. Activation en 1 clic.";
+        $("manualHint").textContent = "Le lien sécurisé est prioritaire. Le tunnel ABOS reste disponible si besoin.";
+        if(auto) setTimeout(activateToken, 400);
+      }
+
+      if(from_){
+        $("manualHint").textContent = "Après paiement et validation, tu retourneras sur ton module.";
+      }
+
+      setTimeout(()=>kbAsk("Explique DIGIY PAY en 2 lignes."), 250);
     }
 
-    autoSelectFromUrl();
-    syncInputsToState();
-
-    function renderAll(){
-      renderModuleRail();
-      renderPlanRail();
-      renderBoostRail();
-      renderRecap();
-    }
-
-    renderAll();
-    bindRailArrows();
-
-    if(!token){
-      $("tokenBox").classList.add("hide");
-      setStatus(baseModule ? "💳 Module prêt. Continue quand tu veux." : "💳 Choisis ton module", "warn", "MANUEL");
-      $("manualHint").textContent = "Choisis un module, ajoute un boost si besoin, puis continue vers le paiement ABOS.";
-    } else {
-      $("tokenBox").classList.remove("hide");
-      setStatus("🔐 Lien sécurisé détecté. Clique pour activer.", "ok", "TOKEN");
-      $("tokenHint").textContent = "Token détecté. Activation en 1 clic.";
-      $("manualHint").textContent = "Le lien sécurisé est prioritaire. Le tunnel ABOS reste disponible si besoin.";
-      if(auto) setTimeout(activateToken, 400);
-    }
-
-    if(from_){
-      $("manualHint").textContent = "Après paiement et validation, tu retourneras sur ton module.";
-    }
-
-    setTimeout(()=>kbAsk("Explique DIGIY PAY en 2 lignes."), 250);
+    init();
   })();
   </script>
 </body>
