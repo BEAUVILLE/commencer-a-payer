@@ -1578,6 +1578,7 @@
 
           syncSelectionToUrl();
           renderAll();
+          syncInputsToState();        
         });
       });
     }
@@ -1748,41 +1749,43 @@
       }
     }
 
-    $("btnActivateToken").addEventListener("click", activateToken);
+  $("btnActivateToken").addEventListener("click", activateToken);
+
 function renderAll(){
   renderModuleRail();
   renderPlanRail();
   renderBoostRail();
   renderRecap();
-}    
-    async function init(){
-      bindRailArrows();
-      syncInputsToState();
-      await loadPricingFromDB();
-      ensureSelectionFromState();
-      syncSelectionToUrl();
-      renderAll();
+}
 
-      if(!token){
-        $("tokenBox").classList.add("hide");
-        $("manualHint").textContent =
-          "Choisis un module, ajoute un boost si besoin, puis continue vers le paiement ABOS. Prix affiché = client autonome.";
-      } else {
-        $("tokenBox").classList.remove("hide");
-        setStatus("🔐 Lien sécurisé détecté. Clique pour activer.", "ok", "TOKEN");
-        $("tokenHint").textContent = "Token détecté. Activation en 1 clic.";
-        $("manualHint").textContent = "Le lien sécurisé est prioritaire. Le tunnel ABOS reste disponible si besoin.";
-        if(auto) setTimeout(activateToken, 400);
-      }
+async function init(){
+  bindRailArrows();
+  await loadPricingFromDB();
+  ensureSelectionFromState();
+  syncInputsToState();
+  syncSelectionToUrl();
+  renderAll();
 
-      if(from_){
-        $("manualHint").textContent = "Après paiement et validation, tu retourneras sur ton module.";
-      }
+  if(!token){
+    $("tokenBox").classList.add("hide");
+    $("manualHint").textContent =
+      "Choisis un module, ajoute un boost si besoin, puis continue vers le paiement ABOS. Prix affiché = client autonome.";
+  } else {
+    $("tokenBox").classList.remove("hide");
+    setStatus("🔐 Lien sécurisé détecté. Clique pour activer.", "ok", "TOKEN");
+    $("tokenHint").textContent = "Token détecté. Activation en 1 clic.";
+    $("manualHint").textContent = "Le lien sécurisé est prioritaire. Le tunnel ABOS reste disponible si besoin.";
+    if(auto) setTimeout(activateToken, 400);
+  }
 
-      setTimeout(()=>kbAsk("Explique DIGIY PAY en 2 lignes."), 250);
-    }
+  if(from_){
+    $("manualHint").textContent = "Après paiement et validation, tu retourneras sur ton module.";
+  }
 
-    init();
+  setTimeout(()=>kbAsk("Explique DIGIY PAY en 2 lignes."), 250);
+}
+
+init();
   })();
   </script>
 </body>
