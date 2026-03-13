@@ -976,6 +976,73 @@ h1{
   #recapAmount{
     font-size:24px;
   }
+} 
+/* ===== PATCH MODULES HAUT DE PAGE — GROS DOIGTS ===== */
+
+.moduleRail{
+  gap:14px;
+  padding-top:4px;
+  padding-bottom:8px;
+}
+
+.moduleBtn{
+  min-width:220px;
+  min-height:150px;
+  padding:18px 16px;
+  border-radius:22px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+}
+
+.moduleEmoji{
+  font-size:30px;
+  margin-bottom:10px;
+}
+
+.moduleName{
+  font-size:18px;
+  font-weight:1200;
+  line-height:1.2;
+}
+
+.moduleHint{
+  margin-top:6px;
+  font-size:14px;
+  font-weight:900;
+  line-height:1.4;
+  color:rgba(248,245,239,.86);
+}
+
+.locoBadge{
+  margin-top:10px;
+  padding:6px 10px;
+  font-size:11px;
+  font-weight:1200;
+}
+
+@media (max-width:640px){
+  .moduleRail{
+    gap:12px;
+  }
+
+  .moduleBtn{
+    min-width:240px;
+    min-height:158px;
+    padding:18px 16px;
+  }
+
+  .moduleEmoji{
+    font-size:32px;
+  }
+
+  .moduleName{
+    font-size:19px;
+  }
+
+  .moduleHint{
+    font-size:14px;
+  }
 }    
   </style>
 </head>
@@ -1451,7 +1518,7 @@ h1{
       { module:"EXPLORE",    icon:"🧭", label:"EXPLORE",             hint:"Agence & tourisme • présence premium", loco:true },
       { module:"DRIVER",     icon:"🚗", label:"DRIVER AMBASSADEUR",  hint:"Fiche chauffeur • demandes directes" },
       { module:"LOC",        icon:"🏠", label:"LOC",                 hint:"Location • unités • présence activité" },
-      { module:"RESTO_RESA", icon:"📅", label:"RÉSA",                hint:"Réservations multi-business • planning • rappels" },
+      { module:"RESTO_RESA", icon:"📅", label:"RÉSA MULTI-BUSINESS", hint:"Coiffure • beauté • spa • couture • cabinet • garage • resto" },
       { module:"POS_PRO",    icon:"🧾", label:"CAISSE BOUTIQUE",     hint:"Caisse • ventes • stock • commerce" },
       { module:"MARKET",     icon:"🛒", label:"MARKET",              hint:"Boutique en ligne • présence commerce" },
       { module:"BUILD",      icon:"🏗️", label:"MULTI-SERVICE",      hint:"Artisans • dépannage • devis" }
@@ -1742,37 +1809,42 @@ h1{
       }
     }
 
-    function renderModuleRail(){
-      $("moduleRail").innerHTML = MODULES.map(m => `
-        <button class="moduleBtn ${baseModule === m.module ? 'active' : ''} ${m.loco ? 'loco' : ''}" type="button" data-module="${m.module}">
-          <span class="moduleEmoji">${m.icon}</span>
-          <div class="moduleName">${m.label}</div>
-          <div class="moduleHint">${m.hint}</div>
-          ${m.loco ? `<div class="locoBadge">👑 LOCOMOTIVE</div>` : ``}
-        </button>
-      `).join("");
+ function renderModuleRail(){
+  $("moduleRail").innerHTML = MODULES.map(m => `
+    <button class="moduleBtn ${baseModule === m.module ? 'active' : ''} ${m.loco ? 'loco' : ''}" type="button" data-module="${m.module}">
+      <span class="moduleEmoji">${m.icon}</span>
+      <div class="moduleName">${m.label}</div>
+      <div class="moduleHint">${m.hint}</div>
+      ${m.loco ? `<div class="locoBadge">👑 LOCOMOTIVE</div>` : ``}
+    </button>
+  `).join("");
 
-      document.querySelectorAll(".moduleBtn[data-module]").forEach(btn=>{
-        btn.addEventListener("click", ()=>{
-          const mod = normModule(btn.getAttribute("data-module") || "");
-          const first = firstPlanForModule(mod);
-          if(!first) return;
+  document.querySelectorAll(".moduleBtn[data-module]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const mod = normModule(btn.getAttribute("data-module") || "");
+      const first = firstPlanForModule(mod);
+      if(!first) return;
 
-          baseModule = first.module;
-          basePlan = first.plan;
-          baseAmount = first.amount;
-          baseCode = first.code;
+      baseModule = first.module;
+      basePlan = first.plan;
+      baseAmount = first.amount;
+      baseCode = first.code;
 
-          boostPlan = "";
-          boostAmount = 0;
-          boostCode = "";
+      boostPlan = "";
+      boostAmount = 0;
+      boostCode = "";
 
-          syncSelectionToUrl();
-          renderAll();
-          setStatus(`💳 ${MODULE_LABELS[mod] || mod} sélectionné — choisis ton pack.`, "warn", "MODULE");
-        });
-      });
-    }
+      syncSelectionToUrl();
+      renderAll();
+      setStatus(`💳 ${MODULE_LABELS[mod] || mod} sélectionné — choisis ton pack.`, "warn", "MODULE");
+
+      const target = $("plansBlock");
+      if(target){
+        target.scrollIntoView({ behavior:"smooth", block:"start" });
+      }
+    });
+  });
+}
 
     function renderPlanRail(){
       const rail = $("planRail");
