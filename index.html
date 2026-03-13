@@ -740,6 +740,243 @@
       min-height:42px;
     }
   }
+/* ===== PATCH LISIBILITÉ DIGIY — GROS + GRAS ===== */
+
+body{
+  font-size:17px;
+}
+
+h1{
+  font-size:30px;
+  line-height:1.1;
+  font-weight:1000;
+  letter-spacing:.2px;
+}
+
+.sub{
+  font-size:17px;
+  line-height:1.6;
+  font-weight:850;
+  color:rgba(248,245,239,.94);
+}
+
+.small{
+  font-size:15px;
+  line-height:1.55;
+  font-weight:760;
+  color:rgba(248,245,239,.84);
+}
+
+.smallMuted{
+  font-size:14px;
+  line-height:1.45;
+  font-weight:760;
+  color:rgba(248,245,239,.72);
+}
+
+.sectionTitle{
+  font-size:14px;
+  letter-spacing:1px;
+  font-weight:1200;
+}
+
+.truthBox,
+.flowBox,
+.status,
+.steps,
+.hint,
+.miniValue,
+.planDesc,
+.moduleHint,
+.kbAns{
+  font-size:15px;
+  line-height:1.55;
+  font-weight:760;
+}
+
+.pill,
+.tag{
+  font-size:12px;
+  font-weight:1000;
+}
+
+.moduleBtn{
+  min-width:170px;
+  padding:16px 14px;
+}
+
+.moduleEmoji{
+  font-size:24px;
+  margin-bottom:8px;
+}
+
+.moduleName{
+  font-size:15px;
+  font-weight:1100;
+  line-height:1.25;
+}
+
+.moduleHint{
+  font-size:13px;
+  font-weight:850;
+  line-height:1.4;
+  color:rgba(248,245,239,.80);
+}
+
+.planCard,
+.boostCard{
+  min-width:290px;
+  max-width:330px;
+  padding:16px;
+}
+
+.codeBadge{
+  min-width:46px;
+  height:46px;
+  border-radius:12px;
+  font-size:15px;
+  font-weight:1200;
+}
+
+.planName{
+  font-size:16px;
+  font-weight:1100;
+  line-height:1.3;
+}
+
+.planAmount{
+  font-size:20px;
+  font-weight:1200;
+  color:#ffe7b0;
+}
+
+.planDesc{
+  margin-top:10px;
+  font-size:14px;
+  font-weight:780;
+  line-height:1.5;
+}
+
+.miniLabel{
+  font-size:13px;
+  font-weight:1000;
+  color:rgba(248,245,239,.72);
+}
+
+.miniValue{
+  font-size:17px;
+  font-weight:1100;
+  line-height:1.45;
+}
+
+.digiy-input{
+  font-size:16px;
+  font-weight:900;
+  min-height:52px;
+}
+
+.digiy-input::placeholder{
+  color:rgba(248,245,239,.48);
+  font-weight:700;
+}
+
+.btn{
+  min-height:56px;
+  font-size:16px;
+  font-weight:1100;
+  letter-spacing:.2px;
+}
+
+.stickyTitle{
+  font-size:13px;
+  font-weight:900;
+}
+
+.stickyValue{
+  font-size:16px;
+  font-weight:1100;
+}
+
+#recapAmount,
+.planAmount,
+#stickyValue{
+  font-variant-numeric:tabular-nums;
+}
+
+#recapAmount{
+  font-size:22px;
+  font-weight:1200;
+  color:#fde7bf;
+}
+
+#recapCode,
+#recapRef,
+#recapProduct{
+  font-size:16px;
+  font-weight:1000;
+}
+
+/* ===== MOBILE : ENCORE PLUS FRANC ===== */
+@media (max-width:640px){
+  body{
+    font-size:18px;
+  }
+
+  h1{
+    font-size:32px;
+  }
+
+  .sub{
+    font-size:18px;
+    font-weight:900;
+  }
+
+  .small,
+  .smallMuted,
+  .truthBox,
+  .flowBox,
+  .status,
+  .steps,
+  .hint,
+  .miniValue,
+  .planDesc,
+  .moduleHint,
+  .kbAns{
+    font-size:15px;
+  }
+
+  .moduleBtn{
+    min-width:180px;
+  }
+
+  .planCard,
+  .boostCard{
+    min-width:300px;
+  }
+
+  .planName{
+    font-size:17px;
+  }
+
+  .planAmount{
+    font-size:22px;
+  }
+
+  .codeBadge{
+    min-width:50px;
+    height:50px;
+    font-size:16px;
+  }
+
+  .btn{
+    min-height:58px;
+    font-size:17px;
+  }
+
+  #recapAmount{
+    font-size:24px;
+  }
+}    
   </style>
 </head>
 
