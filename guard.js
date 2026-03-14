@@ -2,8 +2,8 @@
   "use strict";
 
   /* =========================================================
-     DIGIY GUARD — v2026-03-07
-     Anti-boucle / slug-first / soft by default
+     DIGIY GUARD — v2026-03-14
+     Soft / slug-first / anti-boucle / accès DIGIY
      ---------------------------------------------------------
      Usage minimal:
        <script>
@@ -26,27 +26,40 @@
        - rpc public.digiy_has_access(phone,module)
   ========================================================= */
 
-  const VERSION = "2026-03-07-royal";
+  const VERSION = "2026-03-14-digiy";
 
   const EMBEDDED_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
-  const EMBEDDED_SUPABASE_ANON =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc3Ftd2pqdHNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA";
+  const EMBEDDED_SUPABASE_ANON = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
 
-  const DEFAULT_PAY_URL = "https://beauville.github.io/commencer-a-payer/";
-  const SESSION_KEY = "DIGIY_GUARD_SESSION_V3";
+  const DEFAULT_PAY_URL = "https://commencer-a-payer.digiylyfe.com/";
+  const SESSION_KEY = "DIGIY_GUARD_SESSION_V4";
   const SESSION_TTL_MS = 8 * 60 * 60 * 1000;
 
+  /* =========================================================
+     CANONICAL MODULE ACCESS
+     ---------------------------------------------------------
+     Ici on normalise vers le code attendu côté accès / subscription.
+     Le tunnel paiement peut ensuite remapper si besoin.
+  ========================================================= */
   const MODULE_ALIAS = {
     CAISSE: "POS",
+    CAISSE_BOUTIQUE: "POS",
     POS: "POS",
+    POS_PRO: "POS",
+
     DRIVER: "DRIVER",
     LOC: "LOC",
+
+    RESA: "RESA",
+    RESA_TABLE: "RESA",
+    RESTO_RESA: "RESA",
+
     RESTO: "RESTO",
-    RESA: "RESA_TABLE",
-    RESA_TABLE: "RESA_TABLE",
     MARKET: "MARKET",
     BUILD: "BUILD",
+    MULTI_SERVICE: "BUILD",
     EXPLORE: "EXPLORE",
+
     FRET_PRO: "FRET_PRO",
     FRET_CHAUF: "FRET_PRO",
     FRET_CLIENT: "FRET_CLIENT_PRO",
@@ -55,9 +68,18 @@
 
   const CFG = {
     supabaseUrl:
-      (window.DIGIY_SUPABASE_URL || window.DIGIY_SUPABASE__?.url || EMBEDDED_SUPABASE_URL || "").trim(),
+      (window.DIGIY_SUPABASE_URL ||
+        window.DIGIY_SUPABASE__?.url ||
+        EMBEDDED_SUPABASE_URL ||
+        "").trim(),
+
     supabaseAnon:
-      (window.DIGIY_SUPABASE_ANON_KEY || window.DIGIY_SUPABASE__?.anon || EMBEDDED_SUPABASE_ANON || "").trim(),
+      (window.DIGIY_SUPABASE_ANON_KEY ||
+        window.DIGIY_SUPABASE_ANON ||
+        window.DIGIY_SUPABASE__?.anon ||
+        EMBEDDED_SUPABASE_ANON ||
+        "").trim(),
+
     module: "",
     payUrl: (window.DIGIY_PAY_URL || DEFAULT_PAY_URL || "").trim()
   };
@@ -70,6 +92,18 @@
 
   function nowMs() {
     return Date.now();
+  }
+
+  function safeUrl(raw, fallback = "") {
+    const value = String(raw || "").trim();
+    if (!value) return fallback;
+    try {
+      const u = new URL(value, window.location.href);
+      if (u.protocol === "http:" || u.protocol === "https:") return u.toString();
+      return fallback;
+    } catch {
+      return fallback;
+    }
   }
 
   function normalizePhone(value) {
@@ -207,34 +241,40 @@
 
   async function resolvePhoneFromSlug(slug, module) {
     const cleanSlug = normalizeSlug(slug);
+    const cleanModule = normalizeModule(module);
     if (!cleanSlug) return null;
 
     const client = getClient();
 
-    let query = client
-      .from("digiy_subscriptions_public")
-      .select("slug, phone, module")
-      .eq("slug", cleanSlug)
-      .limit(10);
+    async function run(filtered) {
+      let query = client
+        .from("digiy_subscriptions_public")
+        .select("slug, phone, module")
+        .eq("slug", cleanSlug)
+        .limit(10);
 
-    if (module) {
-      query = query.eq("module", normalizeModule(module));
+      if (filtered && cleanModule) {
+        query = query.eq("module", cleanModule);
+      }
+
+      const { data, error } = await query;
+      if (error) throw error;
+
+      const rows = Array.isArray(data) ? data : [];
+      if (!rows.length) return null;
+
+      const row = rows[0];
+      return {
+        phone: normalizePhone(row.phone),
+        slug: normalizeSlug(row.slug),
+        module: normalizeModule(row.module || cleanModule)
+      };
     }
 
-    const { data, error } = await query;
-    if (error) {
-      throw error;
-    }
+    const filteredHit = await run(true);
+    if (filteredHit) return filteredHit;
 
-    const rows = Array.isArray(data) ? data : [];
-    if (!rows.length) return null;
-
-    const row = rows[0];
-    return {
-      phone: normalizePhone(row.phone),
-      slug: normalizeSlug(row.slug),
-      module: normalizeModule(row.module || module)
-    };
+    return await run(false);
   }
 
   async function checkAccess(phone, module) {
@@ -257,17 +297,23 @@
   }
 
   function buildPayUrl(opts = {}) {
-    const u = new URL(opts.payUrl || CFG.payUrl || DEFAULT_PAY_URL, window.location.origin);
+    const baseUrl = safeUrl(opts.payUrl || CFG.payUrl || DEFAULT_PAY_URL, DEFAULT_PAY_URL);
+    const u = new URL(baseUrl, window.location.origin);
 
-    const module = normalizeModule(opts.module || opts.ctx?.module);
-    const phone = normalizePhone(opts.phone || opts.ctx?.phone);
-    const slug = normalizeSlug(opts.slug || opts.ctx?.slug);
-    const ret = opts.returnUrl || window.location.href;
+    const ctx = opts.ctx || {};
+    const module = normalizeModule(opts.module || ctx.module || inferModule());
+    const phone = normalizePhone(opts.phone || ctx.phone);
+    const slug = normalizeSlug(opts.slug || ctx.slug);
+    const ret = safeUrl(opts.returnUrl || window.location.href, window.location.href);
 
     if (module) u.searchParams.set("module", module);
     if (phone) u.searchParams.set("phone", phone);
     if (slug) u.searchParams.set("slug", slug);
     if (ret) u.searchParams.set("return", ret);
+
+    if (!u.searchParams.get("source")) {
+      u.searchParams.set("source", "digiy-guard");
+    }
 
     return u.toString();
   }
@@ -291,7 +337,9 @@
     const urlModule = normalizeModule(qs("module"));
 
     const session = loadSession();
-    const inferredModule = normalizeModule(CFG.module || inferModule() || urlModule || session?.module);
+    const inferredModule = normalizeModule(
+      CFG.module || inferModule() || urlModule || session?.module
+    );
 
     let phone = urlPhone || session?.phone || "";
     let slug = urlSlug || session?.slug || "";
@@ -379,7 +427,37 @@
     return saveSession(payload);
   }
 
-  const ready = resolveContext()
+  const API = {
+    version: VERSION,
+
+    get sb() {
+      return getClient();
+    },
+
+    ready: null,
+    session: null,
+
+    normalizePhone,
+    normalizeSlug,
+    normalizeModule,
+    displayPhone,
+
+    loadSession,
+    setSession,
+    clearSession,
+    isLoggedIn,
+    logout,
+
+    getClient,
+    resolve: resolveContext,
+    resolvePhoneFromSlug,
+    checkAccess,
+    requireAccess,
+    buildPayUrl,
+    goPay
+  };
+
+  API.ready = resolveContext()
     .then((ctx) => {
       API.session = ctx;
       return ctx;
@@ -401,31 +479,6 @@
       API.session = fallback;
       return fallback;
     });
-
-  const API = {
-    version: VERSION,
-    sb: getClient(),
-    ready,
-    session: null,
-
-    normalizePhone,
-    normalizeSlug,
-    normalizeModule,
-    displayPhone,
-
-    loadSession,
-    setSession,
-    clearSession,
-    isLoggedIn,
-    logout,
-
-    resolve: resolveContext,
-    resolvePhoneFromSlug,
-    checkAccess,
-    requireAccess,
-    buildPayUrl,
-    goPay
-  };
 
   window.DIGIY_GUARD = API;
 })();
