@@ -1116,7 +1116,7 @@
         <div class="foldBody">
           <div class="kbTop">
             <div class="small">
-              Assistant professionnel intégré • DRIVER • LOC • RÉSA MULTI-BUSINESS • PAY • MARKET • MULTI-SERVICE • EXPLORE • MON COMMERCE
+              Assistant professionnel intégré • DRIVER • LOC • JOBS • RÉSA MULTI-BUSINESS • PAY • MARKET • MULTI-SERVICE • EXPLORE • MON COMMERCE
             </div>
             <span class="pill ok" id="kbStatus">En ligne</span>
           </div>
@@ -1128,6 +1128,7 @@
 
           <div class="kbQuick">
             <button type="button" data-q="Explique DIGIY PAY en 2 lignes.">💳 DIGIY PAY</button>
+            <button type="button" data-q="Explique le module DIGIY JOBS et son pack standard.">💼 JOBS</button>
             <button type="button" data-q="Quel code choisir pour DRIVER AMBASSADEUR ?">🚗 DRIVER</button>
             <button type="button" data-q="Explique les tarifs LOC en unités (2A à 2E).">🏠 LOC</button>
             <button type="button" data-q="Explique les tarifs RÉSA multi-business (4A à 4E).">📅 RÉSA</button>
@@ -1346,6 +1347,9 @@
       const alias = {
         DRIVER: "DRIVER",
         LOC: "LOC",
+        JOB: "JOBS",
+        JOBS: "JOBS",
+        DIGIY_JOBS: "JOBS",
         RESA: "RESTO_RESA",
         RESA_TABLE: "RESTO_RESA",
         RESTO_RESA: "RESTO_RESA",
@@ -1387,6 +1391,7 @@
       const map = {
         DRIVER: "driver",
         LOC: "loc",
+        JOBS: "jobs",
         RESTO_RESA: "resa",
         POS_PRO: "pos",
         PAY: "pay",
@@ -1536,6 +1541,7 @@
       { module:"EXPLORE",    icon:"🧭", label:"EXPLORE",             hint:"Présence tourisme DIGIYLYFE • visibilité premium • contact direct", loco:true },
       { module:"DRIVER",     icon:"🚗", label:"DRIVER AMBASSADEUR",  hint:"Fiche chauffeur • demandes directes" },
       { module:"LOC",        icon:"🏠", label:"LOC",                 hint:"Location • unités • présence activité" },
+      { module:"JOBS",       icon:"💼", label:"DIGIY JOBS",          hint:"Dossiers • candidatures • recrutement terrain • présence pro" },
       { module:"RESTO_RESA", icon:"📅", label:"RÉSA MULTI-BUSINESS", hint:"Coiffure • beauté • spa • couture • cabinet • garage • resto" },
       { module:"POS_PRO",    icon:"🧾", label:"MON COMMERCE",        hint:"Caisse • ventes • stock • commerce" },
       { module:"PAY",        icon:"💳", label:"MON ARGENT by DIGIY", hint:"Entrées • dépenses • épargne • lecture claire de l’activité" },
@@ -1555,6 +1561,9 @@
         "2c": { code:"2C", label:"LOC — Pro" },
         "2d": { code:"2D", label:"LOC — Business" },
         "2e": { code:"2E", label:"LOC — Agence" }
+      },
+      JOBS: {
+        standard: { code:"3", label:"DIGIY JOBS" }
       },
       RESTO_RESA: {
         "4a": { code:"4A", label:"RÉSA — Solo" },
@@ -1593,6 +1602,7 @@
     const PLAN_ORDER = {
       DRIVER: ["standard"],
       LOC: ["2a","2b","2c","2d","2e"],
+      JOBS: ["standard"],
       RESTO_RESA: ["4a","4b","4c","4d","4e"],
       POS_PRO: ["standard"],
       PAY: ["starter","pro","business"],
@@ -1623,6 +1633,8 @@
         { module:"LOC", plan_code:"2c", price_month_fcfa:50000, description:"Pro • 10 à 20 unités" },
         { module:"LOC", plan_code:"2d", price_month_fcfa:70000, description:"Business • 21 à 30 unités" },
         { module:"LOC", plan_code:"2e", price_month_fcfa:100000, description:"Agence • plus de 30 unités" },
+
+        { module:"JOBS", plan_code:"standard", price_month_fcfa:4900, description:"Dossiers • candidatures • matching terrain • présence pro dans l'écosystème DIGIYLYFE" },
 
         { module:"RESTO_RESA", plan_code:"4a", price_month_fcfa:9000, description:"Solo • activité simple sur rendez-vous" },
         { module:"RESTO_RESA", plan_code:"4b", price_month_fcfa:15000, description:"Standard • petite activité organisée" },
@@ -1714,7 +1726,7 @@
 
     async function loadPricingFromDB(){
       try{
-        const wantedModules = ["DRIVER","LOC","RESTO_RESA","POS_PRO","PAY","MARKET","BUILD","EXPLORE","EXPLORE_BOOST"];
+        const wantedModules = ["DRIVER","LOC","JOBS","RESTO_RESA","POS_PRO","PAY","MARKET","BUILD","EXPLORE","EXPLORE_BOOST"];
         const { data, error } = await sb
           .from("digiy_pricing_plans")
           .select("module, plan_code, price_month_fcfa, description, is_active")
