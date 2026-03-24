@@ -1055,7 +1055,6 @@
 
   <div class="wrap">
     <div class="card">
-
       <div class="topbar">
         <div class="lang-switch" aria-label="Language switch">
           <button id="lang-fr" class="active" type="button">FR</button>
@@ -1257,7 +1256,6 @@
         </button>
         <p class="small" id="tokenHint" style="margin-top:10px;"></p>
       </div>
-
     </div>
   </div>
 
@@ -1387,6 +1385,15 @@
 
     function lc(v){ return String(v || "").trim().toLowerCase(); }
 
+    function cleanRefPart(v){
+      return String(v || "")
+        .trim()
+        .toUpperCase()
+        .replace(/[^A-Z0-9]+/g, "-")
+        .replace(/-+/g, "-")
+        .replace(/^-|-$/g, "");
+    }
+
     function slugPrefixForModule(module){
       const map = {
         DRIVER: "driver",
@@ -1400,6 +1407,45 @@
         EXPLORE: "explore"
       };
       return map[String(module || "").toUpperCase()] || String(module || "digiy").toLowerCase();
+    }
+
+    function getPaymentRefStorageKey(){
+      const phone = normPhone(userPhoneDigits || qp.get("phone") || "");
+      const mod = normModule(baseModule || accessModule || "");
+      const plan = String(basePlan || "").trim().toLowerCase();
+      const boost = String(boostCode || "").trim().toLowerCase();
+      return [
+        "digiy_abos_payment_ref",
+        phone || "no-phone",
+        mod || "no-module",
+        plan || "no-plan",
+        boost || "no-boost"
+      ].join(":");
+    }
+
+    function buildPaymentRef(){
+      const modulePart = cleanRefPart(baseModule || accessModule || "DIGIY");
+      const planPart   = cleanRefPart(baseCode || basePlan || "STD");
+      const phonePart  = cleanRefPart((userPhoneDigits || "").slice(-9) || "000000000");
+      const boostPart  = cleanRefPart(boostCode || "BASE");
+      const timePart   = Date.now().toString(36).toUpperCase();
+      return [modulePart, planPart, phonePart, boostPart, timePart].join("-");
+    }
+
+    function ensurePaymentRef(){
+      const key = getPaymentRefStorageKey();
+      let ref = "";
+      try{
+        ref = String(sessionStorage.getItem(key) || localStorage.getItem(key) || "").trim();
+      }catch(_){}
+      if(!ref){
+        ref = buildPaymentRef();
+        try{
+          sessionStorage.setItem(key, ref);
+          localStorage.setItem(key, ref);
+        }catch(_){}
+      }
+      return ref;
     }
 
     const token  = (qp.get("token") || "").trim();
@@ -1528,7 +1574,6 @@
       document.querySelectorAll(".railArrow[data-rail]").forEach(btn=>{
         if(btn.dataset.bound === "1") return;
         btn.dataset.bound = "1";
-
         btn.addEventListener("click", ()=>{
           const railId = btn.getAttribute("data-rail") || "";
           const dir = btn.getAttribute("data-dir") || "right";
@@ -1552,9 +1597,7 @@
     const MODULE_LABELS = Object.fromEntries(MODULE_ORDER.map(x => [x.module, x.label]));
 
     const PLAN_META = {
-      DRIVER: {
-        standard: { code:"1", label:"DRIVER AMBASSADEUR" }
-      },
+      DRIVER: { standard: { code:"1", label:"DRIVER AMBASSADEUR" } },
       LOC: {
         "2a": { code:"2A", label:"LOC — Essentiel" },
         "2b": { code:"2B", label:"LOC — Standard" },
@@ -1562,9 +1605,7 @@
         "2d": { code:"2D", label:"LOC — Business" },
         "2e": { code:"2E", label:"LOC — Agence" }
       },
-      JOBS: {
-        standard: { code:"3", label:"DIGIY JOBS" }
-      },
+      JOBS: { standard: { code:"3", label:"DIGIY JOBS" } },
       RESTO_RESA: {
         "4a": { code:"4A", label:"RÉSA — Solo" },
         "4b": { code:"4B", label:"RÉSA — Standard" },
@@ -1572,20 +1613,14 @@
         "4d": { code:"4D", label:"RÉSA — Business" },
         "4e": { code:"4E", label:"RÉSA — Premium" }
       },
-      POS_PRO: {
-        standard: { code:"5", label:"MON COMMERCE" }
-      },
+      POS_PRO: { standard: { code:"5", label:"MON COMMERCE" } },
       PAY: {
         starter:  { code:"9A", label:"MON ARGENT — Starter" },
         pro:      { code:"9B", label:"MON ARGENT — Pro" },
         business: { code:"9C", label:"MON ARGENT — Business" }
       },
-      MARKET: {
-        standard: { code:"6", label:"MARKET" }
-      },
-      BUILD: {
-        standard: { code:"7", label:"MULTI-SERVICE" }
-      },
+      MARKET: { standard: { code:"6", label:"MARKET" } },
+      BUILD: { standard: { code:"7", label:"MULTI-SERVICE" } },
       EXPLORE: {
         "8a": { code:"8A", label:"EXPLORE — Essentiel" },
         "8b": { code:"8B", label:"EXPLORE — Pro" },
@@ -1627,35 +1662,27 @@
     function buildFallbackPricing(){
       const fallbackRows = [
         { module:"DRIVER", plan_code:"standard", price_month_fcfa:19900, description:"Driver Ambassadeur • fiche pro • demandes directes • présence dans l'écosystème DIGIYLYFE" },
-
         { module:"LOC", plan_code:"2a", price_month_fcfa:26000, description:"Essentiel • 1 à 5 unités" },
         { module:"LOC", plan_code:"2b", price_month_fcfa:35000, description:"Standard • 6 à 9 unités" },
         { module:"LOC", plan_code:"2c", price_month_fcfa:50000, description:"Pro • 10 à 20 unités" },
         { module:"LOC", plan_code:"2d", price_month_fcfa:70000, description:"Business • 21 à 30 unités" },
         { module:"LOC", plan_code:"2e", price_month_fcfa:100000, description:"Agence • plus de 30 unités" },
-
         { module:"JOBS", plan_code:"standard", price_month_fcfa:4900, description:"Dossiers • candidatures • matching terrain • présence pro dans l'écosystème DIGIYLYFE" },
-
         { module:"RESTO_RESA", plan_code:"4a", price_month_fcfa:9000, description:"Solo • activité simple sur rendez-vous" },
         { module:"RESTO_RESA", plan_code:"4b", price_month_fcfa:15000, description:"Standard • petite activité organisée" },
         { module:"RESTO_RESA", plan_code:"4c", price_month_fcfa:25000, description:"Pro • plusieurs services / planning structuré" },
         { module:"RESTO_RESA", plan_code:"4d", price_month_fcfa:40000, description:"Business • activité coordonnée / équipe" },
         { module:"RESTO_RESA", plan_code:"4e", price_month_fcfa:60000, description:"Premium • gros flux / usage intensif" },
-
         { module:"POS_PRO", plan_code:"standard", price_month_fcfa:19900, description:"MON COMMERCE • ventes • stock • présence commerce dans la Super App" },
-
         { module:"PAY", plan_code:"starter", price_month_fcfa:4900, description:"Starter • lecture simple de ce qui rentre, sort et reste" },
         { module:"PAY", plan_code:"pro", price_month_fcfa:9900, description:"Pro • lecture plus complète de l’activité et des flux" },
         { module:"PAY", plan_code:"business", price_month_fcfa:24900, description:"Business • vision renforcée et pilotage plus large" },
-
         { module:"MARKET", plan_code:"standard", price_month_fcfa:19900, description:"Boutique en ligne • catalogue • commandes • présence dans la Super App" },
         { module:"BUILD", plan_code:"standard", price_month_fcfa:12900, description:"Multi-service • artisans • dépannage • devis • présence pro dans l'écosystème" },
-
         { module:"EXPLORE", plan_code:"8a", price_month_fcfa:30000, description:"Présence tourisme DIGIYLYFE • visibilité locale et internationale • contact direct" },
         { module:"EXPLORE", plan_code:"8b", price_month_fcfa:60000, description:"Présence renforcée • image plus forte • visibilité élargie" },
         { module:"EXPLORE", plan_code:"8c", price_month_fcfa:120000, description:"Présence maximale dans la vitrine tourisme DIGIY" },
         { module:"EXPLORE", plan_code:"8d", price_month_fcfa:150000, description:"Setup, onboarding et mise en route agence" },
-
         { module:"EXPLORE_BOOST", plan_code:"local", price_month_fcfa:5000, description:"Boost local • client autonome = prix affiché • mise en service DIGIY en supplément si nécessaire" },
         { module:"EXPLORE_BOOST", plan_code:"standard", price_month_fcfa:10000, description:"Boost standard • client autonome = prix affiché • mise en service DIGIY en supplément si nécessaire" },
         { module:"EXPLORE_BOOST", plan_code:"premium", price_month_fcfa:20000, description:"Boost premium • client autonome = prix affiché • mise en service DIGIY en supplément si nécessaire" }
@@ -1720,7 +1747,6 @@
 
       PLANS_BY_MODULE = grouped;
       BOOST_PLANS = boosts;
-
       MODULES = MODULE_ORDER.filter(mod => (PLANS_BY_MODULE[mod.module] || []).length > 0);
     }
 
@@ -1973,10 +1999,17 @@
       $("recapProduct").textContent = product;
       $("recapAmount").textContent = prettyFCFA(totalAmount());
       $("recapCode").textContent = (baseCode || "—") + (boostCode ? ` + ${boostCode}` : "");
-      $("recapRef").textContent =
-        (slugPrefixForModule(baseModule || accessModule || "DIGIY")).toUpperCase() + "-" +
-        (baseCode || "X") + "-" +
-        (userPhoneDigits ? userPhoneDigits.slice(-6) : "000000");
+
+      const refPreview =
+        baseModule && basePlan && userPhoneDigits
+          ? ensurePaymentRef()
+          : (
+              (slugPrefixForModule(baseModule || accessModule || "DIGIY")).toUpperCase() + "-" +
+              (baseCode || "X") + "-" +
+              (userPhoneDigits ? userPhoneDigits.slice(-6) : "000000")
+            );
+
+      $("recapRef").textContent = refPreview;
 
       const stickyText =
         baseModule && baseCode
@@ -2019,13 +2052,21 @@
 
     function buildPayerUrl(){
       const u = new URL(ABOS_PAYER_URL);
+      const paymentRef = ensurePaymentRef();
+      const moduleOnlyAmount = Number(baseAmount || 0);
+      const total = Number(totalAmount() || 0);
 
       u.searchParams.set("module", baseModule || accessModule || "");
       u.searchParams.set("base_module", baseModule || accessModule || "");
       u.searchParams.set("plan", basePlan || "");
-      u.searchParams.set("amount", String(totalAmount() || 0));
+      u.searchParams.set("amount", String(total));
+      u.searchParams.set("amount_total", String(total));
+      u.searchParams.set("amount_module", String(moduleOnlyAmount));
       u.searchParams.set("code", baseCode || "");
       u.searchParams.set("public_label", MODULE_LABELS[baseModule] || baseModule || "");
+      u.searchParams.set("payment_ref", paymentRef);
+      u.searchParams.set("order_ref", paymentRef);
+      u.searchParams.set("billing_cycle", "monthly");
 
       if(boostModule && baseModule !== "PAY") u.searchParams.set("boost_module", boostModule);
       if(boostPlan && baseModule !== "PAY") u.searchParams.set("boost", boostPlan);
@@ -2042,8 +2083,10 @@
     }
 
     function continueToPayer(){
-      if(!baseAmount || !basePlan || !baseModule){
-        setStatus("⚠️ Choisis d’abord ton module et ton pack.", "warn", "MODULE");
+      syncInputsToState();
+
+      if(!baseModule || !basePlan || !baseAmount){
+        setStatus("⚠️ Choisis d’abord ton module et ton pack.", "warn", "PACK");
         return;
       }
 
@@ -2059,8 +2102,10 @@
         syncInputsToState();
       }
 
+      const paymentRef = ensurePaymentRef();
       const url = buildPayerUrl();
-      setStatus("➡️ Redirection vers le paiement ABOS…", "ok", "ABOS");
+
+      setStatus(`➡️ Redirection vers le paiement ABOS… Réf ${paymentRef}`, "ok", "ABOS");
       location.href = url;
     }
 
