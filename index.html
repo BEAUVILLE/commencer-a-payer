@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="fr">
 <head>
@@ -1133,6 +1132,7 @@
             <button type="button" data-q="Explique les tarifs LOC en unités (2A à 2E).">🏠 LOC</button>
             <button type="button" data-q="Explique les tarifs RÉSA multi-business (4A à 4E).">📅 RÉSA</button>
             <button type="button" data-q="Explique les tarifs MON COMMERCE.">🧾 MON COMMERCE</button>
+            <button type="button" data-q="Explique le pack duo commerce 56.">🧩 PACK DUO</button>
             <button type="button" data-q="Explique les tarifs MON ARGENT by DIGIY.">💰 MON ARGENT</button>
             <button type="button" data-q="Explique les packs EXPLORE.">🧭 EXPLORE</button>
             <button type="button" data-q="C’est quoi le slug et à quoi ça sert ?">🔗 Le slug</button>
@@ -1359,6 +1359,9 @@
         MON_COMMERCE: "POS_PRO",
         PAY: "PAY",
         MARKET: "MARKET",
+        COMMERCE_DUO: "COMMERCE_DUO",
+        DUO_COMMERCE: "COMMERCE_DUO",
+        PACK_DUO_COMMERCE: "COMMERCE_DUO",
         BUILD: "BUILD",
         MULTI_SERVICE: "BUILD",
         EXPLORE: "EXPLORE"
@@ -1404,6 +1407,7 @@
         POS_PRO: "pos",
         PAY: "pay",
         MARKET: "market",
+        COMMERCE_DUO: "commerce-duo",
         BUILD: "build",
         EXPLORE: "explore"
       };
@@ -1590,8 +1594,9 @@
       { module:"JOBS",       icon:"💼", label:"DIGIY JOBS",          hint:"Dossiers • candidatures • recrutement terrain • présence pro" },
       { module:"RESTO_RESA", icon:"📅", label:"RÉSA MULTI-BUSINESS", hint:"Coiffure • beauté • spa • couture • cabinet • garage • resto" },
       { module:"POS_PRO",    icon:"🧾", label:"MON COMMERCE",        hint:"Caisse tactile • ventes • stock • gestion boutique" },
+      { module:"COMMERCE_DUO", icon:"🧩", label:"PACK DUO COMMERCE", hint:"MON COMMERCE + DIGIY MARKET • je travaille et j’attire" },
       { module:"PAY",        icon:"💳", label:"MON ARGENT by DIGIY", hint:"Entrées • dépenses • épargne • lecture claire de l’activité" },
-      { module:"MARKET",     icon:"🛒", label:"MARKET",              hint:"Catalogue • commandes • visibilité collective" },
+      { module:"MARKET",     icon:"🛒", label:"DIGIY MARKET",        hint:"Catalogue • commandes • visibilité collective" },
       { module:"BUILD",      icon:"🏗️", label:"MULTI-SERVICE",      hint:"Artisans • dépannage • devis" }
     ];
 
@@ -1615,6 +1620,7 @@
         "4e": { code:"4E", label:"RÉSA — Premium" }
       },
       POS_PRO: { standard: { code:"5", label:"MON COMMERCE" } },
+      COMMERCE_DUO: { standard: { code:"56", label:"PACK DUO COMMERCE" } },
       PAY: {
         starter:  { code:"9A", label:"MON ARGENT — Starter" },
         pro:      { code:"9B", label:"MON ARGENT — Pro" },
@@ -1641,6 +1647,7 @@
       JOBS: ["standard"],
       RESTO_RESA: ["4a","4b","4c","4d","4e"],
       POS_PRO: ["standard"],
+      COMMERCE_DUO: ["standard"],
       PAY: ["starter","pro","business"],
       MARKET: ["standard"],
       BUILD: ["standard"],
@@ -1675,6 +1682,7 @@
         { module:"RESTO_RESA", plan_code:"4d", price_month_fcfa:40000, description:"Business • activité coordonnée / équipe" },
         { module:"RESTO_RESA", plan_code:"4e", price_month_fcfa:60000, description:"Premium • gros flux / usage intensif" },
         { module:"POS_PRO", plan_code:"standard", price_month_fcfa:19900, description:"MON COMMERCE • caisse tactile • stock + alertes • suivi activité boutique" },
+        { module:"COMMERCE_DUO", plan_code:"standard", price_month_fcfa:29900, description:"Pack duo commerce • MON COMMERCE + DIGIY MARKET • je travaille et j’attire" },
         { module:"PAY", plan_code:"starter", price_month_fcfa:4900, description:"Starter • lecture simple de ce qui rentre, sort et reste" },
         { module:"PAY", plan_code:"pro", price_month_fcfa:9900, description:"Pro • lecture plus complète de l’activité et des flux" },
         { module:"PAY", plan_code:"business", price_month_fcfa:24900, description:"Business • vision renforcée et pilotage plus large" },
@@ -1753,7 +1761,7 @@
 
     async function loadPricingFromDB(){
       try{
-        const wantedModules = ["DRIVER","LOC","JOBS","RESTO_RESA","POS_PRO","PAY","MARKET","BUILD","EXPLORE","EXPLORE_BOOST"];
+        const wantedModules = ["DRIVER","LOC","JOBS","RESTO_RESA","POS_PRO","COMMERCE_DUO","PAY","MARKET","BUILD","EXPLORE","EXPLORE_BOOST"];
         const { data, error } = await sb
           .from("digiy_pricing_plans")
           .select("module, plan_code, price_month_fcfa, description, is_active")
