@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="fr">
 <head>
@@ -1128,7 +1129,7 @@
           <div class="kbQuick">
             <button type="button" data-q="Explique DIGIY PAY en 2 lignes.">💳 DIGIY PAY</button>
             <button type="button" data-q="Explique le module DIGIY JOBS et son pack standard.">💼 JOBS</button>
-            <button type="button" data-q="Quel code choisir pour DRIVER AMBASSADEUR ?">🚗 DRIVER</button>
+            <button type="button" data-q="Explique les codes 1A, 1B et 1C de DIGIY DRIVER.">🚗 DRIVER</button>
             <button type="button" data-q="Explique les tarifs LOC en unités (2A à 2E).">🏠 LOC</button>
             <button type="button" data-q="Explique les tarifs RÉSA multi-business (4A à 4E).">📅 RÉSA</button>
             <button type="button" data-q="Explique les tarifs MON COMMERCE.">🧾 MON COMMERCE</button>
@@ -1589,7 +1590,7 @@
 
     const MODULE_ORDER = [
       { module:"EXPLORE",    icon:"🧭", label:"EXPLORE",             hint:"Présence tourisme DIGIYLYFE • visibilité premium • contact direct", loco:true },
-      { module:"DRIVER",     icon:"🚗", label:"DRIVER AMBASSADEUR",  hint:"Fiche chauffeur • demandes directes" },
+      { module:"DRIVER",     icon:"🚗", label:"DIGIY DRIVER",        hint:"1A Jakarta • 1B Bus • 1C Driver classique" },
       { module:"LOC",        icon:"🏠", label:"LOC",                 hint:"Location • unités • présence activité" },
       { module:"JOBS",       icon:"💼", label:"DIGIY JOBS",          hint:"Dossiers • candidatures • recrutement terrain • présence pro" },
       { module:"RESTO_RESA", icon:"📅", label:"RÉSA MULTI-BUSINESS", hint:"Coiffure • beauté • spa • couture • cabinet • garage • resto" },
@@ -1603,7 +1604,12 @@
     const MODULE_LABELS = Object.fromEntries(MODULE_ORDER.map(x => [x.module, x.label]));
 
     const PLAN_META = {
-      DRIVER: { standard: { code:"1", label:"DRIVER AMBASSADEUR" } },
+      DRIVER: {
+        "1a": { code:"1A", label:"DIGIY JAKARTA" },
+        "1b": { code:"1B", label:"DIGIY BUS" },
+        "1c": { code:"1C", label:"DIGIY DRIVER" },
+        standard: { code:"1C", label:"DIGIY DRIVER" }
+      },
       LOC: {
         "2a": { code:"2A", label:"LOC — Essentiel" },
         "2b": { code:"2B", label:"LOC — Standard" },
@@ -1642,7 +1648,7 @@
     };
 
     const PLAN_ORDER = {
-      DRIVER: ["standard"],
+      DRIVER: ["1a","1b","1c"],
       LOC: ["2a","2b","2c","2d","2e"],
       JOBS: ["standard"],
       RESTO_RESA: ["4a","4b","4c","4d","4e"],
@@ -1653,6 +1659,12 @@
       BUILD: ["standard"],
       EXPLORE: ["8a","8b","8c","8d"],
       EXPLORE_BOOST: ["local","standard","premium"]
+    };
+
+    const DRIVER_TIERS = {
+      "1a": { code:"1A", label:"DIGIY JAKARTA", amount:5500, desc:"Jakarta • présence simple • WhatsApp direct • QR • contact direct" },
+      "1b": { code:"1B", label:"DIGIY BUS", amount:12000, desc:"Bus • trajets • horaires • points de passage • contact direct" },
+      "1c": { code:"1C", label:"DIGIY DRIVER", amount:19900, desc:"Driver classique • historique courses • Wave & OM • présence DIGIY" }
     };
 
     const RESA_MULTI_BUSINESS = {
@@ -1669,7 +1681,9 @@
 
     function buildFallbackPricing(){
       const fallbackRows = [
-        { module:"DRIVER", plan_code:"standard", price_month_fcfa:19900, description:"Driver Ambassadeur • fiche pro • demandes directes • présence dans l'écosystème DIGIYLYFE" },
+        { module:"DRIVER", plan_code:"1a", price_month_fcfa:5500, description:"Jakarta • présence simple • WhatsApp direct • QR • contact direct" },
+        { module:"DRIVER", plan_code:"1b", price_month_fcfa:12000, description:"Bus • trajets • horaires • points de passage • contact direct" },
+        { module:"DRIVER", plan_code:"1c", price_month_fcfa:19900, description:"Driver classique • historique courses • Wave & OM • présence DIGIY" },
         { module:"LOC", plan_code:"2a", price_month_fcfa:26000, description:"Essentiel • 1 à 5 unités" },
         { module:"LOC", plan_code:"2b", price_month_fcfa:35000, description:"Standard • 6 à 9 unités" },
         { module:"LOC", plan_code:"2c", price_month_fcfa:50000, description:"Pro • 10 à 20 unités" },
@@ -1710,7 +1724,8 @@
       for(const row of rows || []){
         const module = String(row.module || "").toUpperCase();
         const planCode = lc(row.plan_code);
-        const meta = PLAN_META[module]?.[planCode];
+        const normalizedPlanCode = (module === "DRIVER" && planCode === "standard") ? "1c" : planCode;
+        const meta = PLAN_META[module]?.[normalizedPlanCode];
         if(!meta) continue;
 
         const resaPatch = module === "RESTO_RESA" ? RESA_MULTI_BUSINESS[planCode] : null;
@@ -1718,7 +1733,7 @@
         const item = {
           code: resaPatch?.code || meta.code,
           module,
-          plan: planCode,
+          plan: normalizedPlanCode,
           amount: resaPatch?.amount ?? Number(row.price_month_fcfa || 0),
           label: resaPatch?.label || meta.label,
           desc: resaPatch?.desc || String(row.description || "").trim() || meta.label
@@ -1727,7 +1742,23 @@
         if(module === "EXPLORE_BOOST"){
           boosts.push(item);
         } else if(grouped[module]){
-          grouped[module].push(item);
+          if(!grouped[module].find(x => lc(x.plan) === lc(item.plan))) grouped[module].push(item);
+        }
+      }
+
+      for(const planCode of (PLAN_ORDER.DRIVER || [])){
+        if(!grouped.DRIVER.find(x => lc(x.plan) === lc(planCode))){
+          const p = DRIVER_TIERS[planCode];
+          if(p){
+            grouped.DRIVER.push({
+              code: p.code,
+              module: "DRIVER",
+              plan: planCode,
+              amount: p.amount,
+              label: p.label,
+              desc: p.desc
+            });
+          }
         }
       }
 
@@ -2002,9 +2033,18 @@
       });
     }
 
+    function getSelectedBaseItem(){
+      const items = PLANS_BY_MODULE[baseModule] || [];
+      return items.find(x => lc(x.plan) === lc(basePlan)) || null;
+    }
+
+    function getSelectedBaseLabel(){
+      return getSelectedBaseItem()?.label || MODULE_LABELS[baseModule] || baseModule || "—";
+    }
+
     function renderRecap(){
-      const moduleLabel = MODULE_LABELS[baseModule] || baseModule || "—";
-      const product = baseModule ? `${moduleLabel} • ${baseCode || basePlan || "—"}` : "—";
+      const selectedLabel = getSelectedBaseLabel();
+      const product = baseModule ? `${selectedLabel}${boostCode ? " + " + boostCode : ""}` : "—";
       $("recapProduct").textContent = product;
       $("recapAmount").textContent = prettyFCFA(totalAmount());
       $("recapCode").textContent = (baseCode || "—") + (boostCode ? ` + ${boostCode}` : "");
@@ -2022,7 +2062,7 @@
 
       const stickyText =
         baseModule && baseCode
-          ? `${MODULE_LABELS[baseModule] || baseModule} • ${baseCode}${boostCode ? " + " + boostCode : ""} • ${prettyFCFA(totalAmount())}`
+          ? `${selectedLabel}${boostCode ? " + " + boostCode : ""} • ${prettyFCFA(totalAmount())}`
           : "Choisis ton module";
       $("stickyValue").textContent = stickyText;
     }
@@ -2072,7 +2112,7 @@
       u.searchParams.set("amount_total", String(total));
       u.searchParams.set("amount_module", String(moduleOnlyAmount));
       u.searchParams.set("code", baseCode || "");
-      u.searchParams.set("public_label", MODULE_LABELS[baseModule] || baseModule || "");
+      u.searchParams.set("public_label", getSelectedBaseLabel());
       u.searchParams.set("payment_ref", paymentRef);
       u.searchParams.set("order_ref", paymentRef);
       u.searchParams.set("billing_cycle", "monthly");
