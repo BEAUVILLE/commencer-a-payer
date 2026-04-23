@@ -2266,5 +2266,295 @@
     init();
   })();
   </script>
+<!-- ============================================================
+     DIGIY AUDIO — ACTIVER MON MODULE
+     À coller juste avant </body>
+     ============================================================ -->
+
+<script>
+window.DIGIY_AUDIO_CONFIG = {
+  label: "Écouter l’activation",
+  stopLabel: "Arrêter",
+  text: "Bienvenue. Ici, tu peux activer ton module DIGIY. Choisis d’abord ton module, puis ton pack. Ajoute un boost si tu veux. Ensuite, entre ton téléphone et ton nom public, puis continue vers le paiement. Simple. Direct. Humain. DIGIYLYFE.",
+  buttonBg: "linear-gradient(135deg,#d4af37,#b78b34)",
+  buttonColor: "#111827",
+  bottom: "24px",
+  left: "24px",
+  rate: 0.82,
+  pitch: 1,
+  volume: 1,
+  zIndex: 99999,
+  shadow: "0 10px 30px rgba(0,0,0,.26)"
+};
+</script>
+
+<style>
+#digiy-audio-btn{
+position:fixed;
+display:inline-flex;
+align-items:center;
+gap:12px;
+padding:16px 26px;
+border:none;
+border-radius:999px;
+cursor:pointer;
+font-family:'Outfit',Inter,sans-serif;
+font-weight:900;
+font-size:17px;
+line-height:1;
+-webkit-tap-highlight-color:transparent;
+user-select:none;
+transition:transform .18s ease,box-shadow .18s ease,opacity .18s ease;
+}
+#digiy-audio-btn:hover{
+transform:translateY(-2px);
+}
+#digiy-audio-btn:active{
+transform:scale(.97);
+}
+#digiy-audio-btn:disabled{
+opacity:.65;
+cursor:not-allowed;
+}
+#digiy-audio-btn .digiy-audio-ico{
+font-size:18px;
+line-height:1;
+}
+#digiy-audio-progress-wrap{
+position:fixed;
+left:0;
+right:0;
+bottom:0;
+height:3px;
+opacity:0;
+pointer-events:none;
+transition:opacity .25s ease;
+}
+#digiy-audio-progress{
+width:0%;
+height:100%;
+transition:width .18s linear;
+}
+@media (max-width:600px){
+#digiy-audio-btn{
+font-size:16px;
+padding:15px 22px;
+gap:11px;
+}
+#digiy-audio-btn .digiy-audio-ico{
+font-size:17px;
+}
+}
+</style>
+
+<button id="digiy-audio-btn" type="button" aria-label="Écouter l’activation">
+  <span class="digiy-audio-ico">&#9654;</span>
+  <span class="digiy-audio-lbl">Écouter l’activation</span>
+</button>
+
+<div id="digiy-audio-progress-wrap" aria-hidden="true">
+  <div id="digiy-audio-progress"></div>
+</div>
+
+<script>
+(function(){
+  var cfg = window.DIGIY_AUDIO_CONFIG || {};
+
+  var config = {
+    label: cfg.label || "Écouter DIGIY",
+    stopLabel: cfg.stopLabel || "Arrêter",
+    text: cfg.text || "Bienvenue sur DIGIYLYFE.",
+    buttonBg: cfg.buttonBg || "linear-gradient(135deg,#d4af37,#b78b34)",
+    buttonColor: cfg.buttonColor || "#111827",
+    bottom: cfg.bottom || "24px",
+    left: cfg.left || "24px",
+    right: cfg.right || null,
+    rate: typeof cfg.rate === "number" ? cfg.rate : 0.82,
+    pitch: typeof cfg.pitch === "number" ? cfg.pitch : 1,
+    volume: typeof cfg.volume === "number" ? cfg.volume : 1,
+    zIndex: cfg.zIndex || 99999,
+    shadow: cfg.shadow || "0 8px 28px rgba(0,0,0,.24)"
+  };
+
+  var btn = document.getElementById("digiy-audio-btn");
+  var lbl = btn ? btn.querySelector(".digiy-audio-lbl") : null;
+  var ico = btn ? btn.querySelector(".digiy-audio-ico") : null;
+  var progressWrap = document.getElementById("digiy-audio-progress-wrap");
+  var progressBar = document.getElementById("digiy-audio-progress");
+
+  if (!btn || !lbl || !ico || !progressWrap || !progressBar) return;
+
+  btn.style.bottom = config.bottom;
+  btn.style.left = config.left ? config.left : "auto";
+  btn.style.right = config.right ? config.right : "auto";
+  btn.style.zIndex = String(config.zIndex);
+  btn.style.background = config.buttonBg;
+  btn.style.color = config.buttonColor;
+  btn.style.boxShadow = config.shadow;
+
+  progressWrap.style.zIndex = String(config.zIndex - 1);
+  progressWrap.style.background = "rgba(212,175,55,.2)";
+  progressBar.style.background = "linear-gradient(90deg,#d4af37,#b78b34)";
+
+  if (!("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)) {
+    btn.style.display = "none";
+    return;
+  }
+
+  var synth = window.speechSynthesis;
+  var utterance = null;
+  var playing = false;
+  var timer = null;
+  var launchId = 0;
+
+  function getFrenchVoice(){
+    var voices = synth.getVoices() || [];
+    if (!voices.length) return null;
+
+    return (
+      voices.find(function(v){ return /fr[-_]?FR/i.test(v.lang) && /google/i.test(v.name); }) ||
+      voices.find(function(v){ return /fr[-_]?FR/i.test(v.lang); }) ||
+      voices.find(function(v){ return /^fr/i.test(v.lang); }) ||
+      null
+    );
+  }
+
+  function setIdle(){
+    playing = false;
+    ico.innerHTML = "&#9654;";
+    lbl.textContent = config.label;
+    btn.setAttribute("aria-label", config.label);
+    clearInterval(timer);
+    timer = null;
+    progressWrap.style.opacity = "0";
+    progressBar.style.width = "0%";
+  }
+
+  function setPlaying(){
+    playing = true;
+    ico.innerHTML = "&#9632;";
+    lbl.textContent = config.stopLabel;
+    btn.setAttribute("aria-label", config.stopLabel);
+  }
+
+  function stop(){
+    clearInterval(timer);
+    timer = null;
+    try { synth.cancel(); } catch(e){}
+    utterance = null;
+    setIdle();
+  }
+
+  function startProgress(text, currentId){
+    var words = (text.trim().match(/\S+/g) || []).length;
+    var estimatedDuration = Math.max(2500, words * 520);
+    var elapsed = 0;
+
+    clearInterval(timer);
+    progressBar.style.width = "0%";
+    progressWrap.style.opacity = "1";
+
+    timer = setInterval(function(){
+      if (!playing || currentId !== launchId) {
+        clearInterval(timer);
+        timer = null;
+        return;
+      }
+      elapsed += 150;
+      var pct = Math.min((elapsed / estimatedDuration) * 100, 97);
+      progressBar.style.width = pct + "%";
+    }, 150);
+  }
+
+  function launch(){
+    launchId += 1;
+    var currentId = launchId;
+
+    try { synth.cancel(); } catch(e){}
+
+    utterance = new SpeechSynthesisUtterance(config.text);
+    utterance.lang = "fr-FR";
+    utterance.rate = config.rate;
+    utterance.pitch = config.pitch;
+    utterance.volume = config.volume;
+
+    var voice = getFrenchVoice();
+    if (voice) utterance.voice = voice;
+
+    utterance.onstart = function(){
+      if (currentId !== launchId) return;
+      setPlaying();
+      startProgress(config.text, currentId);
+    };
+
+    utterance.onend = function(){
+      if (currentId !== launchId) return;
+      clearInterval(timer);
+      timer = null;
+      progressBar.style.width = "100%";
+      setTimeout(function(){
+        if (currentId === launchId) setIdle();
+      }, 250);
+    };
+
+    utterance.onerror = function(){
+      if (currentId !== launchId) return;
+      stop();
+    };
+
+    synth.speak(utterance);
+  }
+
+  function play(){
+    if (playing) return;
+
+    if (synth.speaking || synth.pending) {
+      try { synth.cancel(); } catch(e){}
+    }
+
+    var voices = synth.getVoices();
+    if (voices && voices.length) {
+      launch();
+      return;
+    }
+
+    var launched = false;
+
+    function handleVoicesChanged(){
+      if (launched) return;
+      launched = true;
+      synth.removeEventListener("voiceschanged", handleVoicesChanged);
+      launch();
+    }
+
+    synth.addEventListener("voiceschanged", handleVoicesChanged);
+
+    setTimeout(function(){
+      if (launched) return;
+      launched = true;
+      synth.removeEventListener("voiceschanged", handleVoicesChanged);
+      launch();
+    }, 700);
+  }
+
+  btn.addEventListener("click", function(){
+    if (playing) stop();
+    else play();
+  });
+
+  window.addEventListener("beforeunload", stop);
+
+  document.addEventListener("visibilitychange", function(){
+    if (document.hidden && playing) stop();
+  });
+
+  setIdle();
+})();
+</script>
+
+<!-- ============================================================
+     FIN DIGIY AUDIO — ACTIVER MON MODULE
+     ============================================================ -->
+  
 </body>
 </html>
