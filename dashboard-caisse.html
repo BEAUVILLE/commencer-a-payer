@@ -382,7 +382,14 @@
           RESA: "RESA",
           RESA_TABLE: "RESA",
           RESTO_RESA: "RESA",
-          MULTI_SERVICE: "BUILD"
+          MULTI_SERVICE: "BUILD",
+          PAY: "PAY",
+          MON_ARGENT: "PAY",
+          JOBS: "JOBS",
+          PACK: "PACK",
+          COMMERCE_DUO: "PACK",
+          EXPLORE_BOOST: "EXPLORE",
+          BOOST: "EXPLORE"
         };
         return alias[raw] || raw || "AUTRE";
       }
@@ -399,10 +406,54 @@
           BUILD: "BUILD",
           EXPLORE: "EXPLORE",
           FRET_PRO: "FRET PRO",
-          FRET_CLIENT_PRO: "FRET CLIENT"
+          FRET_CLIENT_PRO: "FRET CLIENT",
+          PAY: "PAY",
+          JOBS: "JOBS",
+          PACK: "PACK"
         };
         return labels[mod] || mod;
       }
+
+      const MODULE_HUB_URLS = {
+        POS: "https://commerce-pro.digiylyfe.com/hub.html",
+        CAISSE: "https://commerce-pro.digiylyfe.com/hub.html",
+        COMMERCE: "https://commerce-pro.digiylyfe.com/hub.html",
+        DRIVER: "https://pro-driver.digiylyfe.com/hub.html",
+        LOC: "https://pro-loc.digiylyfe.com/hub.html",
+        RESA: "https://pro-resa-resto.digiylyfe.com/hub.html",
+        RESTO: "https://pro-resa-resto.digiylyfe.com/hub.html",
+        MARKET: "https://pro-market.digiylyfe.com/hub.html",
+        BUILD: "https://pro-build.digiylyfe.com/hub.html",
+        MULTI_SERVICE: "https://pro-build.digiylyfe.com/hub.html",
+        SERVICES: "https://pro-build.digiylyfe.com/hub.html",
+        EXPLORE: "https://pro-explore.digiylyfe.com/hub.html",
+        EXPLORE_BOOST: "https://pro-explore.digiylyfe.com/hub.html",
+        BOOST: "https://pro-explore.digiylyfe.com/hub.html",
+        PAY: "https://pro-pay.digiylyfe.com/hub.html",
+        MON_ARGENT: "https://pro-pay.digiylyfe.com/hub.html",
+        JOBS: "https://pro-job.digiylyfe.com/hub.html",
+        PACK: "https://commerce-pro.digiylyfe.com/hub.html",
+        COMMERCE_DUO: "https://commerce-pro.digiylyfe.com/hub.html"
+      };
+
+      function moduleHubUrl(value){
+        const mod = normalizeModule(value);
+        return MODULE_HUB_URLS[mod] || "";
+      }
+
+      function cleanModuleUrl(raw){
+        const value = String(raw || "").trim();
+        if(!value) return "";
+        try{
+          const u = new URL(value, location.href);
+          ["phone","tel","owner_phone","owner_id","slug","pay_slug","subscription_slug","business_phone","wave_phone","wallet_phone","pay_phone","access_note","keybox_code","keybox_location","token","session_token","pin","return","redirect","redirect_url","url"].forEach(k => u.searchParams.delete(k));
+          u.searchParams.set("from", "digiy-caisse");
+          return u.toString();
+        }catch(_){
+          return value;
+        }
+      }
+
 
       function loadCaisseSession(){
         try{
@@ -585,7 +636,7 @@
             return;
           }
 
-          alert(`✅ Module activé !\n\nSlug: ${data.slug || "—"}\nURL: ${data.url || "—"}`);
+          const sourceRow = allData.find(r => String(r.id) === String(id)) || {};\n          const hubUrl = cleanModuleUrl(moduleHubUrl(data.module || data.resolved_module || sourceRow.module) || data.url || "");\n          alert(`✅ Module activé !\n\nSlug: ${data.slug || "—"}\nHUB module: ${hubUrl || "—"}`);
           loadData();
         }catch(e){
           alert("❌ Erreur: " + e.message);
@@ -593,6 +644,9 @@
       }
 
       function extractPossibleUrl(row){
+        const hub = cleanModuleUrl(moduleHubUrl(row?.module));
+        if(hub) return hub;
+
         const candidates = [
           row?.url,
           row?.public_url,
@@ -604,7 +658,7 @@
 
         for(const c of candidates){
           const u = safeUrl(c);
-          if(u) return u;
+          if(u) return cleanModuleUrl(u);
         }
 
         return "";
@@ -897,3 +951,4 @@ DIGIYLYFE • Made in Sénégal 🇸🇳
   </script>
 </body>
 </html>
+
