@@ -441,6 +441,44 @@
         return MODULE_HUB_URLS[mod] || "";
       }
 
+
+      function moduleSlugPrefix(value){
+        const mod = normalizeModule(value);
+        const map = {
+          POS:"pos", CAISSE:"pos", COMMERCE:"pos", PACK:"commerce",
+          DRIVER:"driver", LOC:"loc", RESA:"resa", RESTO:"resa",
+          MARKET:"market", BUILD:"build", MULTI_SERVICE:"build",
+          EXPLORE:"explore", EXPLORE_BOOST:"explore", BOOST:"explore",
+          PAY:"pay", MON_ARGENT:"pay", JOBS:"jobs"
+        };
+        return map[mod] || String(mod || "digiy").toLowerCase();
+      }
+
+      function expectedPrivateSlug(module, phone){
+        const digits = String(phone || "").replace(/\D/g,"");
+        return digits ? `${moduleSlugPrefix(module)}-${digits}` : "";
+      }
+
+      function buildPrivateAccessUrl(row){
+        const mod = normalizeModule(row?.module || row?.resolved_module || row?.product_module || "");
+        const base = moduleHubUrl(mod) || row?.url || row?.module_url || row?.access_url || "";
+        if(!base) return "";
+        const phone = String(row?.phone || row?.tel || row?.owner_phone || "").replace(/\D/g,"");
+        let slug = String(row?.slug || row?.subscription_slug || row?.pay_slug || "").trim().toLowerCase();
+        if(!slug && phone) slug = expectedPrivateSlug(mod, phone);
+
+        try{
+          const u = new URL(base, location.href);
+          u.searchParams.set("from", "digiy-caisse");
+          if(mod) u.searchParams.set("module", mod);
+          if(phone) u.searchParams.set("phone", phone);
+          if(slug) u.searchParams.set("slug", slug);
+          return u.toString();
+        }catch(_){
+          return base;
+        }
+      }
+
       function cleanModuleUrl(raw){
         const value = String(raw || "").trim();
         if(!value) return "";
@@ -636,7 +674,7 @@
             return;
           }
 
-          const sourceRow = allData.find(r => String(r.id) === String(id)) || {};\n          const hubUrl = cleanModuleUrl(moduleHubUrl(data.module || data.resolved_module || sourceRow.module) || data.url || "");\n          alert(`✅ Module activé !\n\nSlug: ${data.slug || "—"}\nHUB module: ${hubUrl || "—"}`);
+          const sourceRow = allData.find(r => String(r.id) === String(id)) || {};\n          const hubUrl = buildPrivateAccessUrl({ ...sourceRow, ...data, module: data.module || data.resolved_module || sourceRow.module });\n          alert(`✅ Module activé !\n\nSlug: ${data.slug || "—"}\nHUB module: ${hubUrl || "—"}`);
           loadData();
         }catch(e){
           alert("❌ Erreur: " + e.message);
@@ -644,8 +682,8 @@
       }
 
       function extractPossibleUrl(row){
-        const hub = cleanModuleUrl(moduleHubUrl(row?.module));
-        if(hub) return hub;
+        const privateUrl = buildPrivateAccessUrl(row);
+        if(privateUrl) return privateUrl;
 
         const candidates = [
           row?.url,
@@ -658,8 +696,11 @@
 
         for(const c of candidates){
           const u = safeUrl(c);
-          if(u) return cleanModuleUrl(u);
+          if(u) return u;
         }
+
+        return "";
+      }
 
         return "";
       }
