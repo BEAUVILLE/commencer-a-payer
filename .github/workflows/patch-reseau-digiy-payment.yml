@@ -1,0 +1,246 @@
+name: Patch Reseau DIGIY payment extras
+
+on:
+  push:
+    paths:
+      - .github/workflows/patch-reseau-digiy-payment.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add Reseau DIGIY as payable extra
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+
+          def rep(old, new, label):
+              global s
+              if old in s:
+                  s = s.replace(old, new, 1)
+                  print('OK', label)
+              elif new in s:
+                  print('SKIP', label)
+              else:
+                  print('MISS', label)
+
+          # 1) Section visible RÉSEAU dans la grille paiement
+          rep('<div class="section-sep">✨ CODE E · Boost visibilité</div><div class="priceGrid" id="grid_boost"></div>',
+              '<div class="section-sep">✨ CODE E · Boost visibilité</div><div class="priceGrid" id="grid_boost"></div>\n          <div class="section-sep">📣 CODE R · RÉSEAU DIGIY</div><div class="priceGrid" id="grid_reseau"></div>',
+              'section reseau')
+
+          # 2) État JS
+          rep('let userPhoneDigits=normPhone(qp.get("phone")||""),userSlug=normSlug(qp.get("slug")||""),selectedBase=null,selectedBoost=null,orderReference="";const resolvedCache=new Map();',
+              'let userPhoneDigits=normPhone(qp.get("phone")||""),userSlug=normSlug(qp.get("slug")||""),selectedBase=null,selectedBoost=null,selectedReseau=null,orderReference="";const resolvedCache=new Map();',
+              'selectedReseau')
+
+          # 3) Alias module RÉSEAU
+          rep('EXPLORE_BOOST:"EXPLORE_BOOST",BOOST:"EXPLORE_BOOST"};',
+              'EXPLORE_BOOST:"EXPLORE_BOOST",BOOST:"EXPLORE_BOOST",RESEAU:"RESEAU_DIGIY",RESEAU_DIGIY:"RESEAU_DIGIY"};',
+              'alias reseau')
+
+          # 4) Groupes de prix
+          rep('boost:[{code:"E1",module:"EXPLORE_BOOST",label:"Boost EXPLORE — Local",desc:"Badge, vitrine locale, WhatsApp.",boost:true},{code:"E2",module:"EXPLORE_BOOST",label:"Boost EXPLORE — Standard",desc:"Mise en avant, SEO, leads.",boost:true},{code:"E3",module:"EXPLORE_BOOST",label:"Boost EXPLORE — Premium",desc:"Priorité, support média, visibilité maximale.",boost:true}]}',
+              'boost:[{code:"E1",module:"EXPLORE_BOOST",label:"Boost EXPLORE — Local",desc:"Badge, vitrine locale, WhatsApp.",boost:true},{code:"E2",module:"EXPLORE_BOOST",label:"Boost EXPLORE — Standard",desc:"Mise en avant, SEO, leads.",boost:true},{code:"E3",module:"EXPLORE_BOOST",label:"Boost EXPLORE — Premium",desc:"Priorité, support média, visibilité maximale.",boost:true}],reseau:[{code:"R7",module:"RESEAU_DIGIY",label:"RÉSEAU DIGIY — 1 semaine",desc:"Projecteur RÉSEAU sur fiche déjà abonnée.",reseau:true},{code:"R15",module:"RESEAU_DIGIY",label:"RÉSEAU DIGIY — Quinzaine",desc:"Visibilité renforcée pendant 15 jours.",reseau:true},{code:"R30",module:"RESEAU_DIGIY",label:"RÉSEAU DIGIY — 1 mois",desc:"Présence RÉSEAU abonné pendant 1 mois.",reseau:true}]}',
+              'PRICE_GROUPS reseau')
+
+          # 5) Mapping grille
+          rep('boost:"grid_boost"};', 'boost:"grid_boost",reseau:"grid_reseau"};', 'GRID_MAP reseau')
+
+          # 6) Fallback tarifs
+          rep('"EXPLORE_BOOST::E3":{fcfa:20000,eur:29,label:"Premium"}',
+              '"EXPLORE_BOOST::E3":{fcfa:20000,eur:29,label:"Premium"},\n"RESEAU_DIGIY::R7":{fcfa:15000,eur:0,label:"1 semaine"},\n"RESEAU_DIGIY::R15":{fcfa:25000,eur:0,label:"Quinzaine"},\n"RESEAU_DIGIY::R30":{fcfa:45000,eur:0,label:"1 mois"}',
+              'fallback reseau')
+
+          # 7) Total et libellé produit
+          rep('function totalAmount(){return Number(selectedBase?.resolved_price_month_fcfa||0)+Number(selectedBoost?.resolved_price_month_fcfa||0)}function productLabel(){return "DIGIY · "+(selectedBase?"Code "+selectedBase.code:(accessModule||"DIGIY"))+(selectedBoost?" + BOOST "+selectedBoost.code:"")}',
+              'function totalAmount(){return Number(selectedBase?.resolved_price_month_fcfa||0)+Number(selectedBoost?.resolved_price_month_fcfa||0)+Number(selectedReseau?.resolved_price_month_fcfa||0)}function productLabel(){return "DIGIY · "+(selectedBase?"Code "+selectedBase.code:(accessModule||"DIGIY"))+(selectedBoost?" + BOOST "+selectedBoost.code:"")+(selectedReseau?" + RÉSEAU "+selectedReseau.code:"")}',
+              'totalAmount productLabel')
+
+          # 8) Clic prix : RÉSEAU est un extra comme Boost, pas une base module
+          rep('''        if(item.boost){
+          if(selectedBoost&&selectedBoost.code===r.code){
+            selectedBoost=null;
+            setStatus("✨ BOOST retiré.","warn","MODULE");
+          }else{
+            selectedBoost=r;
+            setStatus("👑 BOOST "+r.code+" ajouté : "+prettyFCFA(r.resolved_price_month_fcfa),"ok","BOOST "+r.code);
+          }
+        }else{
+          selectedBase=r;
+          orderReference="";
+          setStatus("💳 Code "+r.code+" sélectionné : "+prettyFCFA(r.resolved_price_month_fcfa),"ok","CODE "+r.code);
+        }''',
+              '''        if(item.reseau){
+          if(selectedReseau&&selectedReseau.code===r.code){
+            selectedReseau=null;
+            setStatus("📣 RÉSEAU retiré.","warn","MODULE");
+          }else{
+            selectedReseau=r;
+            setStatus("📣 RÉSEAU "+r.code+" ajouté : "+prettyFCFA(r.resolved_price_month_fcfa),"ok","RÉSEAU "+r.code);
+          }
+        }else if(item.boost){
+          if(selectedBoost&&selectedBoost.code===r.code){
+            selectedBoost=null;
+            setStatus("✨ BOOST retiré.","warn","MODULE");
+          }else{
+            selectedBoost=r;
+            setStatus("👑 BOOST "+r.code+" ajouté : "+prettyFCFA(r.resolved_price_month_fcfa),"ok","BOOST "+r.code);
+          }
+        }else{
+          selectedBase=r;
+          orderReference="";
+          setStatus("💳 Code "+r.code+" sélectionné : "+prettyFCFA(r.resolved_price_month_fcfa),"ok","CODE "+r.code);
+        }''',
+              'click reseau')
+
+          # 9) Auto-sélection depuis lien LOC/DRIVER avec reseau=R7/R15/R30
+          rep('const rawModule=normalizeModule(qp.get("module")||qp.get("base_module")||""),rawPlan=String(qp.get("plan")||qp.get("code")||"").trim().toUpperCase(),rawBoost=String(qp.get("boost")||qp.get("boost_code")||"").trim().toUpperCase();',
+              'const rawModule=normalizeModule(qp.get("module")||qp.get("base_module")||""),rawPlan=String(qp.get("plan")||qp.get("code")||"").trim().toUpperCase(),rawBoost=String(qp.get("boost")||qp.get("boost_code")||"").trim().toUpperCase(),rawReseau=String(qp.get("reseau")||qp.get("reseau_code")||"").trim().toUpperCase();',
+              'rawReseau')
+
+          rep('''  if(rawBoost){
+    const item=PRICE_GROUPS.boost.find(x=>x.code.toUpperCase()===rawBoost);
+    if(item){
+      selectedBoost=fallbackResolvedPrice(item);
+      resolvedCache.set(item.module+"::"+item.code, selectedBoost);
+      readOfficialPriceInBackground(item);
+    }
+  }
+  renderGrids();''',
+              '''  if(rawBoost){
+    const item=PRICE_GROUPS.boost.find(x=>x.code.toUpperCase()===rawBoost);
+    if(item){
+      selectedBoost=fallbackResolvedPrice(item);
+      resolvedCache.set(item.module+"::"+item.code, selectedBoost);
+      readOfficialPriceInBackground(item);
+    }
+  }
+  if(rawReseau){
+    const item=PRICE_GROUPS.reseau.find(x=>x.code.toUpperCase()===rawReseau);
+    if(item){
+      selectedReseau=fallbackResolvedPrice(item);
+      resolvedCache.set(item.module+"::"+item.code, selectedReseau);
+      readOfficialPriceInBackground(item);
+    }
+  }
+  renderGrids();''',
+              'autoSelect reseau')
+
+          # 10) URL garde les extras choisis
+          rep('if(selectedBoost){u.searchParams.set("boost",selectedBoost.resolved_public_code||selectedBoost.code);u.searchParams.set("boost_code",selectedBoost.resolved_public_code||selectedBoost.code)}else{u.searchParams.delete("boost");u.searchParams.delete("boost_code")}',
+              'if(selectedBoost){u.searchParams.set("boost",selectedBoost.resolved_public_code||selectedBoost.code);u.searchParams.set("boost_code",selectedBoost.resolved_public_code||selectedBoost.code);u.searchParams.set("boost_amount",String(Number(selectedBoost.resolved_price_month_fcfa||0)));u.searchParams.set("boost_label",selectedBoost.resolved_label||selectedBoost.label||selectedBoost.code)}else{u.searchParams.delete("boost");u.searchParams.delete("boost_code");u.searchParams.delete("boost_amount");u.searchParams.delete("boost_label")}if(selectedReseau){u.searchParams.set("reseau",selectedReseau.resolved_public_code||selectedReseau.code);u.searchParams.set("reseau_code",selectedReseau.resolved_public_code||selectedReseau.code);u.searchParams.set("reseau_amount",String(Number(selectedReseau.resolved_price_month_fcfa||0)));u.searchParams.set("reseau_label",selectedReseau.resolved_label||selectedReseau.label||selectedReseau.code)}else{u.searchParams.delete("reseau");u.searchParams.delete("reseau_code");u.searchParams.delete("reseau_amount");u.searchParams.delete("reseau_label")}',
+              'syncSelectionToUrl reseau')
+
+          # 11) Récap visuel : détail et total
+          rep('function renderOrder(){const t=totalAmount(),basePlan=selectedBase?(selectedBase.resolved_plan_code+" / "+(selectedBase.resolved_public_code||selectedBase.code)):"—",boostLine=selectedBoost?" + BOOST "+(selectedBoost.resolved_public_code||selectedBoost.code):"";$("orderProduct").textContent=productLabel();$("orderPlan").textContent=basePlan+boostLine;',
+              'function renderOrder(){const t=totalAmount(),basePlan=selectedBase?(selectedBase.resolved_plan_code+" / "+(selectedBase.resolved_public_code||selectedBase.code)):"—",boostLine=selectedBoost?" + BOOST "+(selectedBoost.resolved_public_code||selectedBoost.code):"",reseauLine=selectedReseau?" + RÉSEAU "+(selectedReseau.resolved_public_code||selectedReseau.code):"";$("orderProduct").textContent=productLabel();$("orderPlan").textContent=basePlan+boostLine+reseauLine;',
+              'renderOrder plan')
+
+          rep('if(selectedBoost)hint.push("✅ BOOST ajouté : "+(selectedBoost.resolved_public_code||selectedBoost.code));',
+              'if(selectedBoost)hint.push("✅ BOOST ajouté : "+(selectedBoost.resolved_public_code||selectedBoost.code)+" · "+prettyFCFA(selectedBoost.resolved_price_month_fcfa));if(selectedReseau)hint.push("📣 RÉSEAU ajouté : "+(selectedReseau.resolved_public_code||selectedReseau.code)+" · "+prettyFCFA(selectedReseau.resolved_price_month_fcfa));',
+              'renderOrder hint')
+
+          # 12) Prix officiel qui revient de Supabase corrige aussi RÉSEAU
+          rep('''  if(item.boost){
+    if(selectedBoost && normalizeModule(selectedBoost.module||selectedBoost.resolved_module||"")===mod && String(selectedBoost.code||selectedBoost.resolved_public_code||"").toUpperCase()===code){
+      selectedBoost=real;
+      renderGrids();
+      syncVisibleFallbackPrices();
+      renderOrder();
+    }
+    return;
+  }''',
+              '''  if(item.reseau){
+    if(selectedReseau && normalizeModule(selectedReseau.module||selectedReseau.resolved_module||"")===mod && String(selectedReseau.code||selectedReseau.resolved_public_code||"").toUpperCase()===code){
+      selectedReseau=real;
+      renderGrids();
+      syncVisibleFallbackPrices();
+      renderOrder();
+    }
+    return;
+  }
+  if(item.boost){
+    if(selectedBoost && normalizeModule(selectedBoost.module||selectedBoost.resolved_module||"")===mod && String(selectedBoost.code||selectedBoost.resolved_public_code||"").toUpperCase()===code){
+      selectedBoost=real;
+      renderGrids();
+      syncVisibleFallbackPrices();
+      renderOrder();
+    }
+    return;
+  }''',
+              'real price reseau')
+
+          # 13) Préparation référence : message inclut extras et total
+          rep('(selectedBoost?" · BOOST dans la preuve : "+prettyFCFA(selectedBoost.resolved_price_month_fcfa):"");setStatus',
+              '(selectedBoost?" · BOOST : "+prettyFCFA(selectedBoost.resolved_price_month_fcfa):"")+(selectedReseau?" · RÉSEAU : "+prettyFCFA(selectedReseau.resolved_price_month_fcfa):"")+" · TOTAL : "+prettyFCFA(totalAmount());setStatus',
+              'prepareMsg total reseau')
+
+          # 14) État exporté
+          rep('boost_amount_xof:Number(selectedBoost?.resolved_price_month_fcfa||0),phone:',
+              'boost_amount_xof:Number(selectedBoost?.resolved_price_month_fcfa||0),reseau_code:selectedReseau?.resolved_public_code||selectedReseau?.code||"",reseau_module:selectedReseau?(selectedReseau.resolved_module||selectedReseau.module):"",reseau_plan:selectedReseau?(selectedReseau.resolved_public_code||selectedReseau.code):"",reseau_amount_xof:Number(selectedReseau?.resolved_price_month_fcfa||0),extras_amount_xof:Number(selectedBoost?.resolved_price_month_fcfa||0)+Number(selectedReseau?.resolved_price_month_fcfa||0),phone:',
+              'DIGIY_PAY_STATE reseau')
+
+          # 15) Panneau droite : montre base + extras + total
+          rep('selected.innerHTML="<strong>"+code+" · "+label+"</strong><span>"+price+"</span>";',
+              'const extraLines=[];if(selectedBoost)extraLines.push("BOOST "+(selectedBoost.resolved_public_code||selectedBoost.code)+" · "+prettyFCFA(selectedBoost.resolved_price_month_fcfa));if(selectedReseau)extraLines.push("RÉSEAU "+(selectedReseau.resolved_public_code||selectedReseau.code)+" · "+prettyFCFA(selectedReseau.resolved_price_month_fcfa));selected.innerHTML="<strong>"+code+" · "+label+"</strong><span>Module : "+price+"</span>"+(extraLines.length?"<span>Extras : "+extraLines.join(" + ")+"</span>":"")+"<span>TOTAL : "+prettyFCFA(totalAmount())+"</span>";',
+              'benefit detail total')
+
+          rep('const waText="Bonjour JB, je veux activer mon module "+mod+" — code "+code+" ("+price+").";',
+              'const waText="Bonjour JB, je veux activer mon module "+mod+" — code "+code+" ("+price+")."+(selectedBoost?"\\nBOOST : "+(selectedBoost.resolved_public_code||selectedBoost.code)+" · "+prettyFCFA(selectedBoost.resolved_price_month_fcfa):"")+(selectedReseau?"\\nRÉSEAU : "+(selectedReseau.resolved_public_code||selectedReseau.code)+" · "+prettyFCFA(selectedReseau.resolved_price_month_fcfa):"")+"\\nTOTAL : "+prettyFCFA(totalAmount());',
+              'benefit WhatsApp')
+
+          # 16) Messages WhatsApp / Support / preuve avec RÉSEAU
+          rep('const t=totalAmount(),baseCode=selectedBase.resolved_public_code||selectedBase.code,boostCode=selectedBoost?(selectedBoost.resolved_public_code||selectedBoost.code):"";let msg="DIGIY — Confirmation paiement Wave',
+              'const t=totalAmount(),baseCode=selectedBase.resolved_public_code||selectedBase.code,boostCode=selectedBoost?(selectedBoost.resolved_public_code||selectedBoost.code):"",reseauCode=selectedReseau?(selectedReseau.resolved_public_code||selectedReseau.code):"";let msg="DIGIY — Confirmation paiement Wave',
+              'wa confirm const')
+
+          rep('if(selectedBoost){msg+="\nBOOST: "+boostCode+"\n";msg+="Plan boost: "+(selectedBoost.resolved_plan_code||"-")+"\n";msg+="Montant boost: "+Number(selectedBoost.resolved_price_month_fcfa||0)+" FCFA\n"}msg+="\n✅ Montant TOTAL: "+t+" FCFA\n";',
+              'if(selectedBoost){msg+="\nBOOST: "+boostCode+"\n";msg+="Plan boost: "+(selectedBoost.resolved_plan_code||"-")+"\n";msg+="Montant boost: "+Number(selectedBoost.resolved_price_month_fcfa||0)+" FCFA\n"}if(selectedReseau){msg+="\nRÉSEAU: "+reseauCode+"\n";msg+="Formule réseau: "+(selectedReseau.resolved_label||selectedReseau.label||selectedReseau.resolved_plan_code||"-")+"\n";msg+="Montant réseau: "+Number(selectedReseau.resolved_price_month_fcfa||0)+" FCFA\n"}msg+="\n✅ Montant TOTAL: "+t+" FCFA\n";',
+              'wa confirm reseau')
+
+          rep('if(selectedBoost)msg+="BOOST: "+(selectedBoost.resolved_public_code||selectedBoost.code)+" ("+Number(selectedBoost.resolved_price_month_fcfa||0)+" FCFA)\n";if(t)msg+="TOTAL: "+t+" FCFA\n";',
+              'if(selectedBoost)msg+="BOOST: "+(selectedBoost.resolved_public_code||selectedBoost.code)+" ("+Number(selectedBoost.resolved_price_month_fcfa||0)+" FCFA)\n";if(selectedReseau)msg+="RÉSEAU: "+(selectedReseau.resolved_public_code||selectedReseau.code)+" ("+Number(selectedReseau.resolved_price_month_fcfa||0)+" FCFA)\n";if(t)msg+="TOTAL: "+t+" FCFA\n";',
+              'support reseau')
+
+          rep('const t=totalAmount(),baseCode=selectedBase.resolved_public_code||selectedBase.code,boostCode=selectedBoost?(selectedBoost.resolved_public_code||selectedBoost.code):"";ensureSlugForSelectedModule();let msg="DIGIY — Preuve paiement Wave',
+              'const t=totalAmount(),baseCode=selectedBase.resolved_public_code||selectedBase.code,boostCode=selectedBoost?(selectedBoost.resolved_public_code||selectedBoost.code):"",reseauCode=selectedReseau?(selectedReseau.resolved_public_code||selectedReseau.code):"";ensureSlugForSelectedModule();let msg="DIGIY — Preuve paiement Wave',
+              'proof const')
+
+          rep('if(selectedBoost){msg+="\nBOOST',
+              'if(selectedReseau){msg+="\nRÉSEAU : "+reseauCode+"\n";msg+="Formule réseau : "+(selectedReseau.resolved_label||selectedReseau.label||selectedReseau.resolved_plan_code||"-")+"\n";msg+="Montant réseau : "+Number(selectedReseau.resolved_price_month_fcfa||0)+" FCFA\n"}if(selectedBoost){msg+="\nBOOST',
+              'proof reseau block')
+
+          rep('const t=totalAmount(),baseCode=selectedBase.resolved_public_code||selectedBase.code,boostPart=selectedBoost?("+"+(selectedBoost.resolved_public_code||selectedBoost.code)):"";let msg="DIGIY WAVE',
+              'const t=totalAmount(),baseCode=selectedBase.resolved_public_code||selectedBase.code,boostPart=selectedBoost?("+"+(selectedBoost.resolved_public_code||selectedBoost.code)):"",reseauPart=selectedReseau?("+"+(selectedReseau.resolved_public_code||selectedReseau.code)):"";let msg="DIGIY WAVE',
+              'sms const')
+
+          rep('"\nCode: "+baseCode+boostPart+"\nTotal: "+t+" FCFA\n";',
+              '"\nCode: "+baseCode+boostPart+reseauPart+"\nTotal: "+t+" FCFA\n";',
+              'sms reseau')
+
+          # Contrôles finaux
+          required = ['grid_reseau','selectedReseau','RESEAU_DIGIY::R7','rawReseau','RÉSEAU ajouté','reseau_amount_xof']
+          missing = [x for x in required if x not in s]
+          if missing:
+              raise SystemExit('Patch incomplet, manque: '+', '.join(missing))
+
+          p.write_text(s, encoding='utf-8')
+          wf = Path('.github/workflows/patch-reseau-digiy-payment.yml')
+          if wf.exists():
+              wf.unlink()
+          PY
+      - name: Commit patch
+        run: |
+          git config user.name "DIGIY Auto Patch"
+          git config user.email "actions@github.com"
+          git add index.html .github/workflows/patch-reseau-digiy-payment.yml
+          git commit -m "Add Reseau DIGIY details to payment total" || echo "Nothing to commit"
+          git push
