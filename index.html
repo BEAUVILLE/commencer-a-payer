@@ -5,7 +5,7 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <meta name="digiy-version" content="tarifs-mobile-direct-sans-moulinage-2026-05-29">
+  <meta name="digiy-version" content="tarifs-mobile-clear-selection-2026-05-29">
 
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
   <title>ACTIVER MON MODULE — DIGIYLYFE</title>
@@ -810,7 +810,7 @@
 
           <div class="digiy-benefit-actions">
             <a class="digiy-benefit-wa" id="digiyBenefitWa" href="https://wa.me/221771342889?text=Bonjour%20JB%2C%20je%20veux%20activer%20un%20module%20DIGIY">💬 Parler à JB</a>
-            <a class="digiy-benefit-activate" id="digiyBenefitActivate" href="#manualBox">🚀 Activer mon module</a>
+            <a class="digiy-benefit-activate" id="digiyBenefitActivate" href="#manualBox">🚀 Activer mon module</a><button class="digiy-benefit-activate" id="btnClearSelection" type="button">🧹 Effacer</button>
           </div>
         </aside>
       </div>
@@ -921,7 +921,7 @@ function speakSubscriptionBenefit(){if(!("speechSynthesis" in window)){alert("Au
 
 function setupHelpButtons(){document.querySelectorAll("[data-open-panel]").forEach(btn=>{btn.addEventListener("click",()=>{const target=btn.getAttribute("data-open-panel");document.querySelectorAll("[data-open-panel]").forEach(b=>{if(b!==btn)b.classList.remove("active")});if(target==="noiseInfoBox"){const status=$("statusBox"),vip=$("noiseVipBox");const opening=!(status?.classList.contains("is-open")||vip?.classList.contains("is-open"));document.querySelectorAll(".digiy-noise-panel").forEach(p=>p.classList.remove("is-open"));if(opening){status?.classList.add("is-open");vip?.classList.add("is-open");btn.classList.add("active")}else{btn.classList.remove("active")}return}const panel=$(target);if(!panel)return;const opening=!panel.classList.contains("is-open");document.querySelectorAll(".digiy-noise-panel").forEach(p=>p.classList.remove("is-open"));if(opening){panel.classList.add("is-open");btn.classList.add("active")}else{btn.classList.remove("active")}})})}
 
-function setupSubscriptionBenefitPanel(){const b=$("digiyBenefitAudioBtn"),s=$("digiyBenefitAudioStop"),a=$("digiyBenefitActivate");if(b)b.addEventListener("click",speakSubscriptionBenefit);if(s)s.addEventListener("click",()=>{if("speechSynthesis" in window)window.speechSynthesis.cancel()});if(a)a.addEventListener("click",e=>{const target=$("manualBox");if(target){e.preventDefault();target.scrollIntoView({behavior:"smooth",block:"start"})}})}
+function clearTarifSelection(){selectedBase=null;selectedBoost=null;orderReference="";try{const u=new URL(location.href);["module","plan","code","boost","boost_code","ref"].forEach(k=>u.searchParams.delete(k));history.replaceState(null,"",u.toString())}catch(_){}renderGrids();renderOrder();setStatus("🧹 Choix effacés. Choisis ton code.","warn","À CHOISIR");scrollBenefitPanelOnPhone()}function setupSubscriptionBenefitPanel(){const b=$("digiyBenefitAudioBtn"),s=$("digiyBenefitAudioStop"),a=$("digiyBenefitActivate");if(b)b.addEventListener("click",speakSubscriptionBenefit);if(s)s.addEventListener("click",()=>{if("speechSynthesis" in window)window.speechSynthesis.cancel()});if(a)a.addEventListener("click",e=>{const target=$("manualBox");if(target){e.preventDefault();target.scrollIntoView({behavior:"smooth",block:"start"})}});const c=$("btnClearSelection");if(c)c.addEventListener("click",clearTarifSelection)}
 function isMobileTarifView(){return window.matchMedia?window.matchMedia("(max-width: 760px)").matches:window.innerWidth<=760}
 function scrollBenefitPanelOnPhone(){const panel=$("digiyBenefitPanel");if(!panel||!isMobileTarifView())return;setTimeout(()=>{try{panel.scrollIntoView({behavior:"smooth",block:"start"});panel.classList.add("digiy-benefit-focus");setTimeout(()=>panel.classList.remove("digiy-benefit-focus"),1200)}catch(_){panel.scrollIntoView(true)}},120)}
 
