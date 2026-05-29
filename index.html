@@ -516,6 +516,43 @@
     .digiy-benefit-actions{grid-template-columns:1fr}
   }
 
+  
+
+  /* DIGIY — Renfort titres catégories tarifs : CODE 1, CODE 2, etc. */
+  .digiy-sub-card .section-sep,
+  .section-sep{
+    margin:20px 0 12px !important;
+    padding:12px 14px !important;
+    border-radius:16px !important;
+    border:1px solid rgba(250,204,21,.46) !important;
+    background:linear-gradient(135deg,rgba(250,204,21,.18),rgba(34,197,94,.10)) !important;
+    color:#ffffff !important;
+    font-size:22px !important;
+    line-height:1.15 !important;
+    font-weight:1200 !important;
+    letter-spacing:.02em !important;
+    text-transform:none !important;
+    text-shadow:0 0 16px rgba(255,255,255,.18),0 3px 12px rgba(0,0,0,.30) !important;
+    display:flex !important;
+    align-items:center !important;
+    gap:10px !important;
+    box-shadow:0 12px 28px rgba(0,0,0,.16),0 0 0 1px rgba(255,255,255,.05) inset !important;
+  }
+
+  .digiy-sub-card .section-sep::after,
+  .section-sep::after{
+    background:rgba(250,204,21,.34) !important;
+  }
+
+  @media(max-width:560px){
+    .digiy-sub-card .section-sep,
+    .section-sep{
+      font-size:20px !important;
+      padding:11px 12px !important;
+      margin:18px 0 10px !important;
+    }
+  }
+
   </style>
 </head>
 <body>
@@ -778,6 +815,14 @@ async function kbAsk(question){const out=$("kbAns"),status=$("kbStatus"),q=Strin
 <script src="./pay-proof.js?v=4"></script>
 </body>
 </html>
+
+
+
+
+
+
+
+
 
 
 
