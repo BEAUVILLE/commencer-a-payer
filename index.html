@@ -5,7 +5,7 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <meta name="digiy-version" content="tarifs-directs-boutons-aide-2026-05-29">
+  <meta name="digiy-version" content="tarifs-mobile-direct-sans-moulinage-2026-05-29">
 
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
   <title>ACTIVER MON MODULE — DIGIYLYFE</title>
@@ -699,40 +699,43 @@
       border-radius:14px;
     }
   }
-
-  
-  /* DIGIY — badge version visible pour vérifier sur téléphone */
-  .digiy-version-badge{
-    position:fixed;
-    left:10px;
-    top:10px;
-    z-index:100000;
-    max-width:calc(100% - 20px);
-    border-radius:999px;
-    padding:8px 12px;
-    border:1px solid rgba(250,204,21,.65);
-    background:rgba(6,27,20,.92);
-    color:#fff8db;
-    font-size:12px;
-    font-weight:1200;
-    box-shadow:0 10px 28px rgba(0,0,0,.28);
-    pointer-events:none;
+/* DIGIY — Mobile : au clic tarif, on amène directement le client vers la valeur/prix */
+  .digiy-sub-right{
+    scroll-margin-top:14px;
   }
-  @media(max-width:560px){
-    .digiy-version-badge{
-      font-size:10.5px;
-      padding:7px 10px;
-      left:8px;
-      top:8px;
+
+  .digiy-benefit-focus{
+    animation:digiyBenefitFocus 1.15s ease;
+  }
+
+  @keyframes digiyBenefitFocus{
+    0%{
+      box-shadow:0 0 0 0 rgba(250,204,21,.00),0 20px 54px rgba(0,0,0,.30);
+      border-color:rgba(255,255,255,.24);
+      transform:translateY(0);
+    }
+    35%{
+      box-shadow:0 0 0 4px rgba(250,204,21,.22),0 24px 62px rgba(0,0,0,.34);
+      border-color:rgba(250,204,21,.78);
+      transform:translateY(-2px);
+    }
+    100%{
+      box-shadow:0 0 0 0 rgba(250,204,21,.00),0 20px 54px rgba(0,0,0,.30);
+      border-color:rgba(255,255,255,.24);
+      transform:translateY(0);
+    }
+  }
+
+  @media(max-width:760px){
+    .digiy-sub-right{
+      scroll-margin-top:10px;
     }
   }
 
   </style>
 </head>
 <body>
-  <div class="digiy-version-badge">VERSION DIGIY · TARIFS DIRECTS · BOUTONS AIDE · 2026-05-29</div>
-
-  <div class="wrap"><div class="card">
+<div class="wrap"><div class="card">
     <div class="topbar"><div class="lang-switch"><button id="lang-fr" class="active" type="button">FR</button><button id="lang-wo" type="button">WO</button></div><span class="tag gold">DIGIY PAY</span></div>
     <nav class="routeNav" aria-label="Navigation DIGIY"><a class="site" href="https://digiylyfe.com/" rel="noopener noreferrer">🌍 Site</a><a class="hub" id="btnHubTop" href="https://digiy-hub.digiylyfe.com/" rel="noopener noreferrer">🧭 HUB</a><a href="https://tarifs.digiylyfe.com/" target="_blank" rel="noopener noreferrer">📦 Tarifs</a><a class="pro" id="btnProTop" href="https://pro-espace.digiylyfe.com/" rel="noopener noreferrer">🏢 Espace pro</a></nav>
     <h1>ACTIVER MON MODULE — DIGIY</h1><p class="small">Paiement direct · 0% commission · prix officiels DIGIY.</p>
@@ -883,7 +886,15 @@ function fallbackResolvedPrice(item){const f=priceFallbackFor(item)||{fcfa:0,eur
 
 async function resolvePrice(item){const key=item.module+"::"+item.code;if(resolvedCache.has(key))return resolvedCache.get(key);try{const{data,error}=await sb.rpc("digiy_resolve_pricing_plan",{p_module:item.module,p_plan:item.code});if(error)throw error;const row=Array.isArray(data)?data[0]:data;if(!row||!row.resolved_price_month_fcfa)throw new Error("Tarif introuvable pour "+item.module+" / "+item.code);const r={...item,resolved_module:row.resolved_module,resolved_plan_code:row.resolved_plan_code,resolved_public_code:row.resolved_public_code,resolved_label:row.resolved_label,resolved_price_month_fcfa:Number(row.resolved_price_month_fcfa||0),resolved_price_month_eur:Number(row.resolved_price_month_eur||0),resolved_billing_cycle:row.resolved_billing_cycle||"monthly"};resolvedCache.set(key,r);return r}catch(e){console.warn("Prix SQL indisponible, fallback DIGIY local utilisé",e);const r=fallbackResolvedPrice(item);resolvedCache.set(key,r);return r}}
 
-async function hydrateVisiblePrices(){for(const item of Object.values(PRICE_GROUPS).flat()){const el=document.querySelector('[data-price-key="'+item.module+"::"+item.code+'"]');try{const r=await resolvePrice(item);if(el)el.textContent=prettyFCFA(r.resolved_price_month_fcfa)+(r.resolved_price_month_eur?" · "+prettyEUR(r.resolved_price_month_eur):"")}catch(_){if(el)el.textContent=fallbackPriceText(item)}}}
+function syncVisibleFallbackPrices(){
+  for(const item of Object.values(PRICE_GROUPS).flat()){
+    const el=document.querySelector('[data-price-key="'+item.module+"::"+item.code+'"]');
+    if(!el) continue;
+    const cached=resolvedCache.get(item.module+"::"+item.code);
+    const r=cached||fallbackResolvedPrice(item);
+    el.textContent=prettyFCFA(r.resolved_price_month_fcfa)+(r.resolved_price_month_eur?" · "+prettyEUR(r.resolved_price_month_eur):"");
+  }
+}
 function totalAmount(){return Number(selectedBase?.resolved_price_month_fcfa||0)+Number(selectedBoost?.resolved_price_month_fcfa||0)}function productLabel(){return "DIGIY · "+(selectedBase?"Code "+selectedBase.code:(accessModule||"DIGIY"))+(selectedBoost?" + BOOST "+selectedBoost.code:"")}function inferModuleForSlug(){return normalizeModule(selectedBase?.resolved_module||selectedBase?.module||accessModule||"LOC")}function subscriptionSlug(module,phone){return String(module||"LOC").toLowerCase()+"-"+String(phone||"").replace(/\D/g,"")}function buildReturnUrlWithSlug(retUrl,module,phone){return buildModuleHubUrl(module,phone,"digiy-pay-token",retUrl)}function makeReference(){const mod=normalizeModule(selectedBase?.resolved_module||selectedBase?.module||accessModule||"DIGIY")||"DIGIY",code=selectedBase?.resolved_public_code||selectedBase?.code||"X",tail=userPhoneDigits?userPhoneDigits.slice(-6):"000000",stamp=Date.now().toString(36).toUpperCase().slice(-6);return `${mod}-${code}-${tail}-${stamp}`}
 function updateVipBox(){const stamp=$("vipStamp"),line=$("vipLine");if(selectedBoost){stamp.textContent="👑 Client BOOST — Prioritaire";stamp.style.borderColor="rgba(250,204,21,.55)";stamp.style.background="rgba(250,204,21,.08)";stamp.style.color="#fff6c8";line.innerHTML="✅ BOOST activé : tu passes en <strong>mise en avant</strong>."}else{stamp.textContent="⭐ Client DIGIY";stamp.style.borderColor="rgba(34,197,94,.35)";stamp.style.background="rgba(34,197,94,.08)";stamp.style.color="#bfffe0";line.textContent="Conseil : choisis ton module, puis ajoute un BOOST si tu veux accélérer."}}
 function syncSelectionToUrl(){const u=new URL(location.href);if(selectedBase){u.searchParams.set("module",selectedBase.resolved_module||selectedBase.module);u.searchParams.set("plan",selectedBase.resolved_public_code||selectedBase.code);u.searchParams.set("code",selectedBase.resolved_public_code||selectedBase.code)}if(selectedBoost){u.searchParams.set("boost",selectedBoost.resolved_public_code||selectedBoost.code);u.searchParams.set("boost_code",selectedBoost.resolved_public_code||selectedBoost.code)}else{u.searchParams.delete("boost");u.searchParams.delete("boost_code")}if(userPhoneDigits)u.searchParams.set("phone",userPhoneDigits);if(userSlug)u.searchParams.set("slug",userSlug);if(orderReference)u.searchParams.set("ref",orderReference);history.replaceState(null,"",u.toString())}
@@ -911,9 +922,114 @@ function speakSubscriptionBenefit(){if(!("speechSynthesis" in window)){alert("Au
 function setupHelpButtons(){document.querySelectorAll("[data-open-panel]").forEach(btn=>{btn.addEventListener("click",()=>{const target=btn.getAttribute("data-open-panel");document.querySelectorAll("[data-open-panel]").forEach(b=>{if(b!==btn)b.classList.remove("active")});if(target==="noiseInfoBox"){const status=$("statusBox"),vip=$("noiseVipBox");const opening=!(status?.classList.contains("is-open")||vip?.classList.contains("is-open"));document.querySelectorAll(".digiy-noise-panel").forEach(p=>p.classList.remove("is-open"));if(opening){status?.classList.add("is-open");vip?.classList.add("is-open");btn.classList.add("active")}else{btn.classList.remove("active")}return}const panel=$(target);if(!panel)return;const opening=!panel.classList.contains("is-open");document.querySelectorAll(".digiy-noise-panel").forEach(p=>p.classList.remove("is-open"));if(opening){panel.classList.add("is-open");btn.classList.add("active")}else{btn.classList.remove("active")}})})}
 
 function setupSubscriptionBenefitPanel(){const b=$("digiyBenefitAudioBtn"),s=$("digiyBenefitAudioStop"),a=$("digiyBenefitActivate");if(b)b.addEventListener("click",speakSubscriptionBenefit);if(s)s.addEventListener("click",()=>{if("speechSynthesis" in window)window.speechSynthesis.cancel()});if(a)a.addEventListener("click",e=>{const target=$("manualBox");if(target){e.preventDefault();target.scrollIntoView({behavior:"smooth",block:"start"})}})}
+function isMobileTarifView(){return window.matchMedia?window.matchMedia("(max-width: 760px)").matches:window.innerWidth<=760}
+function scrollBenefitPanelOnPhone(){const panel=$("digiyBenefitPanel");if(!panel||!isMobileTarifView())return;setTimeout(()=>{try{panel.scrollIntoView({behavior:"smooth",block:"start"});panel.classList.add("digiy-benefit-focus");setTimeout(()=>panel.classList.remove("digiy-benefit-focus"),1200)}catch(_){panel.scrollIntoView(true)}},120)}
 
-function renderGrids(){for(const[groupKey,gridId]of Object.entries(GRID_MAP)){const grid=$(gridId),items=PRICE_GROUPS[groupKey]||[];if(!grid)continue;grid.innerHTML=items.map(item=>{const isBoost=item.boost===true,active=isBoost?(selectedBoost&&selectedBoost.code===item.code):(selectedBase&&selectedBase.code===item.code&&selectedBase.module===item.module),activeClass=active?(isBoost?"boostActive":"active"):"",codeClass=isBoost?"priceCode boost":"priceCode",priceKey=item.module+"::"+item.code;return `<button class="priceBtn ${activeClass}" type="button" data-module="${item.module}" data-code="${item.code}"><div class="priceTop"><div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0;"><div class="${codeClass}">${item.code}</div><div class="priceName">${item.label}</div></div><div class="priceAmt" data-price-key="${priceKey}">${fallbackPriceText(item)}</div></div><div class="priceDesc">${item.desc}</div></button>`}).join("");grid.querySelectorAll(".priceBtn").forEach(btn=>{btn.addEventListener("click",async()=>{const module=btn.getAttribute("data-module")||"",code=btn.getAttribute("data-code")||"",item=items.find(x=>x.module===module&&x.code===code);if(!item)return;btn.disabled=true;setStatus("⏳ Lecture du prix officiel…","warn","SQL");try{const r=await resolvePrice(item);if(item.boost){if(selectedBoost&&selectedBoost.code===r.code){selectedBoost=null;setStatus("✨ BOOST retiré.","warn","MODULE")}else{selectedBoost=r;setStatus("👑 BOOST "+r.code+" ajouté.","ok","BOOST "+r.code)}}else{selectedBase=r;orderReference="";setStatus("💳 Code "+r.code+" sélectionné : "+prettyFCFA(r.resolved_price_month_fcfa),"ok","CODE "+r.code)}renderGrids();hydrateVisiblePrices();renderOrder()}catch(e){console.error(e);setStatus("🔴 Prix introuvable : "+(e?.message||e),"bad","ERREUR")}finally{btn.disabled=false}})})}}
-async function autoSelectFromUrl(){const rawModule=normalizeModule(qp.get("module")||qp.get("base_module")||""),rawPlan=String(qp.get("plan")||qp.get("code")||"").trim().toUpperCase(),rawBoost=String(qp.get("boost")||qp.get("boost_code")||"").trim().toUpperCase();if(rawModule&&rawPlan){const all=Object.values(PRICE_GROUPS).flat();const item=all.find(x=>!x.boost&&normalizeModule(x.module)===rawModule&&x.code.toUpperCase()===rawPlan)||all.find(x=>!x.boost&&x.code.toUpperCase()===rawPlan);if(item){try{selectedBase=await resolvePrice(item);setStatus("💳 Code "+selectedBase.code+" sélectionné depuis le lien.","ok","CODE "+selectedBase.code)}catch(e){console.warn(e)}}}if(rawBoost){const item=PRICE_GROUPS.boost.find(x=>x.code.toUpperCase()===rawBoost);if(item){try{selectedBoost=await resolvePrice(item)}catch(e){console.warn(e)}}}renderGrids();hydrateVisiblePrices();renderOrder()}
+function updateSelectedWithRealPriceIfSame(item, real){
+  const mod=normalizeModule(item.module||"");
+  const code=String(item.code||"").toUpperCase();
+  if(item.boost){
+    if(selectedBoost && normalizeModule(selectedBoost.module||selectedBoost.resolved_module||"")===mod && String(selectedBoost.code||selectedBoost.resolved_public_code||"").toUpperCase()===code){
+      selectedBoost=real;
+      renderGrids();
+      syncVisibleFallbackPrices();
+      renderOrder();
+    }
+    return;
+  }
+  if(selectedBase && normalizeModule(selectedBase.module||selectedBase.resolved_module||"")===mod && String(selectedBase.code||selectedBase.resolved_public_code||"").toUpperCase()===code){
+    selectedBase=real;
+    renderGrids();
+    syncVisibleFallbackPrices();
+    renderOrder();
+  }
+}
+
+function readOfficialPriceInBackground(item){
+  // Ne bloque jamais le téléphone : le prix local s'affiche d'abord, Supabase corrige ensuite si besoin.
+  try{
+    const key=item.module+"::"+item.code;
+    if(resolvedCache.has(key) && !resolvedCache.get(key)?.resolved_from_fallback) return;
+    Promise.resolve(resolvePrice(item)).then(real=>{
+      if(!real) return;
+      updateSelectedWithRealPriceIfSame(item, real);
+      const el=document.querySelector('[data-price-key="'+item.module+"::"+item.code+'"]');
+      if(el) el.textContent=prettyFCFA(real.resolved_price_month_fcfa)+(real.resolved_price_month_eur?" · "+prettyEUR(real.resolved_price_month_eur):"");
+    }).catch(e=>console.warn("Prix officiel non lu, prix local gardé", e));
+  }catch(e){console.warn("Lecture arrière-plan ignorée", e)}
+}
+
+function renderGrids(){
+  for(const[groupKey,gridId]of Object.entries(GRID_MAP)){
+    const grid=$(gridId),items=PRICE_GROUPS[groupKey]||[];
+    if(!grid)continue;
+    grid.innerHTML=items.map(item=>{
+      const isBoost=item.boost===true;
+      const active=isBoost?(selectedBoost&&selectedBoost.code===item.code):(selectedBase&&selectedBase.code===item.code&&selectedBase.module===item.module);
+      const activeClass=active?(isBoost?"boostActive":"active"):"";
+      const codeClass=isBoost?"priceCode boost":"priceCode";
+      const priceKey=item.module+"::"+item.code;
+      return `<button class="priceBtn ${activeClass}" type="button" data-module="${item.module}" data-code="${item.code}"><div class="priceTop"><div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0;"><div class="${codeClass}">${item.code}</div><div class="priceName">${item.label}</div></div><div class="priceAmt" data-price-key="${priceKey}">${fallbackPriceText(item)}</div></div><div class="priceDesc">${item.desc}</div></button>`;
+    }).join("");
+
+    grid.querySelectorAll(".priceBtn").forEach(btn=>{
+      btn.addEventListener("click",()=>{
+        const module=btn.getAttribute("data-module")||"";
+        const code=btn.getAttribute("data-code")||"";
+        const item=items.find(x=>x.module===module&&x.code===code);
+        if(!item)return;
+
+        const r=fallbackResolvedPrice(item);
+        resolvedCache.set(item.module+"::"+item.code, r);
+
+        if(item.boost){
+          if(selectedBoost&&selectedBoost.code===r.code){
+            selectedBoost=null;
+            setStatus("✨ BOOST retiré.","warn","MODULE");
+          }else{
+            selectedBoost=r;
+            setStatus("👑 BOOST "+r.code+" ajouté : "+prettyFCFA(r.resolved_price_month_fcfa),"ok","BOOST "+r.code);
+          }
+        }else{
+          selectedBase=r;
+          orderReference="";
+          setStatus("💳 Code "+r.code+" sélectionné : "+prettyFCFA(r.resolved_price_month_fcfa),"ok","CODE "+r.code);
+        }
+
+        renderGrids();
+        syncVisibleFallbackPrices();
+        renderOrder();
+        scrollBenefitPanelOnPhone();
+        readOfficialPriceInBackground(item);
+      });
+    });
+  }
+}
+
+async function autoSelectFromUrl(){
+  const rawModule=normalizeModule(qp.get("module")||qp.get("base_module")||""),rawPlan=String(qp.get("plan")||qp.get("code")||"").trim().toUpperCase(),rawBoost=String(qp.get("boost")||qp.get("boost_code")||"").trim().toUpperCase();
+  if(rawModule&&rawPlan){
+    const all=Object.values(PRICE_GROUPS).flat();
+    const item=all.find(x=>!x.boost&&normalizeModule(x.module)===rawModule&&x.code.toUpperCase()===rawPlan)||all.find(x=>!x.boost&&x.code.toUpperCase()===rawPlan);
+    if(item){
+      selectedBase=fallbackResolvedPrice(item);
+      resolvedCache.set(item.module+"::"+item.code, selectedBase);
+      setStatus("💳 Code "+selectedBase.code+" sélectionné depuis le lien.","ok","CODE "+selectedBase.code);
+      readOfficialPriceInBackground(item);
+    }
+  }
+  if(rawBoost){
+    const item=PRICE_GROUPS.boost.find(x=>x.code.toUpperCase()===rawBoost);
+    if(item){
+      selectedBoost=fallbackResolvedPrice(item);
+      resolvedCache.set(item.module+"::"+item.code, selectedBoost);
+      readOfficialPriceInBackground(item);
+    }
+  }
+  renderGrids();
+  syncVisibleFallbackPrices();
+  renderOrder();
+}
 function updateHubLinks(){["btnHubTop","btnHubSticky"].forEach(id=>{const el=$(id);if(el)el.href=HUB_URL});["btnProTop","btnProSticky"].forEach(id=>{const el=$(id);if(el)el.href=PRO_ESPACE_URL})}
 function syncInputsToUrlAndState(){const p=$("payPhone"),s=$("paySlug");userPhoneDigits=normPhone(p?.value||userPhoneDigits||"");userSlug=normSlug(s?.value||userSlug||"");updateHubLinks();syncSelectionToUrl();renderOrder()}if($("payPhone")){if(userPhoneDigits)$("payPhone").value=userPhoneDigits;$("payPhone").addEventListener("input",syncInputsToUrlAndState)}if($("paySlug")){if(userSlug)$("paySlug").value=userSlug;$("paySlug").addEventListener("input",()=>{$("paySlug").value=normSlug($("paySlug").value);if($("slugAuto")&&$("paySlug").value)$("slugAuto").textContent="";syncInputsToUrlAndState()})}
 function ensureReadyForPayment(){if(!selectedBase){setStatus("⚠️ Choisis d’abord ton code dans la grille.","warn","CODE");return false}if(!selectedBase.resolved_price_month_fcfa){setStatus("⚠️ Prix non chargé. Clique à nouveau le code.","warn","PRIX");return false}if(!userPhoneDigits||userPhoneDigits.length<9){setStatus("⚠️ Contact WhatsApp/SMS.","warn","PHONE");$("payPhone")?.focus();return false}ensureSlugForSelectedModule();syncInputsToUrlAndState();return true}
@@ -924,7 +1040,7 @@ if(!token){$("tokenBox").classList.add("hide");setStatus("💳 Paiement Wave · 
 $("btnWaConfirm").addEventListener("click",function(){if(!ensureReadyForPayment())return;const t=totalAmount(),baseCode=selectedBase.resolved_public_code||selectedBase.code,boostCode=selectedBoost?(selectedBoost.resolved_public_code||selectedBoost.code):"";let msg="DIGIY — Confirmation paiement Wave\n\nBénéficiaire: "+OWNER_NAME+"\n";msg+="Wave: "+WAVE_TO+"\n\n";msg+="Téléphone: "+displayPhoneDigitsAsPlus(userPhoneDigits)+"\n";const _hub=moduleHubUrl(selectedBase.resolved_module||selectedBase.module||accessModule||"");msg+="Module: "+(selectedBase.resolved_module||selectedBase.module||"-")+"\n";msg+="Lien module: "+_hub+"\n";msg+="Code: "+baseCode+"\n";msg+="Plan technique: "+(selectedBase.resolved_plan_code||"-")+"\n";msg+="Montant module: "+Number(selectedBase.resolved_price_month_fcfa||0)+" FCFA\n";if(selectedBoost){msg+="\nBOOST: "+boostCode+"\n";msg+="Plan boost: "+(selectedBoost.resolved_plan_code||"-")+"\n";msg+="Montant boost: "+Number(selectedBoost.resolved_price_month_fcfa||0)+" FCFA\n"}msg+="\n✅ Montant TOTAL: "+t+" FCFA\n";ensureSlugForSelectedModule();msg+="Identifiant: "+userSlug+"\n";if(orderReference)msg+="Référence: "+orderReference+"\n";if(token)msg+="Token: "+token+"\n";msg+="\nJe joins le reçu Wave ici.\nMerci d'activer. — DIGIY";wa(msg);setStatus("✅ Message WhatsApp prêt. Ajoute le reçu.","warn","EN ATTENTE")});
 $("btnSupport").addEventListener("click",function(){const t=totalAmount();let msg="DIGIY — Support Paiement\n\n";if(userPhoneDigits)msg+="Téléphone: "+displayPhoneDigitsAsPlus(userPhoneDigits)+"\n";if(selectedBase){msg+="Module: "+(selectedBase.resolved_module||selectedBase.module)+"\n";msg+="Code: "+(selectedBase.resolved_public_code||selectedBase.code)+"\n";msg+="Plan: "+(selectedBase.resolved_plan_code||"-")+"\n";msg+="Montant: "+Number(selectedBase.resolved_price_month_fcfa||0)+" FCFA\n"}if(selectedBoost)msg+="BOOST: "+(selectedBoost.resolved_public_code||selectedBoost.code)+" ("+Number(selectedBoost.resolved_price_month_fcfa||0)+" FCFA)\n";if(t)msg+="TOTAL: "+t+" FCFA\n";ensureSlugForSelectedModule();if(userSlug)msg+="Identifiant: "+userSlug+"\n"; else msg+="Identifiant: généré après validation\n";msg+="\nJ'ai besoin d'aide. — DIGIY";wa(msg);setStatus("💬 Support WhatsApp…","warn","INFO")});
 $("btnProofWa").addEventListener("click",function(){if(!ensureReadyForPayment())return;const t=totalAmount(),baseCode=selectedBase.resolved_public_code||selectedBase.code,boostCode=selectedBoost?(selectedBoost.resolved_public_code||selectedBoost.code):"";ensureSlugForSelectedModule();let msg="DIGIY — Preuve paiement Wave\n\nBénéficiaire : "+OWNER_NAME+"\nWave : "+WAVE_TO+"\n\n";if(userPhoneDigits) msg+="Téléphone : "+displayPhoneDigitsAsPlus(userPhoneDigits)+"\n"; else msg+="Contact : envoyé par WhatsApp/SMS\n";ensureSlugForSelectedModule();const _hubProof=buildModuleHubUrl(selectedBase.resolved_module||selectedBase.module||accessModule||"",userPhoneDigits,"digiy-proof","");msg+="Module : "+(selectedBase.resolved_module||selectedBase.module||"-")+"\n";msg+="Lien module : "+_hubProof+"\n";msg+="Code : "+baseCode+"\n";msg+="Plan : "+(selectedBase.resolved_plan_code||"-")+"\n";msg+="Montant module : "+Number(selectedBase.resolved_price_month_fcfa||0)+" FCFA\n";if(selectedBoost){msg+="\nBOOST : "+boostCode+"\n";msg+="Montant boost : "+Number(selectedBoost.resolved_price_month_fcfa||0)+" FCFA\n"}msg+="\nTOTAL : "+t+" FCFA\n";if(userSlug)msg+="Identifiant : "+userSlug+"\n"; else msg+="Identifiant : généré après validation\n";if(orderReference)msg+="Référence : "+orderReference+"\n";msg+="\nReçu Wave en photo — merci d'activer. — DIGIY";wa(msg);const pm=$("proofSendMsg");if(pm)pm.textContent="✅ WhatsApp ouvert. Ajoute la photo du reçu Wave dans le message.";setStatus("✅ WhatsApp ouvert. Joins la photo du reçu.","warn","PREUVE WA")});$("btnProofSms").addEventListener("click",function(){if(!ensureReadyForPayment())return;const t=totalAmount(),baseCode=selectedBase.resolved_public_code||selectedBase.code,boostPart=selectedBoost?("+"+(selectedBoost.resolved_public_code||selectedBoost.code)):"";let msg="DIGIY WAVE\nTel: "+displayPhoneDigitsAsPlus(userPhoneDigits)+"\nCode: "+baseCode+boostPart+"\nTotal: "+t+" FCFA\n";if(orderReference)msg+="Ref: "+orderReference+"\n";msg+="Photo reçu Wave en MMS separé.";const phone=SUPPORT_WA.replace(/\D/g,"");const _smsA=document.createElement("a");_smsA.href="sms:+"+phone+"?body="+encodeURIComponent(msg);_smsA.rel="noopener";_smsA.style.display="none";document.body.appendChild(_smsA);_smsA.click();setTimeout(()=>{try{document.body.removeChild(_smsA)}catch(_){}},400);const pm=$("proofSendMsg");if(pm)pm.textContent="📱 SMS ouvert. Envoie ce message + la photo Wave en MMS.";setStatus("📱 SMS ouvert. Joins la photo en MMS.","warn","PREUVE SMS")});
-async function kbAsk(question){const out=$("kbAns"),status=$("kbStatus"),q=String(question||"").trim();if(!out||!status||!q)return;out.textContent="⏳ Je réfléchis…";status.textContent="En ligne";status.className="pill ok";try{const res=await fetch("https://ai.orange-pig-270004.hostingersite.com/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:q})});const data=await res.json().catch(()=>null);if(!res.ok||!data?.ok)throw new Error(data?.error||"assistant indisponible");out.textContent=data.answer||"✅"}catch(e){status.textContent="Hors ligne";status.className="pill";out.textContent="⚠️ Assistant indisponible.\nChoisis ton code, paie Wave, puis envoie le reçu.\nSinon clique Support WhatsApp."}}$("kbSend").addEventListener("click",()=>kbAsk($("kbInput").value));$("kbInput").addEventListener("keydown",e=>{if(e.key==="Enter")kbAsk($("kbInput").value)});document.querySelectorAll(".kbQuick button[data-q]").forEach(btn=>btn.addEventListener("click",()=>{const q=btn.getAttribute("data-q")||"";$("kbInput").value=q;kbAsk(q)}));$("lang-fr").addEventListener("click",()=>{$("lang-fr").classList.add("active");$("lang-wo").classList.remove("active")});$("lang-wo").addEventListener("click",()=>{$("lang-wo").classList.add("active");$("lang-fr").classList.remove("active")});if(from_)$("manualHint").textContent="Après validation, DIGIY ouvre le HUB du module choisi.";setupHelpButtons();setupSubscriptionBenefitPanel();renderGrids();hydrateVisiblePrices();renderOrder();autoSelectFromUrl();updateHubLinks();syncInputsToUrlAndState();const _on=$("ownerName"),_wt=$("waveTo"),_hp=$("hintPhone");if(_on)_on.textContent=OWNER_NAME;if(_wt)_wt.textContent=WAVE_TO;if(_hp)_hp.textContent=SUPPORT_WA;
+async function kbAsk(question){const out=$("kbAns"),status=$("kbStatus"),q=String(question||"").trim();if(!out||!status||!q)return;out.textContent="⏳ Je réfléchis…";status.textContent="En ligne";status.className="pill ok";try{const res=await fetch("https://ai.orange-pig-270004.hostingersite.com/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:q})});const data=await res.json().catch(()=>null);if(!res.ok||!data?.ok)throw new Error(data?.error||"assistant indisponible");out.textContent=data.answer||"✅"}catch(e){status.textContent="Hors ligne";status.className="pill";out.textContent="⚠️ Assistant indisponible.\nChoisis ton code, paie Wave, puis envoie le reçu.\nSinon clique Support WhatsApp."}}$("kbSend").addEventListener("click",()=>kbAsk($("kbInput").value));$("kbInput").addEventListener("keydown",e=>{if(e.key==="Enter")kbAsk($("kbInput").value)});document.querySelectorAll(".kbQuick button[data-q]").forEach(btn=>btn.addEventListener("click",()=>{const q=btn.getAttribute("data-q")||"";$("kbInput").value=q;kbAsk(q)}));$("lang-fr").addEventListener("click",()=>{$("lang-fr").classList.add("active");$("lang-wo").classList.remove("active")});$("lang-wo").addEventListener("click",()=>{$("lang-wo").classList.add("active");$("lang-fr").classList.remove("active")});if(from_)$("manualHint").textContent="Après validation, DIGIY ouvre le HUB du module choisi.";setupHelpButtons();setupSubscriptionBenefitPanel();renderGrids();syncVisibleFallbackPrices();renderOrder();autoSelectFromUrl();updateHubLinks();syncInputsToUrlAndState();const _on=$("ownerName"),_wt=$("waveTo"),_hp=$("hintPhone");if(_on)_on.textContent=OWNER_NAME;if(_wt)_wt.textContent=WAVE_TO;if(_hp)_hp.textContent=SUPPORT_WA;
 })();
 </script>
 
@@ -1021,6 +1137,15 @@ const floatingPayBtn=document.getElementById("btnFloatingPay");if(floatingPayBtn
 <script src="./pay-proof.js?v=4"></script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
 
 
 
