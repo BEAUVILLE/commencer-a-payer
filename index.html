@@ -1,719 +1,1034 @@
 <!doctype html>
 <html lang="fr">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<title>Tarifs DIGIYLYFE — Activer mon module</title>
-<meta name="theme-color" content="#00853f"/>
-<meta name="description" content="Tarifs DIGIYLYFE : codes simples pour activer son module pro, présence digitale, logiciel métier, voix DIGIY et 0% commission."/>
-<meta name="robots" content="index,follow"/>
-<link rel="canonical" href="https://tarifs.digiylyfe.com/"/>
-<style>
-:root{
-  --bg:#063b28;
-  --bg2:#041b12;
-  --card:#ffffff;
-  --ink:#0f172a;
-  --muted:#475569;
-  --line:rgba(15,23,42,.12);
-  --gold:#facc15;
-  --green:#10b981;
-  --deep:#00853f;
-  --dark:#0f172a;
-  --shadow:0 18px 48px rgba(0,0,0,.22);
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
-  margin:0;
-  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-  background:
-    radial-gradient(1000px 620px at 8% 0%,rgba(16,185,129,.34),transparent 58%),
-    radial-gradient(900px 540px at 94% 10%,rgba(250,204,21,.20),transparent 56%),
-    linear-gradient(180deg,var(--bg),var(--bg2));
-  color:#fff;
-  min-height:100vh;
-  padding-bottom:96px;
-}
-a{color:inherit;text-decoration:none}
-button{font:inherit;cursor:pointer}
+  <meta charset="utf-8"/>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <meta name="digiy-version" content="tarifs-directs-boutons-aide-2026-05-29">
 
-.wrap{width:min(1180px,100%);margin:0 auto;padding:14px}
-.topbar{
-  position:sticky;
-  top:0;
-  z-index:50;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  flex-wrap:wrap;
-  padding:10px 0 12px;
-  background:linear-gradient(180deg,rgba(6,59,40,.96),rgba(6,59,40,.84));
-  backdrop-filter:blur(14px);
-}
-.topbar a,.topbar button{
-  min-height:46px;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  border-radius:999px;
-  padding:0 14px;
-  border:1px solid rgba(255,255,255,.20);
-  background:rgba(255,255,255,.09);
-  color:#fff;
-  font-weight:1000;
-  font-size:13px;
-}
-.topbar .brand{
-  margin-right:auto;
-  background:rgba(255,255,255,.14);
-  border-color:rgba(250,204,21,.36);
-  color:#fff8db;
-}
-.topbar .pay{
-  border:0;
-  background:linear-gradient(135deg,var(--gold),var(--green));
-  color:#07150f;
-  box-shadow:0 12px 26px rgba(0,0,0,.22);
-}
-.hero{
-  margin-top:12px;
-  border-radius:28px;
-  border:1px solid rgba(255,255,255,.18);
-  background:
-    radial-gradient(760px 260px at 8% 0%,rgba(250,204,21,.16),transparent 60%),
-    radial-gradient(640px 260px at 92% 0%,rgba(16,185,129,.20),transparent 62%),
-    rgba(15,23,42,.62);
-  box-shadow:var(--shadow);
-  padding:20px;
-  overflow:hidden;
-}
-.kicker{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  padding:8px 12px;
-  border-radius:999px;
-  border:1px solid rgba(250,204,21,.40);
-  background:rgba(250,204,21,.12);
-  color:#fff8db;
-  font-size:12px;
-  font-weight:1000;
-  letter-spacing:.08em;
-  text-transform:uppercase;
-}
-h1{
-  margin:14px 0 0;
-  font-size:clamp(34px,6vw,72px);
-  line-height:.92;
-  letter-spacing:-.055em;
-  font-weight:1000;
-}
-h1 span{color:var(--gold)}
-.hero p{
-  max-width:820px;
-  margin:14px 0 0;
-  color:rgba(255,255,255,.88);
-  font-size:clamp(16px,2vw,20px);
-  line-height:1.55;
-  font-weight:850;
-}
-.hero-actions{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-top:18px;
-}
-.btn{
-  min-height:54px;
-  border-radius:16px;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  gap:8px;
-  padding:0 18px;
-  font-weight:1000;
-  border:1px solid rgba(255,255,255,.18);
-  background:rgba(255,255,255,.10);
-  color:#fff;
-}
-.btn.main{
-  border:0;
-  background:linear-gradient(135deg,var(--gold),var(--green));
-  color:#07150f;
-  box-shadow:0 14px 30px rgba(0,0,0,.24);
-}
-.btn.whatsapp{
-  border-color:rgba(16,185,129,.45);
-  background:rgba(16,185,129,.16);
-  color:#dcfce7;
-}
-.audio-mini{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-  align-items:center;
-  margin-top:14px;
-}
-.audio-mini button{
-  min-height:44px;
-  border-radius:999px;
-  border:1px solid rgba(250,204,21,.55);
-  background:linear-gradient(135deg,var(--gold),var(--green));
-  color:#07150f;
-  padding:0 14px;
-  font-weight:1000;
-}
-.audio-mini .stop{
-  background:rgba(239,68,68,.16);
-  color:#fee2e2;
-  border-color:rgba(239,68,68,.40);
-}
-.audio-mini small{
-  color:rgba(255,255,255,.82);
-  font-weight:800;
-  line-height:1.35;
-}
-.quick{
-  margin:14px 0 0;
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
-  gap:8px;
-}
-.quick a{
-  min-height:48px;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,.18);
-  background:rgba(255,255,255,.09);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:0 10px;
-  text-align:center;
-  font-size:13px;
-  font-weight:1000;
-}
-.section-title{
-  margin:24px 0 12px;
-  font-size:clamp(25px,4vw,42px);
-  font-weight:1000;
-  text-align:center;
-  letter-spacing:-.04em;
-}
-.modules{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(310px,1fr));
-  gap:14px;
-}
-.card{
-  color:var(--ink);
-  background:rgba(255,255,255,.96);
-  border:1px solid rgba(255,255,255,.75);
-  border-radius:24px;
-  box-shadow:var(--shadow);
-  padding:18px;
-}
-.card-head{
-  display:flex;
-  gap:12px;
-  align-items:flex-start;
-}
-.module-code{
-  min-width:54px;
-  height:54px;
-  border-radius:15px;
-  display:grid;
-  place-items:center;
-  background:linear-gradient(135deg,var(--dark),#334155);
-  color:var(--gold);
-  font-size:22px;
-  font-weight:1000;
-  box-shadow:0 10px 22px rgba(15,23,42,.24);
-}
-.card h2{
-  margin:0;
-  font-size:23px;
-  line-height:1.12;
-  font-weight:1000;
-}
-.card .desc{
-  margin:6px 0 0;
-  color:var(--muted);
-  font-size:13.5px;
-  line-height:1.45;
-  font-weight:750;
-}
-.price-hook{
-  margin:14px 0 0;
-  display:inline-flex;
-  padding:10px 13px;
-  border-radius:14px;
-  background:linear-gradient(135deg,var(--green),var(--deep));
-  color:#fff;
-  font-weight:1000;
-  font-size:15px;
-}
-.tiers{
-  margin-top:14px;
-  background:#f1f5f9;
-  border-radius:16px;
-  padding:12px;
-  border:1px solid rgba(15,23,42,.06);
-}
-.tiers-title{
-  font-size:12px;
-  color:#334155;
-  font-weight:1000;
-  text-transform:uppercase;
-  letter-spacing:.08em;
-  margin-bottom:8px;
-}
-.tier{
-  display:grid;
-  grid-template-columns:48px 1fr auto;
-  gap:10px;
-  align-items:center;
-  background:#fff;
-  border-left:4px solid var(--green);
-  border-radius:12px;
-  padding:10px;
-  margin-bottom:8px;
-}
-.tier:last-child{margin-bottom:0}
-.tier-code{
-  min-width:42px;
-  height:42px;
-  display:grid;
-  place-items:center;
-  border-radius:11px;
-  background:linear-gradient(135deg,var(--green),var(--deep));
-  color:#fff;
-  font-weight:1000;
-}
-.tier-name{
-  color:#334155;
-  font-weight:900;
-  font-size:13px;
-  line-height:1.25;
-}
-.tier-price{
-  color:var(--deep);
-  font-weight:1000;
-  font-size:13px;
-  text-align:right;
-  white-space:nowrap;
-}
-.features{
-  margin:14px 0 0;
-  padding:0;
-  list-style:none;
-}
-.features li{
-  position:relative;
-  padding:6px 0 6px 24px;
-  color:#475569;
-  font-size:13.5px;
-  font-weight:800;
-  line-height:1.35;
-}
-.features li::before{
-  content:"✓";
-  position:absolute;
-  left:0;
-  top:5px;
-  color:var(--green);
-  font-weight:1000;
-}
-.card-actions{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
-  margin-top:14px;
-}
-.card-actions a{
-  min-height:48px;
-  border-radius:14px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:10px;
-  font-size:13px;
-  font-weight:1000;
-}
-.card-actions .wa{
-  background:rgba(16,185,129,.12);
-  border:1px solid rgba(16,185,129,.35);
-  color:#065f46;
-}
-.card-actions .activate{
-  background:linear-gradient(135deg,var(--gold),var(--green));
-  color:#07150f;
-}
-.truth{
-  margin:18px 0 0;
-  border-radius:22px;
-  border:1px solid rgba(255,255,255,.18);
-  background:rgba(15,23,42,.78);
-  padding:18px;
-  box-shadow:var(--shadow);
-}
-.truth h2{
-  margin:0 0 8px;
-  color:#fff8db;
-  font-size:24px;
-  font-weight:1000;
-}
-.truth p{
-  margin:0;
-  color:rgba(255,255,255,.88);
-  line-height:1.6;
-  font-weight:800;
-}
-.floating{
-  position:fixed;
-  left:12px;
-  right:12px;
-  bottom:calc(14px + env(safe-area-inset-bottom));
-  z-index:100;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
-  width:min(760px,calc(100% - 24px));
-  margin:0 auto;
-}
-.floating a{
-  min-height:58px;
-  border-radius:18px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:10px;
-  font-weight:1000;
-  box-shadow:0 16px 38px rgba(0,0,0,.28);
-}
-.floating .wa{
-  background:#0f172a;
-  color:#fff;
-  border:1px solid rgba(255,255,255,.18);
-}
-.floating .activate{
-  background:linear-gradient(135deg,var(--gold),var(--green));
-  color:#07150f;
-}
-.footer{
-  margin-top:20px;
-  text-align:center;
-  color:rgba(255,255,255,.72);
-  font-size:13px;
-  font-weight:800;
-}
-@media(max-width:680px){
-  .wrap{padding:10px}
-  .topbar{gap:6px}
-  .topbar .brand{width:100%;justify-content:center}
-  .topbar a,.topbar button{font-size:12px;min-height:42px;padding:0 12px}
-  .hero{padding:16px;border-radius:22px}
-  .hero-actions .btn{width:100%}
-  .modules{grid-template-columns:1fr}
-  .tier{grid-template-columns:42px 1fr}
-  .tier-price{grid-column:2;text-align:left;white-space:normal}
-  .card-actions{grid-template-columns:1fr}
-  .floating{grid-template-columns:1fr 1fr}
-  .floating a{font-size:13px;min-height:54px}
-}
-</style>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <title>ACTIVER MON MODULE — DIGIYLYFE</title>
+  <meta name="theme-color" content="#1f7a52"/>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root{--bg:#061b14;--card:#0b2a1f;--line:rgba(255,255,255,.14);--text:#eafff1;--muted:rgba(234,255,241,.75);--ok:#22c55e;--warn:#f59e0b;--bad:#ef4444;--gold:#facc15;--radius:18px;--shadow:0 18px 50px rgba(0,0,0,.35)}
+    *{box-sizing:border-box}html,body{margin:0;padding:0}body{min-height:100vh;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:17px;background:radial-gradient(circle at top left,rgba(34,197,94,.10),transparent 34%),radial-gradient(circle at bottom right,rgba(250,204,21,.07),transparent 30%),linear-gradient(180deg,var(--bg),#03110d 70%);color:var(--text)}
+    .wrap{max-width:820px;margin:0 auto;padding:16px 16px 120px}.card{background:linear-gradient(180deg,rgba(11,42,31,.98),rgba(7,29,22,.98));border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+    h1{margin:0;font-size:26px;font-weight:1100;line-height:1.15;color:#fef3c7}h2{margin:0;font-size:18px;font-weight:1100}p{margin:8px 0 0;color:var(--muted);line-height:1.5}.hr{height:1px;background:var(--line);margin:14px 0}.small{font-size:15px;color:var(--muted);line-height:1.5}.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace}.hide{display:none!important}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px}.lang-switch{display:flex;gap:6px;padding:4px;border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.08)}.lang-switch button{border:none;padding:7px 12px;border-radius:999px;cursor:pointer;font-weight:1100;font-size:13px;background:transparent;color:var(--text)}.lang-switch button.active{background:#0f172a;color:#fff}
+    .tag,.pill{font-size:14px;padding:7px 12px;border-radius:999px;border:1px solid var(--line);color:var(--muted);display:inline-flex;align-items:center;gap:6px}.tag.ok,.pill.ok{color:#bbf7d0;border-color:rgba(34,197,94,.45);background:rgba(34,197,94,.08)}.tag.warn,.pill.warn{color:#fde68a;border-color:rgba(245,158,11,.45);background:rgba(245,158,11,.08)}.tag.bad,.pill.bad{color:#fecaca;border-color:rgba(239,68,68,.45);background:rgba(239,68,68,.08)}.tag.gold,.pill.gold{color:#fef3c7;border-color:rgba(250,204,21,.55);background:rgba(250,204,21,.08)}
+    .status{padding:14px;border-radius:16px;border:1px solid var(--line);font-weight:1100;font-size:16px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.status.ok{border-color:rgba(34,197,94,.55)}.status.warn{border-color:rgba(245,158,11,.55)}.status.bad{border-color:rgba(239,68,68,.55)}
+    .box{border:1px solid var(--line);border-radius:16px;padding:16px;background:rgba(0,0,0,.12)}.row{display:flex;gap:10px;flex-wrap:wrap}.row>*{flex:1;min-width:220px}
+    .btn{width:100%;min-height:56px;border-radius:16px;cursor:pointer;border:1px solid var(--line);background:rgba(0,0,0,.08);color:var(--text);padding:14px 16px;font-weight:1100;font-size:16px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:inherit}.btn:disabled{opacity:.55;cursor:not-allowed}.btn.ok{border-color:rgba(34,197,94,.55)}.btn.warn{border-color:rgba(245,158,11,.55)}.btn.bad{border-color:rgba(239,68,68,.55)}.btn.gold{border-color:rgba(250,204,21,.65);color:#fef3c7;background:rgba(250,204,21,.08)}.btn.primary{border:0;background:linear-gradient(135deg,#22c55e,#16a34a);color:#062014}
+    .digiy-input{width:100%;padding:14px;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.12);color:var(--text);font-size:16px;outline:none}.digiy-input:focus{border-color:rgba(250,204,21,.55);box-shadow:0 0 0 3px rgba(250,204,21,.08)}
+    .kbWrap{border:1px solid rgba(34,197,94,.30);background:linear-gradient(180deg,rgba(34,197,94,.10),rgba(0,0,0,.08));border-radius:18px;padding:14px}.kbTop{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap}.kbTitle{font-weight:1200;display:flex;align-items:center;gap:10px;line-height:1.2}.kbBadge{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:10px;background:rgba(34,197,94,.18);border:1px solid rgba(34,197,94,.35);font-weight:1200}.kbSub{margin-top:4px;color:var(--muted);font-size:14px}.kbMeta{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.kbChat{margin-top:12px;border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:12px;background:rgba(0,0,0,.10)}.kbInputRow{display:flex;gap:8px;flex-wrap:wrap}.kbInputRow input{flex:1;min-width:220px;padding:13px;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.12);color:var(--text);font-size:16px}.kbInputRow button{min-width:140px;border-radius:14px;border:1px solid rgba(34,197,94,.45);background:rgba(34,197,94,.10);color:var(--text);padding:13px 16px;font-weight:1100;font-size:15px;cursor:pointer}.kbAns{margin-top:10px;color:#dfffee;line-height:1.5;font-size:15px;white-space:pre-wrap}.kbQuick{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}.kbQuick button{border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.10);color:var(--text);padding:10px 12px;border-radius:999px;font-size:14px;cursor:pointer}
+    .vipBox{border:1px solid rgba(250,204,21,.28);background:linear-gradient(180deg,rgba(250,204,21,.08),rgba(0,0,0,.08));border-radius:18px;padding:14px}.vipTitle{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;font-weight:1100}.vipPerks{margin:10px 0 0;padding-left:18px;color:var(--muted);line-height:1.45;font-size:13px}.vipStamp{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;border:1px solid rgba(34,197,94,.35);background:rgba(34,197,94,.08);color:#bfffe0;font-size:14px;font-weight:1100}
+    .section-sep{margin:16px 0 8px;font-size:13px;font-weight:1100;letter-spacing:.8px;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:8px}.section-sep::after{content:"";flex:1;height:1px;background:rgba(250,204,21,.18)}.priceGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}.priceBtn{text-align:left;border:1px solid var(--line);background:rgba(0,0,0,.10);border-radius:16px;padding:14px;cursor:pointer;color:var(--text);transition:border-color .18s,transform .06s;min-height:110px}.priceBtn:hover{border-color:rgba(250,204,21,.55)}.priceBtn:active{transform:translateY(1px)}.priceBtn.active{border-color:rgba(250,204,21,.85);background:rgba(250,204,21,.07);box-shadow:0 10px 30px rgba(250,204,21,.08)}.priceBtn.boostActive{border-color:rgba(34,197,94,.70);background:rgba(34,197,94,.08);box-shadow:0 10px 30px rgba(34,197,94,.10)}.priceTop{display:flex;justify-content:space-between;gap:10px;align-items:center}.priceCode{display:inline-flex;align-items:center;justify-content:center;min-width:40px;height:36px;border-radius:8px;background:linear-gradient(135deg,#667eea,#764ba2);font-size:14px;font-weight:1100;color:#fff;flex-shrink:0}.priceCode.boost{background:linear-gradient(135deg,#22c55e,#16a34a);color:#062014}.priceName{font-size:14px;font-weight:1100;line-height:1.2}.priceAmt{font-size:14px;font-weight:1100;color:var(--gold);white-space:nowrap}.priceDesc{margin-top:7px;font-size:13px;color:var(--muted);line-height:1.4}.hintLine{margin-top:12px;font-size:15px;color:var(--muted)}
+    .uploadBox{border:1px dashed rgba(255,255,255,.20);border-radius:16px;padding:12px;background:rgba(0,0,0,.10);margin:12px 0}.uploadBox input[type=file]{width:100%;padding:10px;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.12);color:var(--text)}.steps{margin:0;padding-left:18px;color:var(--muted);line-height:1.45}
+    .sticky{position:fixed;left:0;right:0;bottom:0;z-index:9998;padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));background:linear-gradient(180deg,rgba(6,27,20,.02),rgba(6,27,20,.94) 30%);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}.stickyInner{max-width:820px;margin:0 auto;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:rgba(10,42,31,.96);border:1px solid var(--line);border-radius:18px;padding:10px;box-shadow:0 14px 36px rgba(0,0,0,.22)}.stickyTxt{flex:1;min-width:220px}.stickyTxt small{display:block;color:var(--muted);font-size:13px;font-weight:900;margin-bottom:3px}.stickyTxt strong{display:block;color:#fff;font-size:16px;font-weight:1100;line-height:1.3}.stickyActions{display:flex;gap:8px;flex-wrap:wrap}.stickyActions a,.stickyActions button{min-height:46px;border-radius:999px;padding:11px 15px;font-size:14px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);font-weight:1000;text-decoration:none;cursor:pointer}.stickyActions .pay{background:linear-gradient(135deg,#22c55e,#16a34a);color:#062014;border:0}
+
+
+    .audioBox{position:relative;margin:12px 0 0;border:1px solid rgba(250,204,21,.44);background:radial-gradient(circle at top right,rgba(250,204,21,.20),transparent 38%),radial-gradient(circle at bottom left,rgba(34,197,94,.16),transparent 42%),linear-gradient(180deg,rgba(250,204,21,.11),rgba(34,197,94,.08) 60%,rgba(0,0,0,.10));border-radius:20px;padding:14px;box-shadow:0 18px 40px rgba(0,0,0,.22),0 0 0 1px rgba(250,204,21,.06) inset}.audioTop{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}.audioLead{display:inline-flex;align-items:center;gap:7px;margin-bottom:8px;padding:6px 11px;border-radius:999px;background:rgba(250,204,21,.16);border:1px solid rgba(250,204,21,.42);color:#fff3cf;font-size:13px;font-weight:1200;letter-spacing:.02em;box-shadow:0 0 18px rgba(250,204,21,.10)}.audioLead .dot{width:8px;height:8px;border-radius:999px;background:#facc15;box-shadow:0 0 14px rgba(250,204,21,.75);animation:audioPulse 1.5s ease-in-out infinite}.audioTitle{font-weight:1200;color:#fff8db;line-height:1.25;font-size:16px}.audioText{margin-top:5px;color:#e9f7ee;font-size:15px;line-height:1.5;max-width:540px}.audioHint{margin-top:8px;color:#fff3cf;font-size:14px;font-weight:1000}.audioActions{display:flex;gap:8px;flex-wrap:wrap}.audioBtn{min-height:46px;border-radius:999px;border:1px solid rgba(250,204,21,.65);background:linear-gradient(135deg,#facc15,#f59e0b);color:#062014;font-weight:1200;padding:10px 15px;cursor:pointer;box-shadow:0 10px 24px rgba(250,204,21,.26);transition:transform .15s ease,box-shadow .15s ease,filter .15s ease}.audioBtn:hover{transform:translateY(-1px);box-shadow:0 14px 30px rgba(250,204,21,.34);filter:saturate(1.05)}.audioBtn:active{transform:translateY(1px)}.audioBtn.stop{border-color:rgba(239,68,68,.44);background:rgba(239,68,68,.10);color:#fecaca;box-shadow:none}.audioProgressWrap{height:6px;margin-top:12px;border-radius:999px;background:rgba(255,255,255,.12);overflow:hidden}.audioProgress{height:100%;width:0%;background:linear-gradient(90deg,#facc15,#22c55e);transition:width .2s linear}.audioGlow{position:absolute;right:14px;bottom:12px;width:80px;height:80px;border-radius:999px;background:radial-gradient(circle,rgba(250,204,21,.18),transparent 65%);pointer-events:none;filter:blur(3px)}@keyframes audioPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.25);opacity:.75}}@media(max-width:560px){.audioActions,.audioBtn{width:100%}.audioBtn{justify-content:center}.audioGlow{display:none}}
+    .routeNav{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}.routeNav a{min-height:44px;border-radius:999px;padding:11px 14px;border:1px solid rgba(250,204,21,.30);background:rgba(250,204,21,.08);color:#fef3c7;text-decoration:none;font-size:13px;font-weight:1100;display:inline-flex;align-items:center;justify-content:center;gap:7px}.routeNav a.site{border-color:rgba(255,255,255,.18);background:rgba(255,255,255,.045);color:var(--text)}.routeNav a.hub{border-color:rgba(250,204,21,.42);background:rgba(250,204,21,.10);color:#fef3c7}.routeNav a.pro{border-color:rgba(34,197,94,.40);background:rgba(34,197,94,.09);color:#bbf7d0}.routeNav a:hover{filter:brightness(1.12)}@media(max-width:560px){.routeNav a{flex:1;min-width:0}}
+  
+    /* DIGIY — paiement public : ne pas bloquer l'abonné avec téléphone/slug. */
+    #publicContactBox input[type="hidden"]{display:none!important}
+    .digiy-public-hidden-tech{display:none!important}
+
+
+    /* DIGIY — version éclaircie : même identité vert/or, plus lisible sur téléphone */
+    :root{
+      --bg:#123c2d;
+      --card:#174b38;
+      --line:rgba(255,255,255,.19);
+      --text:#f7fff9;
+      --muted:rgba(247,255,249,.83);
+      --shadow:0 16px 42px rgba(0,0,0,.24);
+    }
+    body{
+      background:
+        radial-gradient(circle at top left,rgba(34,197,94,.18),transparent 36%),
+        radial-gradient(circle at bottom right,rgba(250,204,21,.12),transparent 34%),
+        linear-gradient(180deg,#123c2d,#0f3025 76%);
+      color:var(--text);
+    }
+    .card{
+      background:linear-gradient(180deg,rgba(25,82,60,.97),rgba(16,61,46,.97));
+      border-color:rgba(255,255,255,.20);
+      box-shadow:var(--shadow);
+    }
+    .box,
+    .kbWrap,
+    .kbChat,
+    .vipBox,
+    .uploadBox,
+    .priceBtn,
+    .status,
+    .lang-switch,
+    .routeNav a,
+    .stickyInner{
+      background:rgba(255,255,255,.055);
+      border-color:rgba(255,255,255,.20);
+    }
+    .priceBtn.active{
+      background:rgba(250,204,21,.12);
+      border-color:rgba(250,204,21,.88);
+    }
+    .priceBtn.boostActive{
+      background:rgba(34,197,94,.13);
+      border-color:rgba(34,197,94,.76);
+    }
+    .audioBox{
+      background:
+        radial-gradient(circle at top right,rgba(250,204,21,.24),transparent 38%),
+        radial-gradient(circle at bottom left,rgba(34,197,94,.20),transparent 42%),
+        linear-gradient(180deg,rgba(250,204,21,.14),rgba(34,197,94,.11) 60%,rgba(255,255,255,.04));
+      border-color:rgba(250,204,21,.52);
+    }
+    .digiy-input,
+    .kbInputRow input,
+    .uploadBox input[type=file]{
+      background:rgba(255,255,255,.07);
+      border-color:rgba(255,255,255,.22);
+      color:var(--text);
+    }
+    .sticky{
+      background:linear-gradient(180deg,rgba(18,60,45,.02),rgba(18,60,45,.92) 28%);
+    }
+    .stickyInner{
+      background:rgba(20,74,55,.96);
+      box-shadow:0 12px 30px rgba(0,0,0,.18);
+    }
+    h1{color:#fff4bf}
+    h2{color:#ffffff}
+    .small,p{color:var(--muted)}
+
+  
+
+  /* DIGIY — renfort lisibilité terrain : écriture grande, grasse, blanc brillant */
+  :root{
+    --text:#ffffff;
+    --muted:rgba(255,255,255,.92);
+    --line:rgba(255,255,255,.24);
+  }
+
+  body{
+    color:#ffffff !important;
+    font-size:19px !important;
+    font-weight:750;
+    text-shadow:0 0 10px rgba(255,255,255,.045);
+  }
+
+  h1{
+    font-size:34px !important;
+    font-weight:1200 !important;
+    color:#ffffff !important;
+    letter-spacing:.01em;
+    text-shadow:0 0 18px rgba(255,255,255,.18),0 3px 12px rgba(0,0,0,.25);
+  }
+
+  h2{
+    font-size:24px !important;
+    font-weight:1200 !important;
+    color:#ffffff !important;
+    text-shadow:0 0 14px rgba(255,255,255,.12);
+  }
+
+  p,
+  .small,
+  .hintLine,
+  .kbSub,
+  .priceDesc,
+  .audioText,
+  .audioHint,
+  .vipPerks,
+  .steps,
+  .orderHint{
+    font-size:17px !important;
+    line-height:1.6 !important;
+    color:rgba(255,255,255,.93) !important;
+    font-weight:850 !important;
+  }
+
+  .tag,
+  .pill,
+  .section-sep,
+  .priceName,
+  .priceAmt,
+  .priceCode,
+  .kbTitle,
+  .vipTitle,
+  .stickyTxt strong,
+  .mono{
+    font-weight:1200 !important;
+    color:#ffffff !important;
+    text-shadow:0 0 10px rgba(255,255,255,.10);
+  }
+
+  .section-sep{
+    font-size:16px !important;
+    letter-spacing:.08em;
+    color:#fff8db !important;
+  }
+
+  .priceBtn{
+    min-height:126px !important;
+    padding:17px !important;
+  }
+
+  .priceName{
+    font-size:16px !important;
+    line-height:1.25 !important;
+  }
+
+  .priceAmt{
+    font-size:16px !important;
+    color:#fff8db !important;
+  }
+
+  .priceCode{
+    min-width:46px !important;
+    height:42px !important;
+    font-size:16px !important;
+  }
+
+  .btn,
+  .audioBtn,
+  .kbInputRow button,
+  .stickyActions a,
+  .stickyActions button{
+    font-size:18px !important;
+    font-weight:1200 !important;
+    color:#ffffff;
+  }
+
+  .btn.primary,
+  .stickyActions .pay{
+    color:#061b14 !important;
+    text-shadow:none !important;
+  }
+
+  .digiy-input,
+  .kbInputRow input{
+    font-size:18px !important;
+    font-weight:900 !important;
+    color:#ffffff !important;
+  }
+
+  .card,
+  .box,
+  .kbWrap,
+  .vipBox,
+  .audioBox,
+  .stickyInner{
+    border-color:rgba(255,255,255,.28) !important;
+  }
+
+  @media(max-width:560px){
+    body{font-size:18px !important;}
+    h1{font-size:30px !important;}
+    h2{font-size:22px !important;}
+    p,.small,.hintLine,.kbSub,.priceDesc,.audioText,.audioHint,.vipPerks,.steps{
+      font-size:16.5px !important;
+    }
+    .btn,.audioBtn,.kbInputRow button,.stickyActions a,.stickyActions button{
+      font-size:16.5px !important;
+    }
+  }
+
+  
+
+  /* DIGIY — Abonnement transversal façon ACTION DIGIY : 2 colonnes, clic utile, valeur qui apparaît */
+  .digiy-sub-card{
+    margin:18px 0 0;
+    padding:18px;
+    border-radius:24px;
+    border:1px solid rgba(255,255,255,.30);
+    background:
+      radial-gradient(circle at top right,rgba(250,204,21,.18),transparent 36%),
+      radial-gradient(circle at bottom left,rgba(34,197,94,.16),transparent 42%),
+      linear-gradient(180deg,rgba(19,78,55,.96),rgba(9,43,31,.96));
+    box-shadow:0 20px 54px rgba(0,0,0,.30),0 0 0 1px rgba(255,255,255,.06) inset;
+    color:#fff;
+  }
+
+  .digiy-sub-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-bottom:14px;
+  }
+
+  .digiy-sub-kicker{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:8px 12px;
+    border-radius:999px;
+    border:1px solid rgba(250,204,21,.50);
+    background:rgba(250,204,21,.12);
+    color:#fff8db;
+    font-size:13px;
+    font-weight:1200;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+  }
+
+  .digiy-sub-title{
+    margin:10px 0 0;
+    font-size:30px;
+    line-height:1.08;
+    font-weight:1200;
+    color:#fff;
+    text-shadow:0 0 18px rgba(255,255,255,.18),0 3px 12px rgba(0,0,0,.25);
+  }
+
+  .digiy-sub-note{
+    margin:8px 0 0;
+    color:rgba(255,255,255,.94);
+    font-size:17px;
+    line-height:1.55;
+    font-weight:900;
+    max-width:68ch;
+  }
+
+  .digiy-sub-pill{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:9px 13px;
+    border-radius:999px;
+    border:1px solid rgba(34,197,94,.48);
+    background:rgba(34,197,94,.12);
+    color:#d1fae5;
+    font-size:14px;
+    font-weight:1200;
+    white-space:nowrap;
+  }
+
+  .digiy-sub-columns{
+    display:grid;
+    grid-template-columns:minmax(0,1.08fr) minmax(310px,.92fr);
+    gap:14px;
+    align-items:start;
+  }
+
+  .digiy-sub-left,
+  .digiy-sub-right{
+    border:1px solid rgba(255,255,255,.24);
+    border-radius:22px;
+    background:rgba(0,0,0,.13);
+    padding:15px;
+  }
+
+  .digiy-sub-left h2,
+  .digiy-sub-right h2{
+    margin:0;
+    color:#fff;
+    font-size:24px !important;
+    font-weight:1200 !important;
+    line-height:1.12;
+  }
+
+  .digiy-sub-left .small,
+  .digiy-sub-right .small{
+    color:rgba(255,255,255,.92) !important;
+    font-weight:900 !important;
+  }
+
+  .digiy-sub-card .section-sep{
+    margin:14px 0 8px;
+    color:#fff8db !important;
+    font-size:14px !important;
+  }
+
+  .digiy-sub-card .priceGrid{
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:9px;
+  }
+
+  .digiy-sub-card .priceBtn{
+    min-height:122px !important;
+    padding:13px !important;
+    border-color:rgba(255,255,255,.22);
+    background:rgba(255,255,255,.07);
+  }
+
+  .digiy-sub-card .priceBtn:hover,
+  .digiy-sub-card .priceBtn.active{
+    border-color:rgba(250,204,21,.85);
+    background:rgba(250,204,21,.13);
+    box-shadow:0 12px 28px rgba(250,204,21,.10);
+  }
+
+  .digiy-sub-card .priceName{
+    font-size:15.5px !important;
+    line-height:1.18 !important;
+  }
+
+  .digiy-sub-card .priceDesc{
+    font-size:14px !important;
+    line-height:1.35 !important;
+  }
+
+  .digiy-sub-card .priceAmt{
+    font-size:14px !important;
+    white-space:normal;
+    text-align:right;
+  }
+
+  .digiy-sub-right{
+    position:sticky;
+    top:88px;
+  }
+
+  .digiy-benefit-eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:7px 11px;
+    border-radius:999px;
+    border:1px solid rgba(250,204,21,.42);
+    background:rgba(250,204,21,.12);
+    color:#fff8db;
+    font-size:12px;
+    font-weight:1200;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    margin-bottom:10px;
+  }
+
+  .digiy-benefit-selected{
+    margin:12px 0;
+    padding:12px;
+    border-radius:17px;
+    border:1px solid rgba(250,204,21,.34);
+    background:rgba(250,204,21,.10);
+    color:#fff8db;
+    font-weight:1200;
+    line-height:1.45;
+  }
+
+  .digiy-benefit-selected strong{
+    display:block;
+    font-size:18px;
+    color:#fff;
+  }
+
+  .digiy-benefit-selected span{
+    display:block;
+    margin-top:3px;
+    color:#fff8db;
+  }
+
+  .digiy-benefit-list{
+    margin:0;
+    padding-left:18px;
+    color:#fff;
+    line-height:1.62;
+    font-weight:900;
+    font-size:16px;
+  }
+
+  .digiy-benefit-list li{
+    margin:4px 0;
+  }
+
+  .digiy-benefit-audio{
+    margin-top:13px;
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    align-items:center;
+  }
+
+  .digiy-benefit-audio button{
+    min-height:44px;
+    border-radius:999px;
+    border:1px solid rgba(250,204,21,.62);
+    background:linear-gradient(135deg,#facc15,#f59e0b);
+    color:#092016 !important;
+    font-size:16px !important;
+    font-weight:1200 !important;
+    padding:10px 14px;
+    cursor:pointer;
+    text-shadow:none !important;
+  }
+
+  .digiy-benefit-audio button.stop{
+    background:rgba(239,68,68,.12);
+    color:#fecaca !important;
+    border-color:rgba(239,68,68,.42);
+  }
+
+  .digiy-benefit-audio small{
+    color:rgba(255,255,255,.88);
+    font-weight:850;
+    line-height:1.35;
+  }
+
+  .digiy-benefit-actions{
+    margin-top:13px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:9px;
+  }
+
+  .digiy-benefit-actions a{
+    min-height:52px;
+    border-radius:16px;
+    padding:12px 13px;
+    text-decoration:none;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    font-weight:1200;
+    font-size:16px;
+  }
+
+  .digiy-benefit-wa{
+    background:rgba(34,197,94,.16);
+    border:1px solid rgba(34,197,94,.55);
+    color:#d1fae5;
+  }
+
+  .digiy-benefit-activate{
+    background:linear-gradient(135deg,#22c55e,#16a34a);
+    color:#062014;
+  }
+
+  .digiy-benefit-empty{
+    opacity:.78;
+  }
+
+  @media(max-width:760px){
+    .digiy-sub-columns{grid-template-columns:1fr}
+    .digiy-sub-right{position:relative;top:auto}
+  }
+
+  @media(max-width:560px){
+    .digiy-sub-card{padding:14px}
+    .digiy-sub-title{font-size:25px}
+    .digiy-sub-note{font-size:16px}
+    .digiy-sub-card .priceGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+    .digiy-sub-card .priceBtn{min-height:118px !important;padding:11px !important}
+    .digiy-sub-card .priceTop{align-items:flex-start;flex-direction:column}
+    .digiy-sub-card .priceAmt{text-align:left}
+    .digiy-benefit-actions{grid-template-columns:1fr}
+  }
+
+  
+
+  /* DIGIY — Renfort titres catégories tarifs : CODE 1, CODE 2, etc. */
+  .digiy-sub-card .section-sep,
+  .section-sep{
+    margin:20px 0 12px !important;
+    padding:12px 14px !important;
+    border-radius:16px !important;
+    border:1px solid rgba(250,204,21,.46) !important;
+    background:linear-gradient(135deg,rgba(250,204,21,.18),rgba(34,197,94,.10)) !important;
+    color:#ffffff !important;
+    font-size:22px !important;
+    line-height:1.15 !important;
+    font-weight:1200 !important;
+    letter-spacing:.02em !important;
+    text-transform:none !important;
+    text-shadow:0 0 16px rgba(255,255,255,.18),0 3px 12px rgba(0,0,0,.30) !important;
+    display:flex !important;
+    align-items:center !important;
+    gap:10px !important;
+    box-shadow:0 12px 28px rgba(0,0,0,.16),0 0 0 1px rgba(255,255,255,.05) inset !important;
+  }
+
+  .digiy-sub-card .section-sep::after,
+  .section-sep::after{
+    background:rgba(250,204,21,.34) !important;
+  }
+
+  @media(max-width:560px){
+    .digiy-sub-card .section-sep,
+    .section-sep{
+      font-size:20px !important;
+      padding:11px 12px !important;
+      margin:18px 0 10px !important;
+    }
+  }
+
+  
+
+  /* DIGIY — Version mobile terrain : direct les tarifs, zéro bruit au-dessus */
+  .digiy-sub-card{
+    margin-top:12px !important;
+    padding:12px !important;
+  }
+
+  .digiy-sub-left,
+  .digiy-sub-right{
+    padding:12px !important;
+  }
+
+  .digiy-sub-card .section-sep:first-child{
+    margin-top:0 !important;
+  }
+
+  .digiy-sub-columns{
+    gap:10px !important;
+  }
+
+  @media(max-width:760px){
+    .digiy-sub-card{
+      margin-top:10px !important;
+      padding:10px !important;
+      border-radius:20px !important;
+    }
+    .digiy-sub-left,
+    .digiy-sub-right{
+      padding:10px !important;
+      border-radius:18px !important;
+    }
+  }
+
+  
+
+  /* DIGIY — Bouton flottant paiement : moins de scroll, action directe */
+  .digiy-floating-pay{
+    position:fixed;
+    right:16px;
+    bottom:calc(18px + env(safe-area-inset-bottom,0px));
+    z-index:99999;
+    min-height:58px;
+    min-width:220px;
+    border:0;
+    border-radius:999px;
+    padding:15px 20px;
+    background:linear-gradient(135deg,#facc15,#f59e0b);
+    color:#061b14;
+    font-size:18px;
+    font-weight:1200;
+    letter-spacing:.03em;
+    cursor:pointer;
+    box-shadow:0 18px 42px rgba(250,204,21,.34),0 10px 26px rgba(0,0,0,.30);
+    text-shadow:none;
+  }
+
+  .digiy-floating-pay:hover{
+    transform:translateY(-1px);
+    filter:saturate(1.05);
+  }
+
+  .digiy-floating-pay:active{
+    transform:translateY(1px);
+  }
+
+  @media(max-width:640px){
+    .digiy-floating-pay{
+      left:12px;
+      right:12px;
+      bottom:calc(12px + env(safe-area-inset-bottom,0px));
+      width:calc(100% - 24px);
+      min-width:0;
+      min-height:62px;
+      font-size:18px;
+      border-radius:18px;
+    }
+
+    .wrap{
+      padding-bottom:92px !important;
+    }
+  }
+
+  
+
+  /* DIGIY — Le bruit devient boutons : direct tarifs, aide à la demande */
+  .digiy-help-buttons{
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:8px;
+    margin:12px 0 8px;
+  }
+
+  .digiy-help-buttons button{
+    min-height:46px;
+    border-radius:15px;
+    border:1px solid rgba(255,255,255,.24);
+    background:rgba(255,255,255,.07);
+    color:#fff;
+    font-size:15px;
+    font-weight:1200;
+    cursor:pointer;
+    text-shadow:0 0 10px rgba(255,255,255,.10);
+  }
+
+  .digiy-help-buttons button:hover,
+  .digiy-help-buttons button.active{
+    border-color:rgba(250,204,21,.72);
+    background:rgba(250,204,21,.13);
+  }
+
+  .digiy-noise-panel{
+    display:none !important;
+  }
+
+  .digiy-noise-panel.is-open{
+    display:block !important;
+    margin-top:10px;
+  }
+
+  #statusBox.digiy-noise-panel.is-open{
+    display:flex !important;
+  }
+
+  #noiseVipBox.digiy-noise-panel.is-open{
+    display:block !important;
+  }
+
+  @media(max-width:560px){
+    .digiy-help-buttons{
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:7px;
+      margin:10px 0 6px;
+    }
+
+    .digiy-help-buttons button{
+      min-height:44px;
+      font-size:14.5px;
+      border-radius:14px;
+    }
+  }
+
+  
+  /* DIGIY — badge version visible pour vérifier sur téléphone */
+  .digiy-version-badge{
+    position:fixed;
+    left:10px;
+    top:10px;
+    z-index:100000;
+    max-width:calc(100% - 20px);
+    border-radius:999px;
+    padding:8px 12px;
+    border:1px solid rgba(250,204,21,.65);
+    background:rgba(6,27,20,.92);
+    color:#fff8db;
+    font-size:12px;
+    font-weight:1200;
+    box-shadow:0 10px 28px rgba(0,0,0,.28);
+    pointer-events:none;
+  }
+  @media(max-width:560px){
+    .digiy-version-badge{
+      font-size:10.5px;
+      padding:7px 10px;
+      left:8px;
+      top:8px;
+    }
+  }
+
+  </style>
 </head>
 <body>
-<div class="wrap">
+  <div class="digiy-version-badge">VERSION DIGIY · TARIFS DIRECTS · BOUTONS AIDE · 2026-05-29</div>
 
-  <nav class="topbar" aria-label="Navigation DIGIY">
-    <a class="brand" href="https://digiylyfe.com/">DIGIYLYFE · Tarifs</a>
-    <a href="https://digiylyfe.com/">🌍 Site</a>
-    <a href="https://digiy-hub.digiylyfe.com/">🧭 HUB</a>
-    <a class="pay" href="#tarifs">📦 Codes</a>
-    <a class="pay" href="https://commencer-a-payer.digiylyfe.com/">🚀 Activer</a>
-  </nav>
-
-  <header class="hero">
-    <span class="kicker">Tarifs officiels · page statique rapide</span>
-    <h1>Choisis ton code.<br><span>Active ton module.</span></h1>
-    <p>
-      Ici, pas de moulinage, pas de dépendance à un dossier assets, pas d’attente Supabase.
-      Les tarifs sont visibles directement. Le professionnel reçoit une présence digitale,
-      une fiche partageable, un QR, un logiciel métier, la voix DIGIY, des textes prêts et 0% commission.
-    </p>
-    <div class="hero-actions">
-      <a class="btn main" href="#tarifs">📦 Voir les codes tarifs</a>
-      <a class="btn whatsapp" href="https://wa.me/221771342889?text=Bonjour%20JB%2C%20je%20veux%20activer%20un%20module%20DIGIY.">💬 Parler à JB</a>
-      <a class="btn gold" href="https://commencer-a-payer.digiylyfe.com/">🚀 Activer mon module</a>
+  <div class="wrap"><div class="card">
+    <div class="topbar"><div class="lang-switch"><button id="lang-fr" class="active" type="button">FR</button><button id="lang-wo" type="button">WO</button></div><span class="tag gold">DIGIY PAY</span></div>
+    <nav class="routeNav" aria-label="Navigation DIGIY"><a class="site" href="https://digiylyfe.com/" rel="noopener noreferrer">🌍 Site</a><a class="hub" id="btnHubTop" href="https://digiy-hub.digiylyfe.com/" rel="noopener noreferrer">🧭 HUB</a><a href="https://tarifs.digiylyfe.com/" target="_blank" rel="noopener noreferrer">📦 Tarifs</a><a class="pro" id="btnProTop" href="https://pro-espace.digiylyfe.com/" rel="noopener noreferrer">🏢 Espace pro</a></nav>
+    <h1>ACTIVER MON MODULE — DIGIY</h1><p class="small">Paiement direct · 0% commission · prix officiels DIGIY.</p>
+    <div class="digiy-help-buttons" aria-label="Aides DIGIY">
+      <button type="button" data-open-panel="noiseAudioBox">🎧 Audio</button>
+      <button type="button" data-open-panel="noiseAssistantBox">∞ Assistant</button>
+      <button type="button" data-open-panel="noiseRecapBox">🧾 Récap</button>
+      <button type="button" data-open-panel="noiseInfoBox">ℹ️ Infos</button>
     </div>
-    <div class="audio-mini">
-      <button id="playAudio" type="button">🎧 Écouter les tarifs</button>
-      <button id="stopAudio" class="stop" type="button">⏹ Stop</button>
-      <small>Texte visible d’abord. Audio en renfort si le téléphone parle correctement.</small>
+    <div class="audioBox digiy-noise-panel" id="noiseAudioBox" aria-label="Explication audio DIGIY">
+      <div class="audioTop">
+        <div>
+          <div class="audioLead"><span class="dot"></span> Conseil DIGIY · écoute d'abord</div>
+          <div class="audioTitle">🎧 Écouter avant de choisir</div>
+          <div class="audioText">Une voix explique comment choisir ton code, payer direct, envoyer la preuve et ouvrir ton accès DIGIY.</div>
+          <div class="audioHint">👉 40 secondes pour comprendre avant de payer.</div>
+        </div>
+        <div class="audioActions">
+          <button class="audioBtn" id="btnActivationAudio" type="button">🎧 Écouter DIGIY</button>
+          <button class="audioBtn stop" id="btnActivationAudioStop" type="button">⏹ Stop</button>
+        </div>
+      </div>
+      <div class="audioProgressWrap" aria-hidden="true"><div class="audioProgress" id="activationAudioProgress"></div></div>
+      <div class="audioGlow" aria-hidden="true"></div>
     </div>
-    <div class="quick">
-      <a href="#driver">🚗 1 DRIVER</a>
-      <a href="#loc">🏠 2 LOC</a>
-      <a href="#resa">📅 4 RÉSA</a>
-      <a href="#commerce">🧾 5/6 Commerce</a>
-      <a href="#services">🏗️ 7 Services</a>
-      <a href="#pay">💳 9 PAY</a>
-    </div>
-  </header>
+<div class="hr"></div>
+    <div class="kbWrap digiy-noise-panel" id="noiseAssistantBox"><div class="kbTop"><div><div class="kbTitle"><span class="kbBadge">∞</span><div><div style="font-size:14px;">Mon assistant DIGIY</div><div class="kbSub">Une aide simple pour avancer sans se perdre.</div></div></div><div class="kbSub" style="margin-top:8px;">Pose une question ou choisis ton code dans la grille.</div></div><div class="kbMeta"><span class="pill ok" id="kbStatus">En ligne</span><span class="pill">🇫🇷 Français</span><span class="pill">🇸🇳 Wolof</span></div></div><div class="kbChat"><div class="kbInputRow"><input id="kbInput" type="text" placeholder="Ex: Quel code Je loue choisir ? Pourquoi 0% commission ?"/><button id="kbSend" type="button">Envoyer</button></div><div class="kbQuick"><button type="button" data-q="Explique Mon argent en 2 lignes.">💳 Mon argent</button><button type="button" data-q="Quel code choisir pour DRIVER ?">🚗 Je conduis</button><button type="button" data-q="Explique les tarifs LOC 2A à 2E.">🏠 Je loue</button><button type="button" data-q="Pourquoi DIGIY est à 0% commission ?">💰 0% commission</button></div><div class="kbAns" id="kbAns"></div></div></div>
+    <div class="hr"></div><div class="status warn digiy-noise-panel" id="statusBox"><div id="statusText">⏳ Choisis ton code. DIGIY va lire le prix officiel.</div><span class="tag warn" id="statusTag">EN COURS</span></div><div class="hr"></div>
+    <div class="vipBox digiy-noise-panel" id="noiseVipBox"><div class="vipTitle"><div>✨ Ton activité mérite d’être visible, claire et payable.</div><span class="vipStamp" id="vipStamp">⭐ Client DIGIY</span></div><ul class="vipPerks"><li>Tu paies direct : pas de commission qui mange ton travail.</li><li>Tu reçois un accès pro avec ton lien privé.</li><li>Le BOOST est optionnel : il sert à mettre ton activité en avant.</li></ul><p class="small" id="vipLine" style="margin-top:10px;">Conseil : choisis ton module, puis ajoute un BOOST si tu veux accélérer.</p></div>
+    <div class="hr"></div><div class="box digiy-noise-panel" id="noiseRecapBox"><h2>🧾 Récap paiement</h2><p class="small">La page montre ton code. DIGIY confirme le prix officiel.</p><div class="hr"></div><div class="row"><div><div style="font-weight:1100;">Module DIGIY</div><div class="mono" style="font-weight:1000;" id="orderProduct">—</div></div><div><div style="font-weight:1100;">Plan</div><div class="mono" style="font-weight:1000;" id="orderPlan">—</div></div></div><div class="hr"></div><div class="row"><div><div style="font-weight:1100;">Montant</div><div class="mono" style="font-weight:1000;" id="orderAmount">—</div></div><div><div style="font-weight:1100;">Référence</div><div class="mono" style="font-weight:1000;" id="orderRef">—</div></div></div><p class="small" id="orderHint" style="margin-top:10px;"></p></div>
+    <div class="hr"></div>
+    <section class="digiy-sub-card" id="digiySubCard" aria-label="Carte abonnement DIGIY">
+      <div class="digiy-sub-columns">
+        <div class="digiy-sub-left">
+          <div class="section-sep">🚗 CODE 1 · Je conduis</div><div class="priceGrid" id="grid_driver"></div>
+          <div class="section-sep">🏠 CODE 2 · Je loue</div><div class="priceGrid" id="grid_loc"></div>
+          <div class="section-sep">📅 CODE 4 · Je réserve</div><div class="priceGrid" id="grid_resa"></div>
+          <div class="section-sep">🧾 CODE 5 · Mon commerce</div><div class="priceGrid" id="grid_pos"></div>
+          <div class="section-sep">🛒 CODE 6 · Les boutiques</div><div class="priceGrid" id="grid_market"></div>
+          <div class="section-sep">🧾🛒 CODE 56 · Les deux</div><div class="priceGrid" id="grid_pack"></div>
+          <div class="section-sep">🏗️ CODE 7 · Mes services</div><div class="priceGrid" id="grid_build"></div>
+          <div class="section-sep">🧭 CODE 8 · Me faire connaître</div><div class="priceGrid" id="grid_explore"></div>
+          <div class="section-sep">💰 CODE 9 · Mon argent</div><div class="priceGrid" id="grid_pay"></div>
+          <div class="section-sep">✨ CODE E · Boost visibilité</div><div class="priceGrid" id="grid_boost"></div>
 
-  <h2 class="section-title" id="tarifs">📦 Les codes modules DIGIY</h2>
-
-  <section class="modules">
-    <article class="card" id="driver">
-      <div class="card-head">
-        <div class="module-code">1</div>
-        <div>
-          <h2>🚗 Je conduis — DIGIY DRIVER</h2>
-          <p class="desc">Jakarta · bus · chauffeur classique · présence, contact direct, fiche pro.</p>
+          <div class="hintLine">📞 Commander par téléphone : <strong id="hintPhone"></strong></div>
         </div>
-      </div>
-      <div class="price-hook">À partir de 5 500 FCFA · 9 € / mois</div>
-      <div class="tiers">
-        <div class="tiers-title">Par type de conduite</div>
-        <div class="tier"><div class="tier-code">1A</div><div class="tier-name">JAKARTA · présence simple et contact direct</div><div class="tier-price">5 500 FCFA · 9 €</div></div>
-        <div class="tier"><div class="tier-code">1B</div><div class="tier-name">BUS · trajets, horaires, points de passage</div><div class="tier-price">12 000 FCFA · 19 €</div></div>
-        <div class="tier"><div class="tier-code">1C</div><div class="tier-name">DRIVER · chauffeur classique / transfert / premium</div><div class="tier-price">19 900 FCFA · 29 €</div></div>
-      </div>
-      <ul class="features">
-        <li>Fiche pro, WhatsApp direct, appel direct</li>
-        <li>Carte de visite complète : nom, métier, adresse, téléphone</li>
-        <li>QR vers la fiche, photos, vidéo ou mini-site selon demande</li>
-        <li>Logiciel DRIVER + voix DIGIY + textes prêts + clic de confirmation</li>
-      </ul>
-      <div class="card-actions">
-        <a class="wa" href="https://wa.me/221771342889?text=Bonjour%20JB%2C%20je%20veux%20activer%20le%20module%20DRIVER.">💬 WhatsApp</a>
-        <a class="activate" href="https://commencer-a-payer.digiylyfe.com/?module=DRIVER">🚀 Activer DRIVER</a>
-      </div>
-    </article>
 
-    <article class="card" id="loc">
-      <div class="card-head">
-        <div class="module-code">2</div>
-        <div>
-          <h2>🏠 Je loue — DIGIY LOC</h2>
-          <p class="desc">Location courte durée · unités · calendrier · présence de ton lieu.</p>
-        </div>
-      </div>
-      <div class="price-hook">À partir de 26 000 FCFA · 39 € / mois</div>
-      <div class="tiers">
-        <div class="tiers-title">Par nombre d’unités</div>
-        <div class="tier"><div class="tier-code">2A</div><div class="tier-name">Essentiel · 1 à 5 unités</div><div class="tier-price">26 000 FCFA · 39 €</div></div>
-        <div class="tier"><div class="tier-code">2B</div><div class="tier-name">Standard · 6 à 9 unités</div><div class="tier-price">35 000 FCFA · 59 €</div></div>
-        <div class="tier"><div class="tier-code">2C</div><div class="tier-name">Pro · 10 à 20 unités</div><div class="tier-price">50 000 FCFA · 79 €</div></div>
-        <div class="tier"><div class="tier-code">2D</div><div class="tier-name">Business · 21 à 30 unités</div><div class="tier-price">70 000 FCFA · 99 €</div></div>
-        <div class="tier"><div class="tier-code">2E</div><div class="tier-name">Agence · plus de 30 unités</div><div class="tier-price">100 000 FCFA · 149 €</div></div>
-      </div>
-      <ul class="features">
-        <li>Fiche logement, QR, photos, vidéo ou mini-site selon demande</li>
-        <li>Contact direct propriétaire / client</li>
-        <li>Logiciel LOC : unités, demandes, disponibilités, messages prêts</li>
-        <li>0% commission</li>
-      </ul>
-      <div class="card-actions">
-        <a class="wa" href="https://wa.me/221771342889?text=Bonjour%20JB%2C%20je%20veux%20activer%20le%20module%20LOC.">💬 WhatsApp</a>
-        <a class="activate" href="https://commencer-a-payer.digiylyfe.com/?module=LOC">🚀 Activer LOC</a>
-      </div>
-    </article>
+        <aside class="digiy-sub-right" id="digiyBenefitPanel">
+          <div class="digiy-benefit-eyebrow">Ton module DIGIY</div>
+          <h2>✨ Ce que l’abonnement m’apporte</h2>
+          <p class="small" id="digiyBenefitIntro">
+            Clique un tarif. La valeur apparaît ici.
+          </p>
 
-    <article class="card" id="resa">
-      <div class="card-head">
-        <div class="module-code">4</div>
-        <div>
-          <h2>📅 Je réserve — DIGIY RÉSA</h2>
-          <p class="desc">Réservations · planning · créneaux · rendez-vous multi-business.</p>
-        </div>
-      </div>
-      <div class="price-hook">À partir de 9 000 FCFA · 15 € / mois</div>
-      <div class="tiers">
-        <div class="tiers-title">Par niveau de business</div>
-        <div class="tier"><div class="tier-code">4A</div><div class="tier-name">Solo · activité simple sur rendez-vous</div><div class="tier-price">9 000 FCFA · 15 €</div></div>
-        <div class="tier"><div class="tier-code">4B</div><div class="tier-name">Standard · petite activité organisée</div><div class="tier-price">15 000 FCFA · 25 €</div></div>
-        <div class="tier"><div class="tier-code">4C</div><div class="tier-name">Pro · plusieurs services / planning structuré</div><div class="tier-price">25 000 FCFA · 39 €</div></div>
-        <div class="tier"><div class="tier-code">4D</div><div class="tier-name">Business · activité coordonnée / équipe</div><div class="tier-price">40 000 FCFA · 59 €</div></div>
-        <div class="tier"><div class="tier-code">4E</div><div class="tier-name">Premium · forte activité / suivi avancé</div><div class="tier-price">60 000 FCFA · 89 €</div></div>
-      </div>
-      <ul class="features">
-        <li>Planning, créneaux, demandes client</li>
-        <li>Textes de confirmation prêts à envoyer</li>
-        <li>Fiche visible et contact direct</li>
-        <li>Validation humaine par clic</li>
-      </ul>
-      <div class="card-actions">
-        <a class="wa" href="https://wa.me/221771342889?text=Bonjour%20JB%2C%20je%20veux%20activer%20le%20module%20RESA.">💬 WhatsApp</a>
-        <a class="activate" href="https://commencer-a-payer.digiylyfe.com/?module=RESA">🚀 Activer RÉSA</a>
-      </div>
-    </article>
+          <div class="digiy-benefit-selected digiy-benefit-empty" id="digiyBenefitSelected">
+            <strong>Aucun code sélectionné</strong>
+            <span>Choisis d’abord un tarif.</span>
+          </div>
 
-    <article class="card" id="commerce">
-      <div class="card-head">
-        <div class="module-code">5/6</div>
-        <div>
-          <h2>🧾 Mon commerce · 🛒 Les boutiques</h2>
-          <p class="desc">Caisse commerce, boutique visible, catalogue, ventes directes.</p>
-        </div>
-      </div>
-      <div class="price-hook">À partir de 14 900 FCFA · 19 € / mois</div>
-      <div class="tiers">
-        <div class="tiers-title">Commerce terrain</div>
-        <div class="tier"><div class="tier-code">5</div><div class="tier-name">Mon commerce — CAISSE</div><div class="tier-price">19 900 FCFA · 29 €</div></div>
-        <div class="tier"><div class="tier-code">6</div><div class="tier-name">Les boutiques — MARKET</div><div class="tier-price">14 900 FCFA · 19 €</div></div>
-        <div class="tier"><div class="tier-code">56</div><div class="tier-name">Pack duo · Caisse + boutique visible</div><div class="tier-price">29 900 FCFA · 49 €</div></div>
-      </div>
-      <ul class="features">
-        <li>Caisse téléphone-first, stock, tickets, notes rapides</li>
-        <li>Fiche boutique, produits, WhatsApp direct</li>
-        <li>Voix DIGIY pour préparer ventes / produits</li>
-        <li>0% commission</li>
-      </ul>
-      <div class="card-actions">
-        <a class="wa" href="https://wa.me/221771342889?text=Bonjour%20JB%2C%20je%20veux%20activer%20un%20module%20commerce%20DIGIY.">💬 WhatsApp</a>
-        <a class="activate" href="https://commencer-a-payer.digiylyfe.com/?module=COMMERCE">🚀 Activer commerce</a>
-      </div>
-    </article>
+          <ul class="digiy-benefit-list" id="digiyBenefitList">
+            <li>✅ Présence professionnelle visible et partageable</li>
+            <li>✅ Fiche, QR, WhatsApp direct, appel direct</li>
+            <li>✅ Logiciel de gestion métier inclus</li>
+          </ul>
 
-    <article class="card" id="services">
-      <div class="card-head">
-        <div class="module-code">7</div>
-        <div>
-          <h2>🏗️ Mes services</h2>
-          <p class="desc">Artisans tout corps de métiers · services utiles · devis · interventions.</p>
-        </div>
-      </div>
-      <div class="price-hook">12 900 FCFA · 19 € / mois</div>
-      <div class="tiers">
-        <div class="tiers-title">Service terrain</div>
-        <div class="tier"><div class="tier-code">7</div><div class="tier-name">Multi-service · fiche + demandes + messages</div><div class="tier-price">12 900 FCFA · 19 €</div></div>
-      </div>
-      <ul class="features">
-        <li>Fiche service, QR, photos, contact direct</li>
-        <li>Demandes, devis, notes rapides</li>
-        <li>Textes prêts à envoyer au client</li>
-        <li>Validation par clic</li>
-      </ul>
-      <div class="card-actions">
-        <a class="wa" href="https://wa.me/221771342889?text=Bonjour%20JB%2C%20je%20veux%20activer%20le%20module%20Mes%20services.">💬 WhatsApp</a>
-        <a class="activate" href="https://commencer-a-payer.digiylyfe.com/?module=BUILD">🚀 Activer services</a>
-      </div>
-    </article>
+          <div class="digiy-benefit-audio">
+            <button type="button" id="digiyBenefitAudioBtn">🎧 Écouter l’offre</button>
+            <button class="stop" type="button" id="digiyBenefitAudioStop">⏹ Stop</button>
+            <small>Le texte reste visible si le son du téléphone est faible.</small>
+          </div>
 
-    <article class="card" id="pay">
-      <div class="card-head">
-        <div class="module-code">9</div>
-        <div>
-          <h2>💳 Mon argent — PAY</h2>
-          <p class="desc">Lire l’argent : entrées, dépenses, reste, notes rapides, canaux.</p>
-        </div>
+          <div class="digiy-benefit-actions">
+            <a class="digiy-benefit-wa" id="digiyBenefitWa" href="https://wa.me/221771342889?text=Bonjour%20JB%2C%20je%20veux%20activer%20un%20module%20DIGIY">💬 Parler à JB</a>
+            <a class="digiy-benefit-activate" id="digiyBenefitActivate" href="#manualBox">🚀 Activer mon module</a>
+          </div>
+        </aside>
       </div>
-      <div class="price-hook">À partir de 4 900 FCFA · 9 € / mois</div>
-      <div class="tiers">
-        <div class="tiers-title">Lecture argent</div>
-        <div class="tier"><div class="tier-code">9A</div><div class="tier-name">Starter · lecture simple</div><div class="tier-price">4 900 FCFA · 9 €</div></div>
-        <div class="tier"><div class="tier-code">9B</div><div class="tier-name">Pro · lecture complète activité</div><div class="tier-price">9 900 FCFA · 19 €</div></div>
-        <div class="tier"><div class="tier-code">9C</div><div class="tier-name">Business · suivi avancé</div><div class="tier-price">24 900 FCFA · 39 €</div></div>
-      </div>
-      <ul class="features">
-        <li>Entrées, dépenses, argent à recevoir</li>
-        <li>Notes rapides et lecture simple</li>
-        <li>Wave, cash, Orange Money selon terrain</li>
-        <li>PAY reste la caisse centrale</li>
-      </ul>
-      <div class="card-actions">
-        <a class="wa" href="https://wa.me/221771342889?text=Bonjour%20JB%2C%20je%20veux%20activer%20le%20module%20PAY.">💬 WhatsApp</a>
-        <a class="activate" href="https://commencer-a-payer.digiylyfe.com/?module=PAY">🚀 Activer PAY</a>
-      </div>
-    </article>
-
-    <article class="card" id="explore">
-      <div class="card-head">
-        <div class="module-code">8/E</div>
-        <div>
-          <h2>🧭 Me faire connaître</h2>
-          <p class="desc">EXPLORE PRO et boost visibilité pour lieux, activités, fiches et territoire.</p>
-        </div>
-      </div>
-      <div class="price-hook">À partir de 30 000 FCFA · 49 € / mois</div>
-      <div class="tiers">
-        <div class="tiers-title">Visibilité</div>
-        <div class="tier"><div class="tier-code">8A</div><div class="tier-name">Explore Essentiel · présence territoire</div><div class="tier-price">30 000 FCFA · 49 €</div></div>
-        <div class="tier"><div class="tier-code">8B</div><div class="tier-name">Explore Pro</div><div class="tier-price">60 000 FCFA · 89 €</div></div>
-        <div class="tier"><div class="tier-code">8C</div><div class="tier-name">Explore Premium</div><div class="tier-price">120 000 FCFA · 149 €</div></div>
-        <div class="tier"><div class="tier-code">E2</div><div class="tier-name">Boost Standard</div><div class="tier-price">10 000 FCFA · 19 €</div></div>
-      </div>
-      <ul class="features">
-        <li>Fiche lieu / activité, QR, lien partageable</li>
-        <li>Mise en avant locale selon besoin</li>
-        <li>WhatsApp direct et présence visible</li>
-        <li>Boost optionnel</li>
-      </ul>
-      <div class="card-actions">
-        <a class="wa" href="https://wa.me/221771342889?text=Bonjour%20JB%2C%20je%20veux%20me%20faire%20conna%C3%AEtre%20avec%20DIGIY.">💬 WhatsApp</a>
-        <a class="activate" href="https://commencer-a-payer.digiylyfe.com/?module=EXPLORE">🚀 Activer visibilité</a>
-      </div>
-    </article>
-  </section>
-
-  <section class="truth">
-    <h2>✨ Ce que l’abonnement m’apporte</h2>
-    <p>
-      Je deviens visible, joignable, crédible, partageable — et je reçois mon logiciel de gestion métier,
-      avec la voix DIGIY, des textes prêts à l’emploi et un clic de confirmation qui reste entre mes mains.
-      Je garde mon nom, mon argent, ma relation client. DIGIY garde le chemin clair.
-    </p>
-  </section>
-
-  <div class="footer">
-    DIGIYLYFE — Le terrain garde la main · Page statique sans moulinage · 0% commission
+    </section>
+    <div class="hr"></div><div class="box" id="tokenBox"><h2>🔐 Activation sécurisée</h2><p class="small">Si tu as reçu un lien DIGIY avec token, clique simplement.</p><div class="hr"></div><button class="btn ok" id="btnActivateToken" type="button">✅ Activer maintenant <span id="spinnerToken" class="mono" style="display:none;margin-left:8px;">⏳</span></button><p class="small" id="tokenHint" style="margin-top:10px;"></p></div>
+    <div class="hr"></div><div class="box" id="manualBox"><h2>💳 Paiement manuel Wave</h2><p class="small">Paye sur Wave, puis envoie le reçu ici ou sur WhatsApp. Activation après validation.</p><div class="hr"></div><div class="row"><div><div style="font-weight:1100;">Bénéficiaire</div><div class="mono" style="font-weight:1000;" id="ownerName"></div></div><div><div style="font-weight:1100;">Numéro Wave</div><div class="mono" style="font-weight:1000;" id="waveTo"></div></div></div><div class="hr"></div><div class="box" style="margin:12px 0;" id="publicContactBox">
+  <h2>📲 Contact après preuve</h2>
+  <p class="small">
+    Pas besoin de remplir un téléphone ici. Tu paies, puis tu envoies la preuve par WhatsApp ou SMS :
+    DIGIY récupère le contact dans le message et prépare l’accès.
+  </p>
+  <div class="hr"></div>
+  <div class="small">
+    L’identifiant privé sera généré à l’activation. L’abonné novice ne doit pas se bloquer sur un champ technique.
   </div>
-</div>
+  <input type="hidden" id="payPhone" value=""/>
+  <input type="hidden" id="paySlug" value=""/>
+  <div id="slugAuto" class="small hide"></div>
+</div><div class="hr"></div><button class="btn primary" id="btnPrepareOrder" type="button">🧾 Préparer la référence paiement</button><p class="small" id="prepareMsg" style="margin-top:10px;"></p><div class="uploadBox"><div style="font-weight:1100;margin-bottom:6px;">📸 Envoyer la preuve Wave</div><p class="small" style="margin-top:0;">Sélectionne la capture du reçu Wave, puis envoie.</p><input type="file" id="proofFile" accept="image/*"/><div class="hr"></div><button class="btn ok" id="btnSendProof" type="button">📤 Envoyer preuve Wave</button><p class="small" id="payMsg" style="margin-top:10px;"></p><div class="hr"></div><p class="small" style="margin-bottom:8px;font-weight:1100;">📲 Envoie la preuve directement :</p><div class="row"><button class="btn ok" id="btnProofWa" type="button">💬 Preuve WhatsApp</button><button class="btn warn" id="btnProofSms" type="button">📱 Preuve SMS</button></div><p class="small" id="proofSendMsg" style="margin-top:10px;"></p></div><div class="hr"></div><ol class="steps"><li>Choisis ton code.</li><li>DIGIY lit le prix officiel.</li><li>Fais le transfert Wave.</li><li>Envoie la preuve.</li><li>Activation après validation.</li></ol><div class="hr"></div><div class="row"><button class="btn gold" id="btnWaConfirm" type="button">💬 Confirmer WhatsApp</button><button class="btn bad" id="btnSupport" type="button">🛟 Support WhatsApp</button></div><p class="small" id="manualHint" style="margin-top:10px;"></p></div>
+  </div></div>
+  <button class="digiy-floating-pay" id="btnFloatingPay" type="button" aria-label="Activer paiement">
+    🚀 ACTIVER PAIEMENT
+  </button>
+<script>
+(function(){"use strict";
+const SUPABASE_URL="https://wesqmwjjtsefyjnluosj.supabase.co";const SUPABASE_ANON_KEY="sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";window.DIGIY_SUPABASE_URL=SUPABASE_URL;window.DIGIY_SUPABASE_ANON_KEY=SUPABASE_ANON_KEY;if(!window.supabase)throw new Error("Supabase lib non chargée");const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false,storage:{getItem:()=>null,setItem:()=>{},removeItem:()=>{}}}});window.sb=sb;
+const SUPPORT_WA="+221771342889",WAVE_TO="+221771342889",OWNER_NAME="JB BEAUVILLE",SITE_URL="https://digiylyfe.com/",HUB_URL="https://digiy-hub.digiylyfe.com/",PRO_ESPACE_URL="https://pro-espace.digiylyfe.com/",TARIFS_URL="https://tarifs.digiylyfe.com/",$=id=>document.getElementById(id),qp=new URLSearchParams(location.search);const MODULE_ALIAS={CAISSE:"POS",POS_PRO:"POS",POS:"POS",DRIVER:"DRIVER",LOC:"LOC",RESA_TABLE:"RESA",RESTO_RESA:"RESA",RESA:"RESA",MARKET:"MARKET",BUILD:"BUILD",MULTI_SERVICE:"BUILD",EXPLORE:"EXPLORE",PAY:"PAY",MON_ARGENT:"PAY",PACK:"PACK",COMMERCE_DUO:"PACK",EXPLORE_BOOST:"EXPLORE_BOOST",BOOST:"EXPLORE_BOOST"};
+function setStatus(text,tone,tag){$("statusBox").className="status "+(tone||"warn");$("statusText").textContent=text||"";const tg=$("statusTag");tg.className="tag "+(tone||"warn");tg.textContent=tag||"—";const st=$("stickyText");if(st)st.textContent=text||""}function wa(msg){location.href="https://wa.me/"+SUPPORT_WA.replace(/\+/g,"")+"?text="+encodeURIComponent(msg)}function normPhone(p){return String(p||"").trim().replace(/[^\d]/g,"")}function normSlug(s){return String(s||"").trim().toLowerCase().replace(/\s+/g,"-").replace(/[^a-z0-9-]/g,"").replace(/-+/g,"-").replace(/^-|-$/g,"")}function normalizeModule(v){const raw=String(v||"").trim().toUpperCase();return MODULE_ALIAS[raw]||raw||""}const MODULE_HUB_URLS={POS:"https://commerce-pro.digiylyfe.com/hub.html",CAISSE:"https://commerce-pro.digiylyfe.com/hub.html",COMMERCE:"https://commerce-pro.digiylyfe.com/hub.html",DRIVER:"https://pro-driver.digiylyfe.com/hub.html",LOC:"https://pro-loc.digiylyfe.com/hub.html",RESA:"https://pro-resa-resto.digiylyfe.com/hub.html",RESTO:"https://pro-resa-resto.digiylyfe.com/hub.html",MARKET:"https://pro-market.digiylyfe.com/hub.html",BUILD:"https://pro-build.digiylyfe.com/hub.html",MULTI_SERVICE:"https://pro-build.digiylyfe.com/hub.html",SERVICES:"https://pro-build.digiylyfe.com/hub.html",EXPLORE:"https://pro-explore.digiylyfe.com/hub.html",PAY:"https://pro-pay.digiylyfe.com/hub.html",MON_ARGENT:"https://pro-pay.digiylyfe.com/hub.html",JOBS:"https://pro-job.digiylyfe.com/hub.html",PACK:"https://commerce-pro.digiylyfe.com/hub.html",COMMERCE_DUO:"https://commerce-pro.digiylyfe.com/hub.html",EXPLORE_BOOST:"https://pro-explore.digiylyfe.com/hub.html",BOOST:"https://pro-explore.digiylyfe.com/hub.html"};
+function moduleHubUrl(module){const mod=normalizeModule(module);return MODULE_HUB_URLS[mod]||PRO_ESPACE_URL}
+function cleanModuleAccessUrl(url,source){try{const u=new URL(url,location.origin);["phone","tel","owner_phone","owner_id","slug","pay_slug","subscription_slug","business_phone","wave_phone","wallet_phone","pay_phone","access_note","keybox_code","keybox_location","token","session_token","pin","return","redirect","redirect_url","url"].forEach(k=>u.searchParams.delete(k));u.searchParams.set("from",source||"digiy-abo");return u.toString()}catch(_){return url||PRO_ESPACE_URL}}
+function buildModuleHubUrl(module,phone,source,fallback){const mod=normalizeModule(module);const base=moduleHubUrl(mod)||fallback||PRO_ESPACE_URL;try{const u=new URL(base,location.origin);u.searchParams.set("from",source||"digiy-abo");if(mod)u.searchParams.set("module",mod);const p=normPhone(phone||userPhoneDigits||"");if(p)u.searchParams.set("phone",p);const s=normSlug(userSlug||expectedModuleSlug?.(mod,p)||"");if(s)u.searchParams.set("slug",s);return u.toString()}catch(_){return base}}function genSlug(prefix){const p=normSlug(prefix||"digiy")||"digiy";return p+"-"+Math.random().toString(16).slice(2,10)}function moduleSlugPrefix(module){const mod=normalizeModule(module);const map={POS:"pos",CAISSE:"pos",COMMERCE:"pos",DRIVER:"driver",LOC:"loc",RESA:"resa",RESTO:"resa",MARKET:"market",BUILD:"build",MULTI_SERVICE:"build",SERVICES:"build",EXPLORE:"explore",EXPLORE_BOOST:"explore",BOOST:"explore",PAY:"pay",MON_ARGENT:"pay",JOBS:"jobs",PACK:"commerce"};return map[mod]||normSlug(mod||"digiy")||"digiy"}
+function expectedModuleSlug(module,phone){const prefix=moduleSlugPrefix(module);const digits=String(phone||"").replace(/\D/g,"");return digits?`${prefix}-${digits}`:genSlug(prefix)}
+function slugMatchesModulePrefix(slug,module){const s=normSlug(slug);const prefix=moduleSlugPrefix(module);return !!s&&(s===prefix||s.startsWith(prefix+"-"))}
+function slugLooksAuto(slug){return /^(pay|driver|loc|resa|pos|commerce|market|build|explore|jobs)-[a-z0-9-]+$/.test(normSlug(slug))}
+function ensureSlugForSelectedModule(){const mod=normalizeModule(selectedBase?.resolved_module||selectedBase?.module||accessModule||"DIGIY");if(!userPhoneDigits){userSlug="";if($("paySlug"))$("paySlug").value="";if($("slugAuto"))$("slugAuto").textContent="Identifiant généré après validation.";return ""}if(!userSlug||userSlug.length<3||(!slugMatchesModulePrefix(userSlug,mod)&&slugLooksAuto(userSlug))){userSlug=expectedModuleSlug(mod,userPhoneDigits);if($("paySlug"))$("paySlug").value=userSlug;if($("slugAuto"))$("slugAuto").textContent="Identifiant auto module : "+userSlug}return userSlug}
+function displayPhoneDigitsAsPlus(p){const d=String(p||"").replace(/[^\d]/g,"");if(!d)return"";return d.startsWith("221")?"+"+d:d}function prettyFCFA(n){const x=Number(n||0);return x?x.toLocaleString("fr-FR")+" FCFA":"—"}function prettyEUR(n){const x=Number(n||0);return x?x.toLocaleString("fr-FR",{maximumFractionDigits:0})+" €":""}
+const token=(qp.get("token")||"").trim(),ret=(qp.get("return")||"").trim(),auto=qp.get("auto")==="1",from_=(qp.get("from")||"").trim(),accessModule=normalizeModule(qp.get("module")||"");let userPhoneDigits=normPhone(qp.get("phone")||""),userSlug=normSlug(qp.get("slug")||""),selectedBase=null,selectedBoost=null,orderReference="";const resolvedCache=new Map();
+const PRICE_GROUPS={driver:[{code:"1A",module:"DRIVER",label:"Je conduis — Jakarta",desc:"Présence simple, contact direct, fiche chauffeur légère."},{code:"1B",module:"DRIVER",label:"Je conduis — Bus",desc:"Trajets, horaires, points de passage, contact direct."},{code:"1C",module:"DRIVER",label:"Je conduis — Driver",desc:"Chauffeur classique, transfert, premium, fiche pro complète."}],loc:[{code:"2A",module:"LOC",label:"Je loue — Essentiel",desc:"Location courte durée · 1 à 5 unités."},{code:"2B",module:"LOC",label:"Je loue — Standard",desc:"Location courte durée · 6 à 9 unités."},{code:"2C",module:"LOC",label:"Je loue — Pro",desc:"Location courte durée · 10 à 20 unités."},{code:"2D",module:"LOC",label:"Je loue — Business",desc:"Location courte durée · 21 à 30 unités."},{code:"2E",module:"LOC",label:"Je loue — Agence",desc:"Location courte durée · plus de 30 unités."}],resa:[{code:"4A",module:"RESA",label:"Je réserve — Solo",desc:"Activité simple sur rendez-vous."},{code:"4B",module:"RESA",label:"Je réserve — Standard",desc:"Petite activité organisée."},{code:"4C",module:"RESA",label:"Je réserve — Pro",desc:"Plusieurs services ou planning structuré."},{code:"4D",module:"RESA",label:"Je réserve — Business",desc:"Activité coordonnée ou équipe."},{code:"4E",module:"RESA",label:"Je réserve — Premium",desc:"Gros flux ou usage intensif."}],pos:[{code:"5",module:"POS",label:"Mon commerce — Caisse",desc:"Caisse tactile, stock, alertes, suivi activité boutique."}],market:[{code:"6",module:"MARKET",label:"Les boutiques — Market",desc:"Fiche boutique, catalogue produits, contact direct client."}],pack:[{code:"56",module:"PACK",label:"Les deux — Duo commerce",desc:"Mon commerce + Les boutiques."}],build:[{code:"7",module:"BUILD",label:"Mes services — Multi-service",desc:"Fiche artisan/service, devis, missions, chantiers."}],explore:[{code:"8A",module:"EXPLORE",label:"Me faire connaître — Essentiel",desc:"Présence territoire locale, visibilité tourisme, fiche pro."},{code:"8B",module:"EXPLORE",label:"Me faire connaître — Pro",desc:"Présence territoire renforcée."},{code:"8C",module:"EXPLORE",label:"Me faire connaître — Premium",desc:"Présence territoire premium et priorité visibilité."},{code:"8D",module:"EXPLORE",label:"Me faire connaître — Installation",desc:"Mise en route et accompagnement one-shot."}],pay:[{code:"9A",module:"PAY",label:"Mon argent — Starter",desc:"Lecture simple des entrées, dépenses et épargne."},{code:"9B",module:"PAY",label:"Mon argent — Pro",desc:"Activité mieux pilotée."},{code:"9C",module:"PAY",label:"Mon argent — Business",desc:"Vision financière renforcée."}],boost:[{code:"E1",module:"EXPLORE_BOOST",label:"Boost EXPLORE — Local",desc:"Badge, vitrine locale, WhatsApp.",boost:true},{code:"E2",module:"EXPLORE_BOOST",label:"Boost EXPLORE — Standard",desc:"Mise en avant, SEO, leads.",boost:true},{code:"E3",module:"EXPLORE_BOOST",label:"Boost EXPLORE — Premium",desc:"Priorité, support média, visibilité maximale.",boost:true}]};
+const GRID_MAP={driver:"grid_driver",loc:"grid_loc",resa:"grid_resa",pos:"grid_pos",market:"grid_market",pack:"grid_pack",build:"grid_build",explore:"grid_explore",pay:"grid_pay",boost:"grid_boost"};
 
-<div class="floating">
-  <a class="wa" href="https://wa.me/221771342889?text=Bonjour%20JB%2C%20je%20veux%20activer%20un%20module%20DIGIY.">💬 WhatsApp</a>
-  <a class="activate" href="https://commencer-a-payer.digiylyfe.com/">🚀 Activer</a>
-</div>
+const PRICE_FALLBACK={
+"DRIVER::1A":{fcfa:5500,eur:9,label:"JAKARTA"},
+"DRIVER::1B":{fcfa:12000,eur:19,label:"BUS"},
+"DRIVER::1C":{fcfa:19900,eur:29,label:"DRIVER"},
+"LOC::2A":{fcfa:26000,eur:39,label:"Essentiel"},
+"LOC::2B":{fcfa:35000,eur:59,label:"Standard"},
+"LOC::2C":{fcfa:50000,eur:79,label:"Pro"},
+"LOC::2D":{fcfa:70000,eur:99,label:"Business"},
+"LOC::2E":{fcfa:100000,eur:149,label:"Agence"},
+"RESA::4A":{fcfa:9000,eur:15,label:"Solo"},
+"RESA::4B":{fcfa:15000,eur:25,label:"Standard"},
+"RESA::4C":{fcfa:25000,eur:39,label:"Pro"},
+"RESA::4D":{fcfa:40000,eur:59,label:"Business"},
+"RESA::4E":{fcfa:60000,eur:89,label:"Premium"},
+"POS::5":{fcfa:19900,eur:29,label:"Caisse"},
+"MARKET::6":{fcfa:14900,eur:19,label:"Market"},
+"PACK::56":{fcfa:29900,eur:49,label:"Duo commerce"},
+"BUILD::7":{fcfa:12900,eur:19,label:"Multi-service"},
+"EXPLORE::8A":{fcfa:30000,eur:49,label:"Essentiel"},
+"EXPLORE::8B":{fcfa:60000,eur:89,label:"Pro"},
+"EXPLORE::8C":{fcfa:120000,eur:149,label:"Premium"},
+"EXPLORE::8D":{fcfa:150000,eur:199,label:"Installation"},
+"PAY::9A":{fcfa:4900,eur:9,label:"Starter"},
+"PAY::9B":{fcfa:9900,eur:19,label:"Pro"},
+"PAY::9C":{fcfa:24900,eur:39,label:"Business"},
+"EXPLORE_BOOST::E1":{fcfa:5000,eur:9,label:"Local"},
+"EXPLORE_BOOST::E2":{fcfa:10000,eur:19,label:"Standard"},
+"EXPLORE_BOOST::E3":{fcfa:20000,eur:29,label:"Premium"}
+};
+function priceFallbackFor(item){return PRICE_FALLBACK[(item.module||"")+"::"+(item.code||"")]||null}
+function fallbackPriceText(item){const f=priceFallbackFor(item);return f?prettyFCFA(f.fcfa)+(f.eur?" · "+prettyEUR(f.eur):""):"Prix officiel"}
+function fallbackResolvedPrice(item){const f=priceFallbackFor(item)||{fcfa:0,eur:0,label:item.label||item.code};return {...item,resolved_module:item.module,resolved_plan_code:item.code,resolved_public_code:item.code,resolved_label:f.label||item.label||item.code,resolved_price_month_fcfa:Number(f.fcfa||0),resolved_price_month_eur:Number(f.eur||0),resolved_billing_cycle:"monthly",resolved_from_fallback:true}}
+
+async function resolvePrice(item){const key=item.module+"::"+item.code;if(resolvedCache.has(key))return resolvedCache.get(key);try{const{data,error}=await sb.rpc("digiy_resolve_pricing_plan",{p_module:item.module,p_plan:item.code});if(error)throw error;const row=Array.isArray(data)?data[0]:data;if(!row||!row.resolved_price_month_fcfa)throw new Error("Tarif introuvable pour "+item.module+" / "+item.code);const r={...item,resolved_module:row.resolved_module,resolved_plan_code:row.resolved_plan_code,resolved_public_code:row.resolved_public_code,resolved_label:row.resolved_label,resolved_price_month_fcfa:Number(row.resolved_price_month_fcfa||0),resolved_price_month_eur:Number(row.resolved_price_month_eur||0),resolved_billing_cycle:row.resolved_billing_cycle||"monthly"};resolvedCache.set(key,r);return r}catch(e){console.warn("Prix SQL indisponible, fallback DIGIY local utilisé",e);const r=fallbackResolvedPrice(item);resolvedCache.set(key,r);return r}}
+
+async function hydrateVisiblePrices(){for(const item of Object.values(PRICE_GROUPS).flat()){const el=document.querySelector('[data-price-key="'+item.module+"::"+item.code+'"]');try{const r=await resolvePrice(item);if(el)el.textContent=prettyFCFA(r.resolved_price_month_fcfa)+(r.resolved_price_month_eur?" · "+prettyEUR(r.resolved_price_month_eur):"")}catch(_){if(el)el.textContent=fallbackPriceText(item)}}}
+function totalAmount(){return Number(selectedBase?.resolved_price_month_fcfa||0)+Number(selectedBoost?.resolved_price_month_fcfa||0)}function productLabel(){return "DIGIY · "+(selectedBase?"Code "+selectedBase.code:(accessModule||"DIGIY"))+(selectedBoost?" + BOOST "+selectedBoost.code:"")}function inferModuleForSlug(){return normalizeModule(selectedBase?.resolved_module||selectedBase?.module||accessModule||"LOC")}function subscriptionSlug(module,phone){return String(module||"LOC").toLowerCase()+"-"+String(phone||"").replace(/\D/g,"")}function buildReturnUrlWithSlug(retUrl,module,phone){return buildModuleHubUrl(module,phone,"digiy-pay-token",retUrl)}function makeReference(){const mod=normalizeModule(selectedBase?.resolved_module||selectedBase?.module||accessModule||"DIGIY")||"DIGIY",code=selectedBase?.resolved_public_code||selectedBase?.code||"X",tail=userPhoneDigits?userPhoneDigits.slice(-6):"000000",stamp=Date.now().toString(36).toUpperCase().slice(-6);return `${mod}-${code}-${tail}-${stamp}`}
+function updateVipBox(){const stamp=$("vipStamp"),line=$("vipLine");if(selectedBoost){stamp.textContent="👑 Client BOOST — Prioritaire";stamp.style.borderColor="rgba(250,204,21,.55)";stamp.style.background="rgba(250,204,21,.08)";stamp.style.color="#fff6c8";line.innerHTML="✅ BOOST activé : tu passes en <strong>mise en avant</strong>."}else{stamp.textContent="⭐ Client DIGIY";stamp.style.borderColor="rgba(34,197,94,.35)";stamp.style.background="rgba(34,197,94,.08)";stamp.style.color="#bfffe0";line.textContent="Conseil : choisis ton module, puis ajoute un BOOST si tu veux accélérer."}}
+function syncSelectionToUrl(){const u=new URL(location.href);if(selectedBase){u.searchParams.set("module",selectedBase.resolved_module||selectedBase.module);u.searchParams.set("plan",selectedBase.resolved_public_code||selectedBase.code);u.searchParams.set("code",selectedBase.resolved_public_code||selectedBase.code)}if(selectedBoost){u.searchParams.set("boost",selectedBoost.resolved_public_code||selectedBoost.code);u.searchParams.set("boost_code",selectedBoost.resolved_public_code||selectedBoost.code)}else{u.searchParams.delete("boost");u.searchParams.delete("boost_code")}if(userPhoneDigits)u.searchParams.set("phone",userPhoneDigits);if(userSlug)u.searchParams.set("slug",userSlug);if(orderReference)u.searchParams.set("ref",orderReference);history.replaceState(null,"",u.toString())}
+function renderOrder(){const t=totalAmount(),basePlan=selectedBase?(selectedBase.resolved_plan_code+" / "+(selectedBase.resolved_public_code||selectedBase.code)):"—",boostLine=selectedBoost?" + BOOST "+(selectedBoost.resolved_public_code||selectedBoost.code):"";$("orderProduct").textContent=productLabel();$("orderPlan").textContent=basePlan+boostLine;$("orderAmount").textContent=t?prettyFCFA(t):"—";$("orderRef").textContent=orderReference||((selectedBase?.resolved_module||selectedBase?.module||accessModule||"DIGIY")+"-"+(selectedBase?.resolved_public_code||selectedBase?.code||"X")+"-"+(userPhoneDigits?userPhoneDigits.slice(-6):"000000"));const hint=[];if(!selectedBase)hint.push("👉 Choisis ton code dans la grille.");if(selectedBase&&!t)hint.push("⏳ Prix en cours de lecture.");if(selectedBoost)hint.push("✅ BOOST ajouté : "+(selectedBoost.resolved_public_code||selectedBoost.code));if(!userPhoneDigits)hint.push("📲 Contact récupéré par WhatsApp/SMS.");if(!userSlug)hint.push("🔗 Identifiant généré après validation.");if(orderReference)hint.push("🧾 Référence préparée.");$("orderHint").textContent=hint.join("  •  ");updateVipBox();syncSelectionToUrl();renderSubscriptionBenefits()}
+
+function selectedPriceLine(item){if(!item)return"";const f=priceFallbackFor(item);const fcfa=item.resolved_price_month_fcfa?prettyFCFA(item.resolved_price_month_fcfa):(f?prettyFCFA(f.fcfa):"Prix en cours");const eur=item.resolved_price_month_eur?" · "+prettyEUR(item.resolved_price_month_eur):(f&&f.eur?" · "+prettyEUR(f.eur):"");return fcfa+eur+" / mois"}
+function moduleHumanName(mod){const m=normalizeModule(mod||"");return({DRIVER:"Je conduis — DIGIY DRIVER",LOC:"Je loue — DIGIY LOC",RESA:"Je réserve — DIGIY RÉSA",POS:"Mon commerce — DIGIY CAISSE",MARKET:"Les boutiques — DIGIY MARKET",PACK:"Les deux — Pack duo commerce",BUILD:"Mes services — DIGIY MULTI-SERVICE",EXPLORE:"Me faire connaître — EXPLORE PRO",PAY:"Mon argent — PAY by DIGIY",EXPLORE_BOOST:"Boost visibilité — EXPLORE"})[m]||m||"Module DIGIY"}
+const DIGIY_COMMON_BENEFITS=[
+"Je deviens visible, joignable, crédible et partageable",
+"Carte de visite complète : nom, métier, adresse, téléphone",
+"QR code qui conduit directement vers ma fiche",
+"Fiche visible dans l’écosystème DIGIYLYFE",
+"WhatsApp direct et appel direct",
+"Photos, vidéo, mini-site ou plus selon demande",
+"Logiciel de gestion métier fourni avec le module",
+"Voix DIGIY pour préparer les actions plus vite",
+"Textes pré-enregistrés prêts à envoyer au client",
+"Clic de confirmation : je garde toujours la main",
+"0% commission"
+];
+const DIGIY_MODULE_BONUS={DRIVER:"DRIVER prépare les courses, trajets, messages chauffeur et contact client direct.",LOC:"LOC organise les unités, disponibilités, demandes, fiche logement et relation directe.",RESA:"RÉSA aide à poser les créneaux, rendez-vous, planning et messages de confirmation.",POS:"CAISSE aide à vendre, additionner, suivre le stock et préparer les tickets.",MARKET:"MARKET rend les produits visibles et facilite les demandes client directes.",PACK:"Le duo commerce permet de travailler avec la caisse et d’attirer avec la boutique visible.",BUILD:"Mes services aide les artisans tout corps de métiers : devis, interventions, notes et messages.",EXPLORE:"EXPLORE pose le lieu ou l’activité sur le territoire DIGIY avec visibilité locale.",PAY:"PAY lit l’argent : entrées, dépenses, épargne, canaux et activité.",EXPLORE_BOOST:"Le BOOST met en avant une fiche déjà active pour mieux circuler sur le territoire."};
+function renderSubscriptionBenefits(){const panel=$("digiyBenefitPanel"),intro=$("digiyBenefitIntro"),selected=$("digiyBenefitSelected"),list=$("digiyBenefitList"),wa=$("digiyBenefitWa"),act=$("digiyBenefitActivate");if(!panel||!intro||!selected||!list)return;const item=selectedBase;if(!item){panel.classList.add("digiy-benefit-empty");intro.textContent="Clique un tarif. La valeur apparaît ici.";selected.className="digiy-benefit-selected digiy-benefit-empty";selected.innerHTML="<strong>Aucun code sélectionné</strong><span>Choisis d’abord un tarif.</span>";list.innerHTML=["Présence professionnelle visible et partageable","Fiche, QR, WhatsApp direct, appel direct","Logiciel de gestion métier inclus"].map(x=>"<li>✅ "+x+"</li>").join("");if(wa)wa.href="https://wa.me/"+SUPPORT_WA.replace(/\+/g,"")+"?text="+encodeURIComponent("Bonjour JB, je veux activer un module DIGIY.");if(act){act.href="#manualBox";act.textContent="🚀 Activer mon module"}return}panel.classList.remove("digiy-benefit-empty");const mod=normalizeModule(item.resolved_module||item.module),code=item.resolved_public_code||item.code,label=item.resolved_label||item.label||moduleHumanName(mod),price=selectedPriceLine(item),bonus=DIGIY_MODULE_BONUS[mod];intro.textContent="Voilà ce que l’abonnement m’apporte pour "+moduleHumanName(mod)+".";selected.className="digiy-benefit-selected";selected.innerHTML="<strong>"+code+" · "+label+"</strong><span>"+price+"</span>";const items=[...(bonus?[bonus]:[]),...DIGIY_COMMON_BENEFITS];list.innerHTML=items.map(x=>"<li>✅ "+x+"</li>").join("");const waText="Bonjour JB, je veux activer mon module "+mod+" — code "+code+" ("+price+").";if(wa)wa.href="https://wa.me/"+SUPPORT_WA.replace(/\+/g,"")+"?text="+encodeURIComponent(waText);if(act){act.href="#manualBox";act.textContent="🚀 Activer mon module "+code}}
+function speakSubscriptionBenefit(){if(!("speechSynthesis" in window)){alert("Audio indisponible sur ce navigateur.");return}window.speechSynthesis.cancel();const item=selectedBase;const base=item?("J’ai choisi le code "+(item.resolved_public_code||item.code)+" pour "+moduleHumanName(item.resolved_module||item.module)+". "):"Je choisis un tarif. ";const text=base+"Diji i me montre ce que l'abonnement m'apporte. Je deviens visible, joignable, crédible et partageable. Je reçois ma fiche, mon Q R, mon contact Ouatsap, mon logiciel de gestion métier, la voix Diji i, des textes prêts, et je garde toujours la confirmation finale par clic. Zéro pour cent commission.";const u=new SpeechSynthesisUtterance(text);u.lang="fr-FR";u.rate=.86;u.pitch=1.04;window.speechSynthesis.speak(u)}
+
+function setupHelpButtons(){document.querySelectorAll("[data-open-panel]").forEach(btn=>{btn.addEventListener("click",()=>{const target=btn.getAttribute("data-open-panel");document.querySelectorAll("[data-open-panel]").forEach(b=>{if(b!==btn)b.classList.remove("active")});if(target==="noiseInfoBox"){const status=$("statusBox"),vip=$("noiseVipBox");const opening=!(status?.classList.contains("is-open")||vip?.classList.contains("is-open"));document.querySelectorAll(".digiy-noise-panel").forEach(p=>p.classList.remove("is-open"));if(opening){status?.classList.add("is-open");vip?.classList.add("is-open");btn.classList.add("active")}else{btn.classList.remove("active")}return}const panel=$(target);if(!panel)return;const opening=!panel.classList.contains("is-open");document.querySelectorAll(".digiy-noise-panel").forEach(p=>p.classList.remove("is-open"));if(opening){panel.classList.add("is-open");btn.classList.add("active")}else{btn.classList.remove("active")}})})}
+
+function setupSubscriptionBenefitPanel(){const b=$("digiyBenefitAudioBtn"),s=$("digiyBenefitAudioStop"),a=$("digiyBenefitActivate");if(b)b.addEventListener("click",speakSubscriptionBenefit);if(s)s.addEventListener("click",()=>{if("speechSynthesis" in window)window.speechSynthesis.cancel()});if(a)a.addEventListener("click",e=>{const target=$("manualBox");if(target){e.preventDefault();target.scrollIntoView({behavior:"smooth",block:"start"})}})}
+
+function renderGrids(){for(const[groupKey,gridId]of Object.entries(GRID_MAP)){const grid=$(gridId),items=PRICE_GROUPS[groupKey]||[];if(!grid)continue;grid.innerHTML=items.map(item=>{const isBoost=item.boost===true,active=isBoost?(selectedBoost&&selectedBoost.code===item.code):(selectedBase&&selectedBase.code===item.code&&selectedBase.module===item.module),activeClass=active?(isBoost?"boostActive":"active"):"",codeClass=isBoost?"priceCode boost":"priceCode",priceKey=item.module+"::"+item.code;return `<button class="priceBtn ${activeClass}" type="button" data-module="${item.module}" data-code="${item.code}"><div class="priceTop"><div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0;"><div class="${codeClass}">${item.code}</div><div class="priceName">${item.label}</div></div><div class="priceAmt" data-price-key="${priceKey}">${fallbackPriceText(item)}</div></div><div class="priceDesc">${item.desc}</div></button>`}).join("");grid.querySelectorAll(".priceBtn").forEach(btn=>{btn.addEventListener("click",async()=>{const module=btn.getAttribute("data-module")||"",code=btn.getAttribute("data-code")||"",item=items.find(x=>x.module===module&&x.code===code);if(!item)return;btn.disabled=true;setStatus("⏳ Lecture du prix officiel…","warn","SQL");try{const r=await resolvePrice(item);if(item.boost){if(selectedBoost&&selectedBoost.code===r.code){selectedBoost=null;setStatus("✨ BOOST retiré.","warn","MODULE")}else{selectedBoost=r;setStatus("👑 BOOST "+r.code+" ajouté.","ok","BOOST "+r.code)}}else{selectedBase=r;orderReference="";setStatus("💳 Code "+r.code+" sélectionné : "+prettyFCFA(r.resolved_price_month_fcfa),"ok","CODE "+r.code)}renderGrids();hydrateVisiblePrices();renderOrder()}catch(e){console.error(e);setStatus("🔴 Prix introuvable : "+(e?.message||e),"bad","ERREUR")}finally{btn.disabled=false}})})}}
+async function autoSelectFromUrl(){const rawModule=normalizeModule(qp.get("module")||qp.get("base_module")||""),rawPlan=String(qp.get("plan")||qp.get("code")||"").trim().toUpperCase(),rawBoost=String(qp.get("boost")||qp.get("boost_code")||"").trim().toUpperCase();if(rawModule&&rawPlan){const all=Object.values(PRICE_GROUPS).flat();const item=all.find(x=>!x.boost&&normalizeModule(x.module)===rawModule&&x.code.toUpperCase()===rawPlan)||all.find(x=>!x.boost&&x.code.toUpperCase()===rawPlan);if(item){try{selectedBase=await resolvePrice(item);setStatus("💳 Code "+selectedBase.code+" sélectionné depuis le lien.","ok","CODE "+selectedBase.code)}catch(e){console.warn(e)}}}if(rawBoost){const item=PRICE_GROUPS.boost.find(x=>x.code.toUpperCase()===rawBoost);if(item){try{selectedBoost=await resolvePrice(item)}catch(e){console.warn(e)}}}renderGrids();hydrateVisiblePrices();renderOrder()}
+function updateHubLinks(){["btnHubTop","btnHubSticky"].forEach(id=>{const el=$(id);if(el)el.href=HUB_URL});["btnProTop","btnProSticky"].forEach(id=>{const el=$(id);if(el)el.href=PRO_ESPACE_URL})}
+function syncInputsToUrlAndState(){const p=$("payPhone"),s=$("paySlug");userPhoneDigits=normPhone(p?.value||userPhoneDigits||"");userSlug=normSlug(s?.value||userSlug||"");updateHubLinks();syncSelectionToUrl();renderOrder()}if($("payPhone")){if(userPhoneDigits)$("payPhone").value=userPhoneDigits;$("payPhone").addEventListener("input",syncInputsToUrlAndState)}if($("paySlug")){if(userSlug)$("paySlug").value=userSlug;$("paySlug").addEventListener("input",()=>{$("paySlug").value=normSlug($("paySlug").value);if($("slugAuto")&&$("paySlug").value)$("slugAuto").textContent="";syncInputsToUrlAndState()})}
+function ensureReadyForPayment(){if(!selectedBase){setStatus("⚠️ Choisis d’abord ton code dans la grille.","warn","CODE");return false}if(!selectedBase.resolved_price_month_fcfa){setStatus("⚠️ Prix non chargé. Clique à nouveau le code.","warn","PRIX");return false}if(!userPhoneDigits||userPhoneDigits.length<9){setStatus("⚠️ Contact WhatsApp/SMS.","warn","PHONE");$("payPhone")?.focus();return false}ensureSlugForSelectedModule();syncInputsToUrlAndState();return true}
+async function prepareOrder(){if(!ensureReadyForPayment())return null;if(!orderReference)orderReference=makeReference();$("prepareMsg").textContent="⏳ Préparation de la référence…";$("btnPrepareOrder").disabled=true;try{const{data,error}=await sb.rpc("digiy_pay_create_order_auto_amount",{p_reference:orderReference,p_module:selectedBase.resolved_module||selectedBase.module,p_phone:userPhoneDigits,p_plan:selectedBase.resolved_public_code||selectedBase.code,p_days:30,p_billing_cycle:selectedBase.resolved_billing_cycle||"monthly"});if(error)throw error;if(data&&data.ok===false)throw new Error(data.error||"prepare_failed");$("prepareMsg").textContent="✅ Référence préparée : "+orderReference+". Montant base : "+prettyFCFA(data?.amount_xof||selectedBase.resolved_price_month_fcfa)+(selectedBoost?" · BOOST dans la preuve : "+prettyFCFA(selectedBoost.resolved_price_month_fcfa):"");setStatus("✅ Référence prête. Fais le Wave puis envoie la preuve.","ok","PRÊT");renderOrder();return data}catch(e){console.error(e);$("prepareMsg").textContent="❌ Impossible de préparer : "+(e?.message||e);setStatus("🔴 Préparation impossible.","bad","ERREUR");return null}finally{$("btnPrepareOrder").disabled=false}}
+$("btnPrepareOrder").addEventListener("click",prepareOrder);const oldStickyPay=$("btnStickyPay");if(oldStickyPay)oldStickyPay.addEventListener("click",()=>{document.getElementById("manualBox")?.scrollIntoView({behavior:"smooth",block:"start"});prepareOrder()});
+window.DIGIY_PAY_STATE={getOrder:()=>({reference:orderReference||makeReference(),module:selectedBase?.resolved_module||selectedBase?.module||accessModule||"",plan:selectedBase?.resolved_public_code||selectedBase?.code||"",resolved_plan_code:selectedBase?.resolved_plan_code||"",public_code:selectedBase?.resolved_public_code||selectedBase?.code||"",amount:totalAmount(),amount_xof:totalAmount(),base_amount_xof:Number(selectedBase?.resolved_price_month_fcfa||0),code:selectedBase?.resolved_public_code||selectedBase?.code||"",boost_code:selectedBoost?.resolved_public_code||selectedBoost?.code||"",boost_module:selectedBoost?(selectedBoost.resolved_module||selectedBoost.module):"",boost_plan:selectedBoost?(selectedBoost.resolved_public_code||selectedBoost.code):"",boost_amount_xof:Number(selectedBoost?.resolved_price_month_fcfa||0),phone:userPhoneDigits||null,slug:userSlug||null,billing_cycle:selectedBase?.resolved_billing_cycle||"monthly",label:selectedBase?.resolved_label||selectedBase?.label||""})};
+if(!token){$("tokenBox").classList.add("hide");setStatus("💳 Paiement Wave · Étape 1 : choisis ton code.","warn","MANUEL");$("manualHint").textContent="La grille affiche les codes. Le prix vient de la base DIGIY."}else{setStatus("🔐 Lien sécurisé détecté. Clique pour activer.","ok","TOKEN");$("tokenHint").textContent="Token détecté. Activation en 1 clic."}async function activateToken(){if(!token){alert("Token manquant.");return}$("btnActivateToken").disabled=true;$("spinnerToken").style.display="inline-block";setStatus("⏳ Activation en cours…","warn","EN COURS");try{const{data,error}=await sb.rpc("digiy_pay_activate_token",{p_token:token});if(error)throw error;if(!data?.ok)throw new Error(data?.reason||"activation_failed");setStatus("🟢 Activé ! Tu peux continuer.","ok","ACTIF");const m=normalizeModule(data.module||data.resolved_module||inferModuleForSlug()||accessModule||"");const p=normPhone(qp.get("phone")||userPhoneDigits||data.phone||"");const target=buildModuleHubUrl(m,p,"digiy-pay-token",ret||"");$("tokenHint").innerHTML="✅ Activation OK.<br>Ouverture du bon HUB module : <b>"+(m||"DIGIY")+"</b>";setTimeout(()=>{location.href=target},450)}catch(e){setStatus("🔴 Activation impossible. Contacte le support.","bad","ERREUR");$("tokenHint").textContent=String(e.message||e)}finally{$("spinnerToken").style.display="none";$("btnActivateToken").disabled=false}}$("btnActivateToken").addEventListener("click",activateToken);if(auto&&token)setTimeout(activateToken,400);
+$("btnWaConfirm").addEventListener("click",function(){if(!ensureReadyForPayment())return;const t=totalAmount(),baseCode=selectedBase.resolved_public_code||selectedBase.code,boostCode=selectedBoost?(selectedBoost.resolved_public_code||selectedBoost.code):"";let msg="DIGIY — Confirmation paiement Wave\n\nBénéficiaire: "+OWNER_NAME+"\n";msg+="Wave: "+WAVE_TO+"\n\n";msg+="Téléphone: "+displayPhoneDigitsAsPlus(userPhoneDigits)+"\n";const _hub=moduleHubUrl(selectedBase.resolved_module||selectedBase.module||accessModule||"");msg+="Module: "+(selectedBase.resolved_module||selectedBase.module||"-")+"\n";msg+="Lien module: "+_hub+"\n";msg+="Code: "+baseCode+"\n";msg+="Plan technique: "+(selectedBase.resolved_plan_code||"-")+"\n";msg+="Montant module: "+Number(selectedBase.resolved_price_month_fcfa||0)+" FCFA\n";if(selectedBoost){msg+="\nBOOST: "+boostCode+"\n";msg+="Plan boost: "+(selectedBoost.resolved_plan_code||"-")+"\n";msg+="Montant boost: "+Number(selectedBoost.resolved_price_month_fcfa||0)+" FCFA\n"}msg+="\n✅ Montant TOTAL: "+t+" FCFA\n";ensureSlugForSelectedModule();msg+="Identifiant: "+userSlug+"\n";if(orderReference)msg+="Référence: "+orderReference+"\n";if(token)msg+="Token: "+token+"\n";msg+="\nJe joins le reçu Wave ici.\nMerci d'activer. — DIGIY";wa(msg);setStatus("✅ Message WhatsApp prêt. Ajoute le reçu.","warn","EN ATTENTE")});
+$("btnSupport").addEventListener("click",function(){const t=totalAmount();let msg="DIGIY — Support Paiement\n\n";if(userPhoneDigits)msg+="Téléphone: "+displayPhoneDigitsAsPlus(userPhoneDigits)+"\n";if(selectedBase){msg+="Module: "+(selectedBase.resolved_module||selectedBase.module)+"\n";msg+="Code: "+(selectedBase.resolved_public_code||selectedBase.code)+"\n";msg+="Plan: "+(selectedBase.resolved_plan_code||"-")+"\n";msg+="Montant: "+Number(selectedBase.resolved_price_month_fcfa||0)+" FCFA\n"}if(selectedBoost)msg+="BOOST: "+(selectedBoost.resolved_public_code||selectedBoost.code)+" ("+Number(selectedBoost.resolved_price_month_fcfa||0)+" FCFA)\n";if(t)msg+="TOTAL: "+t+" FCFA\n";ensureSlugForSelectedModule();if(userSlug)msg+="Identifiant: "+userSlug+"\n"; else msg+="Identifiant: généré après validation\n";msg+="\nJ'ai besoin d'aide. — DIGIY";wa(msg);setStatus("💬 Support WhatsApp…","warn","INFO")});
+$("btnProofWa").addEventListener("click",function(){if(!ensureReadyForPayment())return;const t=totalAmount(),baseCode=selectedBase.resolved_public_code||selectedBase.code,boostCode=selectedBoost?(selectedBoost.resolved_public_code||selectedBoost.code):"";ensureSlugForSelectedModule();let msg="DIGIY — Preuve paiement Wave\n\nBénéficiaire : "+OWNER_NAME+"\nWave : "+WAVE_TO+"\n\n";if(userPhoneDigits) msg+="Téléphone : "+displayPhoneDigitsAsPlus(userPhoneDigits)+"\n"; else msg+="Contact : envoyé par WhatsApp/SMS\n";ensureSlugForSelectedModule();const _hubProof=buildModuleHubUrl(selectedBase.resolved_module||selectedBase.module||accessModule||"",userPhoneDigits,"digiy-proof","");msg+="Module : "+(selectedBase.resolved_module||selectedBase.module||"-")+"\n";msg+="Lien module : "+_hubProof+"\n";msg+="Code : "+baseCode+"\n";msg+="Plan : "+(selectedBase.resolved_plan_code||"-")+"\n";msg+="Montant module : "+Number(selectedBase.resolved_price_month_fcfa||0)+" FCFA\n";if(selectedBoost){msg+="\nBOOST : "+boostCode+"\n";msg+="Montant boost : "+Number(selectedBoost.resolved_price_month_fcfa||0)+" FCFA\n"}msg+="\nTOTAL : "+t+" FCFA\n";if(userSlug)msg+="Identifiant : "+userSlug+"\n"; else msg+="Identifiant : généré après validation\n";if(orderReference)msg+="Référence : "+orderReference+"\n";msg+="\nReçu Wave en photo — merci d'activer. — DIGIY";wa(msg);const pm=$("proofSendMsg");if(pm)pm.textContent="✅ WhatsApp ouvert. Ajoute la photo du reçu Wave dans le message.";setStatus("✅ WhatsApp ouvert. Joins la photo du reçu.","warn","PREUVE WA")});$("btnProofSms").addEventListener("click",function(){if(!ensureReadyForPayment())return;const t=totalAmount(),baseCode=selectedBase.resolved_public_code||selectedBase.code,boostPart=selectedBoost?("+"+(selectedBoost.resolved_public_code||selectedBoost.code)):"";let msg="DIGIY WAVE\nTel: "+displayPhoneDigitsAsPlus(userPhoneDigits)+"\nCode: "+baseCode+boostPart+"\nTotal: "+t+" FCFA\n";if(orderReference)msg+="Ref: "+orderReference+"\n";msg+="Photo reçu Wave en MMS separé.";const phone=SUPPORT_WA.replace(/\D/g,"");const _smsA=document.createElement("a");_smsA.href="sms:+"+phone+"?body="+encodeURIComponent(msg);_smsA.rel="noopener";_smsA.style.display="none";document.body.appendChild(_smsA);_smsA.click();setTimeout(()=>{try{document.body.removeChild(_smsA)}catch(_){}},400);const pm=$("proofSendMsg");if(pm)pm.textContent="📱 SMS ouvert. Envoie ce message + la photo Wave en MMS.";setStatus("📱 SMS ouvert. Joins la photo en MMS.","warn","PREUVE SMS")});
+async function kbAsk(question){const out=$("kbAns"),status=$("kbStatus"),q=String(question||"").trim();if(!out||!status||!q)return;out.textContent="⏳ Je réfléchis…";status.textContent="En ligne";status.className="pill ok";try{const res=await fetch("https://ai.orange-pig-270004.hostingersite.com/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:q})});const data=await res.json().catch(()=>null);if(!res.ok||!data?.ok)throw new Error(data?.error||"assistant indisponible");out.textContent=data.answer||"✅"}catch(e){status.textContent="Hors ligne";status.className="pill";out.textContent="⚠️ Assistant indisponible.\nChoisis ton code, paie Wave, puis envoie le reçu.\nSinon clique Support WhatsApp."}}$("kbSend").addEventListener("click",()=>kbAsk($("kbInput").value));$("kbInput").addEventListener("keydown",e=>{if(e.key==="Enter")kbAsk($("kbInput").value)});document.querySelectorAll(".kbQuick button[data-q]").forEach(btn=>btn.addEventListener("click",()=>{const q=btn.getAttribute("data-q")||"";$("kbInput").value=q;kbAsk(q)}));$("lang-fr").addEventListener("click",()=>{$("lang-fr").classList.add("active");$("lang-wo").classList.remove("active")});$("lang-wo").addEventListener("click",()=>{$("lang-wo").classList.add("active");$("lang-fr").classList.remove("active")});if(from_)$("manualHint").textContent="Après validation, DIGIY ouvre le HUB du module choisi.";setupHelpButtons();setupSubscriptionBenefitPanel();renderGrids();hydrateVisiblePrices();renderOrder();autoSelectFromUrl();updateHubLinks();syncInputsToUrlAndState();const _on=$("ownerName"),_wt=$("waveTo"),_hp=$("hintPhone");if(_on)_on.textContent=OWNER_NAME;if(_wt)_wt.textContent=WAVE_TO;if(_hp)_hp.textContent=SUPPORT_WA;
+})();
+</script>
 
 <script>
 (function(){
   "use strict";
-  function speakText(text){
-    return String(text||"")
-      .replace(/\bDIGIYLYFE\b/g,"diji laïfe")
-      .replace(/\bDIGIY\b/g,"diji i")
-      .replace(/\bQR\b/g,"Q R")
-      .replace(/\bSMS\b/g,"S M S")
-      .replace(/\bWhatsApp\b/gi,"Ouatsap")
-      .replace(/\bWave\b/gi,"Ouève")
-      .replace(/0\s*%/g,"zéro pour cent");
+
+  const AUDIO_TEXT =
+    "Bienvenue sur Activer mon module diji i. Ici, tu choisis le code qui correspond à ton activité : Je conduis, Je loue, Je réserve, Mon commerce, Les boutiques, Mes services, Me faire connaître ou Mon argent. diji i complète Ouatsap : tu gardes le contact direct avec ton client, tu restes visible, et la commission reste à zéro pour cent. Le prix affiché vient de la base officielle diji i. Tu choisis ton code, tu paies directement par Ouève, puis tu envoies la preuve par Ouatsap ou par S M S. Après validation, ton accès professionnel s’ouvre avec ton lien privé. Si tu hésites, ouvre les tarifs ou passe par le HUB. Si ton accès est déjà actif, va dans l’Espace pro. L’objectif est simple : moins de confusion, plus d’action, et ton activité avance proprement.";
+
+  const btnPlay = document.getElementById("btnActivationAudio");
+  const btnStop = document.getElementById("btnActivationAudioStop");
+  const bar = document.getElementById("activationAudioProgress");
+  const synth = window.speechSynthesis;
+  let timer = null;
+  let playing = false;
+
+  function pickVoice(){
+    if(!synth) return null;
+    const voices = synth.getVoices ? synth.getVoices() : [];
+    return voices.find(v => /^fr/i.test(v.lang || "") && /audrey|amelie|hortense|julie|thomas|paul|french|français/i.test(v.name || ""))
+      || voices.find(v => /^fr/i.test(v.lang || ""))
+      || null;
   }
-  function play(){
-    if(!("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)){
-      alert("Audio indisponible sur ce téléphone.");
+
+  function setProgress(value){
+    if(bar) bar.style.width = Math.max(0, Math.min(100, value)) + "%";
+  }
+
+  function stopAudio(){
+    try{ synth && synth.cancel(); }catch(_){}
+    clearInterval(timer);
+    timer = null;
+    playing = false;
+    setProgress(0);
+    if(btnPlay) btnPlay.textContent = "🎧 Écouter DIGIY";
+  }
+
+  function playAudio(){
+    if(!("speechSynthesis" in window)){
+      alert("Audio indisponible sur ce navigateur.");
       return;
     }
-    window.speechSynthesis.cancel();
-    const txt = "Tarifs DIGIYLYFE. Choisis ton code, active ton module. L’abonnement apporte une présence professionnelle, une fiche, un Q R, le contact Ouatsap direct, un logiciel métier, la voix DIGIY, des textes prêts, un clic de confirmation, et zéro pour cent commission.";
-    const u = new SpeechSynthesisUtterance(speakText(txt));
-    u.lang = "fr-FR";
-    u.rate = 0.86;
-    u.pitch = 1.02;
-    window.speechSynthesis.speak(u);
+
+    if(playing){
+      stopAudio();
+      return;
+    }
+
+    stopAudio();
+
+    const utterance = new SpeechSynthesisUtterance(AUDIO_TEXT);
+    utterance.lang = "fr-FR";
+    utterance.rate = 0.88;
+    utterance.pitch = 1.05;
+    utterance.volume = 1;
+
+    const voice = pickVoice();
+    if(voice) utterance.voice = voice;
+
+    playing = true;
+    if(btnPlay) btnPlay.textContent = "⏸ Lecture…";
+    setProgress(0);
+
+    const estimatedMs = Math.max(22000, AUDIO_TEXT.split(/\s+/).length * 430);
+    const start = Date.now();
+
+    timer = setInterval(() => {
+      const pct = ((Date.now() - start) / estimatedMs) * 96;
+      setProgress(pct);
+    }, 250);
+
+    utterance.onend = () => {
+      setProgress(100);
+      setTimeout(stopAudio, 350);
+    };
+
+    utterance.onerror = stopAudio;
+    synth.speak(utterance);
   }
-  function stop(){ if("speechSynthesis" in window) window.speechSynthesis.cancel(); }
-  document.getElementById("playAudio")?.addEventListener("click", play);
-  document.getElementById("stopAudio")?.addEventListener("click", stop);
-  window.addEventListener("beforeunload", stop);
+
+  if(btnPlay) btnPlay.addEventListener("click", playAudio);
+  if(btnStop) btnStop.addEventListener("click", stopAudio);
+
+  if(synth && typeof synth.onvoiceschanged !== "undefined"){
+    synth.onvoiceschanged = pickVoice;
+  }
+
+  window.addEventListener("beforeunload", stopAudio);
+
+const floatingPayBtn=document.getElementById("btnFloatingPay");if(floatingPayBtn)floatingPayBtn.addEventListener("click",()=>{const manual=document.getElementById("manualBox");if(manual){manual.scrollIntoView({behavior:"smooth",block:"start"});}else{location.hash="#manualBox";}});
 })();
 </script>
+<script src="./pay-proof.js?v=4"></script>
 </body>
 </html>
+
+
+
+
+
+
+
+
 
 
 
