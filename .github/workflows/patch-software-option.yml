@@ -1,0 +1,152 @@
+name: Patch software option visibility
+
+on:
+  push:
+    branches:
+      - agent/remonter-option-logiciel
+    paths:
+      - .github/workflows/patch-software-option.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Raise software option on all business modules
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          paths = [Path("index.html"), Path("app.html")]
+          sources = [p.read_text(encoding="utf-8") for p in paths]
+          if sources[0] != sources[1]:
+              raise SystemExit("index.html and app.html are not identical before patch")
+
+          def patch(s):
+              old_css = '.software-available{margin:0;border:1px solid rgba(34,197,94,.5);border-radius:12px;background:rgba(34,197,94,.1);padding:9px 11px;color:#bbf7d0;font-size:14px;line-height:1.4;font-weight:1000}'
+              new_css = old_css + '\n    .software-choice{width:100%;min-height:54px;border:2px solid rgba(250,204,21,.72);border-radius:16px;background:linear-gradient(135deg,rgba(250,204,21,.24),rgba(34,197,94,.16));color:#fff8db;padding:10px 14px;font:inherit;font-weight:1000;line-height:1.35;cursor:pointer;box-shadow:0 10px 24px rgba(0,0,0,.12)}\n    .software-choice:hover,.software-choice:focus-visible{border-color:var(--gold);background:linear-gradient(135deg,rgba(250,204,21,.34),rgba(34,197,94,.22))}'
+              if old_css not in s:
+                  raise SystemExit("CSS anchor missing")
+              s = s.replace(old_css, new_css, 1)
+
+              s = s.replace('propose le logiciel métier en option à +8 000 FCFA par mois', 'propose le logiciel métier en option à +8 000 FCFA / +15 € par mois')
+              s = s.replace('Pour chacun des huit modules métier, le logiciel associé reste facultatif et s’ajoute à +8 000 FCFA par mois.', 'Pour chacun des huit modules métier, le logiciel associé reste facultatif et s’ajoute à +8 000 FCFA / +15 € par mois.')
+              s = s.replace('Le logiciel métier reste facultatif et n’est facturé que s’il est ajouté.', 'Le logiciel métier reste facultatif et n’est facturé que s’il est ajouté : +8 000 FCFA / +15 € par mois.')
+              s = s.replace('<div class="offer-price" data-i18n="tradePrice">+8 000 FCFA / mois</div>', '<div class="offer-price" data-i18n="tradePrice">+8 000 FCFA / +15 € / mois</div>')
+              s = s.replace('chaque palier affiche aussi son total avec le logiciel métier facultatif à +8 000 FCFA par mois.', 'chaque palier affiche aussi son total avec le logiciel métier facultatif à +8 000 FCFA / +15 € par mois.')
+
+              visible = '<p class="software-available" data-i18n="softwareAvailable">Logiciel métier disponible : +8 000 FCFA/mois</p>'
+              raised = visible + '\n          <button class="software-choice" type="button" data-i18n="softwareChoice">➕ Choisir / voir le logiciel métier · +8 000 FCFA / +15 € / mois</button>'
+              count = s.count(visible)
+              if count != 8:
+                  raise SystemExit(f"Expected 8 software markers, got {count}")
+              s = s.replace(visible, raised)
+
+              s = s.replace('Option logiciel métier : +8 000 FCFA/mois', 'Option logiciel métier : +8 000 FCFA / +15 €/mois')
+              s = s.replace('Tarif du logiciel en euros à confirmer.', 'Option logiciel métier en France : +15 €/mois.')
+
+              totals = {
+                  "driver2Name": ("20 000 FCFA/mois", "20 000 FCFA / 50 €/mois"),
+                  "driver3Name": ("27 900 FCFA/mois", "27 900 FCFA / 60 €/mois"),
+                  "loc1Name": ("34 000 FCFA/mois", "34 000 FCFA / 54 €/mois"),
+                  "loc2Name": ("43 000 FCFA/mois", "43 000 FCFA / 74 €/mois"),
+                  "loc3Name": ("58 000 FCFA/mois", "58 000 FCFA / 94 €/mois"),
+                  "loc4Name": ("78 000 FCFA/mois", "78 000 FCFA / 114 €/mois"),
+                  "loc5Name": ("108 000 FCFA/mois", "108 000 FCFA / 164 €/mois"),
+                  "resa1Name": ("20 000 FCFA/mois", "20 000 FCFA / 34 €/mois"),
+                  "resa2Name": ("27 900 FCFA/mois", "27 900 FCFA / 44 €/mois"),
+                  "resa3Name": ("43 000 FCFA/mois", "43 000 FCFA / 74 €/mois"),
+                  "commerce1Name": ("27 900 FCFA/mois", "27 900 FCFA / 44 €/mois"),
+                  "commerce2Name": ("37 900 FCFA/mois", "37 900 FCFA / 64 €/mois"),
+                  "market1Name": ("17 900 FCFA/mois", "17 900 FCFA / 34 €/mois"),
+                  "market2Name": ("27 900 FCFA/mois", "27 900 FCFA / 44 €/mois"),
+                  "build1Name": ("27 900 FCFA/mois", "27 900 FCFA / 44 €/mois"),
+                  "build2Name": ("37 900 FCFA/mois", "37 900 FCFA / 64 €/mois"),
+                  "build3Name": ("53 000 FCFA/mois", "53 000 FCFA / 84 €/mois"),
+                  "explore1Name": ("38 000 FCFA/mois", "38 000 FCFA / 64 €/mois"),
+                  "explore2Name": ("68 000 FCFA/mois", "68 000 FCFA / 104 €/mois"),
+                  "explore3Name": ("128 000 FCFA/mois", "128 000 FCFA / 164 €/mois"),
+                  "explore4Name": ("158 000 FCFA/mois", "158 000 FCFA / 214 €/mois"),
+              }
+              for key, (old_total, new_total) in totals.items():
+                  pattern = rf'(<div class="tier"><span data-i18n="{re.escape(key)}">.*?<span data-i18n="totalSoftware">Total avec logiciel</span> : ){re.escape(old_total)}(</b></div>)'
+                  s, n = re.subn(pattern, rf'\g<1>{new_total}\g<2>', s)
+                  if n != 1:
+                      raise SystemExit(f"Total patch failed for {key}: {n}")
+
+              resto_old = '<span data-i18n="totalSoftware">Total avec logiciel</span> : <b>27 900 FCFA/mois</b><br>'
+              resto_new = '<span data-i18n="totalSoftware">Total avec logiciel</span> : <b>27 900 FCFA / 45 €/mois</b><br>'
+              if resto_old not in s:
+                  raise SystemExit("MON RESTO total anchor missing")
+              s = s.replace(resto_old, resto_new, 1)
+
+              s = s.replace('tradePrice:"+8 000 FCFA / mois"', 'tradePrice:"+8 000 FCFA / +15 € / mois"')
+              s = s.replace('softwareAvailable:"Logiciel métier disponible : +8 000 FCFA/mois"', 'softwareAvailable:"Logiciel métier facultatif : +8 000 FCFA / +15 € / mois",softwareChoice:"➕ Choisir / voir le logiciel métier · +8 000 FCFA / +15 € / mois"')
+              s = s.replace('softwareOption:"Option logiciel métier : +8 000 FCFA/mois"', 'softwareOption:"Option logiciel métier : +8 000 FCFA / +15 €/mois"')
+              s = s.replace('softwareEuro:"Tarif du logiciel en euros à confirmer."', 'softwareEuro:"Option logiciel métier en France : +15 €/mois."')
+              s = s.replace('tradePrice:"+8,000 FCFA / month"', 'tradePrice:"+8,000 FCFA / +15 € / month"')
+              s = s.replace('softwareAvailable:"Business software available: +8,000 FCFA/month"', 'softwareAvailable:"Optional business software: +8,000 FCFA / +15 € / month",softwareChoice:"➕ Choose / view business software · +8,000 FCFA / +15 € / month"')
+              s = s.replace('softwareOption:"Business software option: +8,000 FCFA/month"', 'softwareOption:"Business software option: +8,000 FCFA / +15 € / month"')
+              s = s.replace('softwareEuro:"Euro price for the software option to be confirmed."', 'softwareEuro:"Business software option in France: +15 €/month."')
+              s = s.replace('every level also shows its total with the optional +8,000 FCFA monthly business software add-on.', 'every level also shows its total with the optional +8,000 FCFA / +15 € monthly business software add-on.')
+              s = s.replace('the software associated with it remains optional and adds +8,000 FCFA per month.', 'the software associated with it remains optional and adds +8,000 FCFA / +15 € per month.')
+              s = s.replace('Optional business software: +8,000 FCFA per month.', 'Optional business software: +8,000 FCFA / +15 € per month.')
+
+              hook = '      document.getElementById("langFr").addEventListener("click",function(){setLanguage("fr");});'
+              handler = (
+                  '      document.querySelectorAll(".software-choice").forEach(function(button){\n'
+                  '        button.addEventListener("click",function(){\n'
+                  '          const card=button.closest(".module-card");\n'
+                  '          if(!card) return;\n'
+                  '          const details=card.querySelector("details");\n'
+                  '          if(details){\n'
+                  '            details.open=true;\n'
+                  '            details.scrollIntoView({behavior:"smooth",block:"center"});\n'
+                  '            return;\n'
+                  '          }\n'
+                  '          const direct=card.querySelector(".software-direct");\n'
+                  '          if(direct) direct.scrollIntoView({behavior:"smooth",block:"center"});\n'
+                  '        });\n'
+                  '      });\n\n'
+              )
+              if hook not in s:
+                  raise SystemExit("JS hook missing")
+              s = s.replace(hook, handler + hook, 1)
+
+              if s.count('class="software-choice"') != 8:
+                  raise SystemExit("Software choice buttons count is not 8")
+              if 'Tarif du logiciel en euros à confirmer.' in s:
+                  raise SystemExit("Stale French euro text remains")
+              if 'Euro price for the software option to be confirmed.' in s:
+                  raise SystemExit("Stale English euro text remains")
+              return s
+
+          updated = [patch(s) for s in sources]
+          if updated[0] != updated[1]:
+              raise SystemExit("index.html and app.html diverged after patch")
+
+          for p, text in zip(paths, updated):
+              p.write_text(text, encoding="utf-8")
+
+          wf = Path(".github/workflows/patch-software-option.yml")
+          if wf.exists():
+              wf.unlink()
+
+          print("OK: 8 software choices raised, +15 EUR applied, index/app synchronized")
+          PY
+
+      - name: Commit patch
+        shell: bash
+        run: |
+          git config user.name "DIGIY Auto Patch"
+          git config user.email "actions@github.com"
+          git add index.html app.html .github/workflows/patch-software-option.yml
+          git commit -m "Remonter option logiciel metier" || echo "Nothing to commit"
+          git push
